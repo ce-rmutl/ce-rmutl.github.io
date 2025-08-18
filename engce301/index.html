@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGCE301 - Software Design & Development [v3 Full]</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --accent-color: #00c6ff;
+            --text-color: #f0f0f0;
+            --text-muted: #dcdcdc;
+            --border-radius: 15px;
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            margin: 0;
+            color: var(--text-color);
+            background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1a2980);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .main-header {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: #fff;
+        }
+        .main-header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        .main-header p {
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+        .badges {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+
+        h2, h3, h4 {
+            color: #fff;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            font-size: 1.6rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        p, li {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul li {
+            padding-left: 25px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+        ul li::before {
+            content: '»';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        th {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        tr {
+            transition: background-color 0.3s;
+        }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .highlight-midterm { background-color: rgba(230, 126, 34, 0.5); }
+        .highlight-final { background-color: rgba(231, 76, 60, 0.5); }
+
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .resource-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .resource-card:hover {
+            transform: scale(1.05);
+        }
+        .resource-card a {
+            text-decoration: none;
+        }
+        .resource-card p {
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+        
+        .footer-links a {
+            color: var(--accent-color);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+        
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 2.5rem;
+            }
+            .main-header p {
+                font-size: 1.2rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .glass-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="main-header">
+            <h1> ENGCE301</h1>
+            <p>Software Design and Development</p>
+            <div class="badges">
+                <img src="https://img.shields.io/badge/Course-ENGCE301-blue?style=for-the-badge" alt="Course Badge">
+                <img src="https://img.shields.io/badge/Language-JavaScript-yellow?style=for-the-badge&logo=javascript" alt="JS Badge">
+                <img src="https://img.shields.io/badge/Framework-React-61DAFB?style=for-the-badge&logo=react" alt="React Badge">
+                <img src="https://img.shields.io/badge/Backend-Node.js-339933?style=for-the-badge&logo=node.js" alt="Node.js Badge">
+            </div>
+        </header>
+
+        <main>
+            <section id="overview" class="glass-card">
+                <h2><i class="fas fa-binoculars"></i> 📚 Course Overview</h2>
+                <p><strong>ENGCE301 - การออกแบบและพัฒนาซอฟต์แวร์</strong> เป็นรายวิชาที่มุ่งเน้นการพัฒนาทักษะการเขียนโปรแกรมสมัยใหม่ ครอบคลุมการพัฒนาทั้ง Frontend และ Backend รวมถึงเทคโนโลยีการพัฒนาแบบ Cross-platform</p>
+                <h3>🎯 Course Objectives</h3>
+                <ul>
+                    <li>เข้าใจหลักการและเทคโนโลยีการพัฒนาซอฟต์แวร์สมัยใหม่</li>
+                    <li>พัฒนาแอปพลิเคชันแบบ Full-stack และ Cross-platform</li>
+                    <li>มีทักษะการเขียนโปรแกรมเชิงลึกด้วยภาษาและเฟรมเวิร์กที่ทันสมัย</li>
+                    <li>สามารถออกแบบและพัฒนา User Interface ที่มีประสิทธิภาพ</li>
+                    <li>เข้าใจการทดสอบซอฟต์แวร์และการใช้เครื่องมือพัฒนา</li>
+                    <li>ใช้ระบบควบคุมเวอร์ชันในการพัฒนาซอฟต์แวร์</li>
+                </ul>
+                <h3>📖 Technology Stack</h3>
+                <pre><code>Frontend:     HTML5, CSS3, JavaScript ES6+, React.js
+Backend:      Node.js, Express.js, MongoDB
+Tools:        Git, GitHub, VS Code, Postman
+Deployment:   Vercel, Netlify, AWS, Docker
+Testing:      Jest, Cypress, React Testing Library</code></pre>
+            </section>
+
+            <section id="labs" class="glass-card">
+                <h2><i class="fas fa-vials"></i> 📝 Laboratory Sessions Overview</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Week</th><th>Todo</th><th>Topic</th><th>Duration</th><th>Type</th><th>Focus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>1</strong></td><td>INIT</td><td>Modern Software Development</td><td>2 hrs</td><td>Workshop</td><td>Environment Setup</td></tr>
+                            <tr><td><strong>2</strong></td><td>TASK#1</td><td>Version Control with Git & GitHub</td><td>3 hrs</td><td>Pair Project</td><td>Collaboration</td></tr>
+                            <tr><td><strong>3</strong></td><td>TASK#2</td><td>HTML5 & CSS3 Fundamentals</td><td>3 hrs</td><td>Pair Task</td><td>Portfolio Website</td></tr>
+                            <tr><td><strong>4</strong></td><td>LAB1</td><td>JavaScript ES6+ & DOM Manipulation</td><td>3 hrs</td><td>Individual</td><td>Interactive App</td></tr>
+                            <tr><td><strong>5</strong></td><td>LAB2</td><td>React.js Fundamentals</td><td>3 hrs</td><td>Individual</td><td>Component Library</td></tr>
+                            <tr><td><strong>6</strong></td><td>LAB3</td><td>Advanced React & State Management</td><td>3 hrs</td><td>Individual</td><td>E-commerce Frontend</td></tr>
+                            <tr class="highlight-midterm"><td><strong>8</strong></td><td><strong>🎯</strong></td><td><strong>MIDTERM INDIVIDUAL PROJECT</strong></td><td><strong>1 week</strong></td><td><strong>Individual</strong></td><td><strong>Full-Stack App</strong></td></tr>
+                            <tr><td><strong>7</strong></td><td>LAB4</td><td>Node.js & Backend Development</td><td>3 hrs</td><td>Individual</td><td>REST API</td></tr>
+                            <tr><td><strong>9</strong></td><td>LAB5</td><td>Database Integration & MongoDB</td><td>3 hrs</td><td>Individual</td><td>Data Management</td></tr>
+                            <tr><td><strong>10</strong></td><td>LAB6</td><td>Authentication & Security</td><td>3 hrs</td><td>Individual</td><td>Secure System</td></tr>
+                            <tr><td><strong>11</strong></td><td>TASK#3</td><td>Full-Stack Integration</td><td>3 hrs</td><td>Pair Task</td><td>Real-time App</td></tr>
+                            <tr><td><strong>12</strong></td><td>LAB7</td><td>Cross-Platform Development</td><td>3 hrs</td><td>Individual</td><td>Multi-platform</td></tr>
+                            <tr><td><strong>13</strong></td><td>LAB8</td><td>Testing & Quality Assurance</td><td>3 hrs</td><td>Individual</td><td>Test Coverage</td></tr>
+                            <tr><td><strong>14</strong></td><td>LAB9</td><td>Performance & Deployment</td><td>3 hrs</td><td>Individual</td><td>Production Deploy</td></tr>
+                            <tr class="highlight-final"><td><strong>15</strong></td><td><strong>🏆</strong></td><td><strong>FINAL CAPSTONE PROJECT</strong></td><td><strong>2 weeks</strong></td><td><strong>Team Project</strong></td><td><strong>Professional App</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="assessment" class="glass-card">
+                <h2><i class="fas fa-clipboard-check"></i> 📊 Assessment & Grading</h2>
+                <h3>Grade Distribution</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>Component</th><th>Weight</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Laboratory Work</strong></td><td>45%</td><td>Weekly lab submissions และ projects</td></tr>
+                            <tr><td><strong>Midterm Project</strong></td><td>20%</td><td>Individual full-stack application</td></tr>
+                            <tr><td><strong>Final Project</strong></td><td>25%</td><td>Team capstone project</td></tr>
+                            <tr><td><strong>Participation</strong></td><td>10%</td><td>Class participation และ code reviews</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Late Submission Policy</h3>
+                <ul>
+                    <li><strong>Within 24 hours</strong>: -10% penalty</li>
+                    <li><strong>Within 48 hours</strong>: -25% penalty</li>
+                    <li><strong>Beyond 48 hours</strong>: -50% penalty</li>
+                    <li><strong>Beyond 1 week</strong>: 0 points (except with prior approval)</li>
+                </ul>
+            </section>
+
+            <section id="setup" class="glass-card">
+                <h2><i class="fas fa-tools"></i> 🛠️ Prerequisites & Setup</h2>
+                <h3>Required Software</h3>
+                <pre><code># Node.js (LTS version)
+https://nodejs.org/
+
+# Git
+https://git-scm.com/
+
+# Visual Studio Code
+https://code.visualstudio.com/
+
+# MongoDB Community Edition
+https://www.mongodb.com/try/download/community</code></pre>
+                <h3>Recommended VS Code Extensions</h3>
+                <pre><code>{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "github.vscode-pull-request-github"
+  ]
+}</code></pre>
+            </section>
+
+            <section id="clo-mapping" class="glass-card">
+                <h2><i class="fas fa-bullseye"></i> 🎯 CLO Assessment Mapping Detail</h2>
+                <h3>Course Learning Outcomes (CLOs) Assessment Matrix</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>CLO</th><th>Description</th><th>Midterm</th><th>Final</th><th>Labs</th><th>Weight</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>CLO1</strong></td><td>อธิบายหลักการและสถาปัตยกรรมของการพัฒนาซอฟต์แวร์</td><td>✔️</td><td>✔️</td><td>✔️</td><td>15%</td></tr>
+                            <tr><td><strong>CLO2</strong></td><td>พัฒนาแอปพลิเคชันแบบ Full-stack</td><td>✔️</td><td>✔️</td><td>✔️</td><td>35%</td></tr>
+                            <tr><td><strong>CLO3</strong></td><td>สร้างแอปพลิเคชันแบบ Cross-platform</td><td></td><td>✔️</td><td>✔️</td><td>15%</td></tr>
+                            <tr><td><strong>CLO4</strong></td><td>ออกแบบและพัฒนา User Interface</td><td>✔️</td><td>✔️</td><td>✔️</td><td>15%</td></tr>
+                            <tr><td><strong>CLO5</strong></td><td>ประยุกต์ใช้เทคนิคการทดสอบซอฟต์แวร์</td><td></td><td>✔️</td><td>✔️</td><td>10%</td></tr>
+                            <tr><td><strong>CLO6</strong></td><td>ใช้ระบบควบคุมเวอร์ชันในการทำงานเป็นทีม</td><td>✔️</td><td>✔️</td><td>✔️</td><td>10%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="resources" class="glass-card">
+                <h2><i class="fas fa-book-open"></i> 📚 Learning Resources</h2>
+                <div class="grid-container">
+                    <div class="resource-card">
+                        <a href="https://developer.mozilla.org/" target="_blank">
+                            <h4>📘 MDN Web Docs</h4>
+                            <p>Web technologies reference</p>
+                        </a>
+                    </div>
+                    <div class="resource-card">
+                        <a href="https://reactjs.org/docs/" target="_blank">
+                            <h4>⚛️ React Docs</h4>
+                            <p>React.js official guide</p>
+                        </a>
+                    </div>
+                    <div class="resource-card">
+                        <a href="https://nodejs.org/docs/" target="_blank">
+                            <h4>🟩 Node.js Docs</h4>
+                            <p>Node.js API reference</p>
+                        </a>
+                    </div>
+                    <div class="resource-card">
+                        <a href="https://freecodecamp.org/" target="_blank">
+                            <h4>🎓 freeCodeCamp</h4>
+                            <p>Free coding bootcamp</p>
+                        </a>
+                    </div>
+                    <div class="resource-card">
+                        <a href="https://stackoverflow.com/" target="_blank">
+                            <h4>💬 Stack Overflow</h4>
+                            <p>Q&A community</p>
+                        </a>
+                    </div>
+                    <div class="resource-card">
+                        <a href="https://github.com/features/discussions" target="_blank">
+                            <h4>🤝 GitHub Discussions</h4>
+                            <p>Project discussions</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="conclusion" class="glass-card">
+                <h2><i class="fas fa-flag-checkered"></i> 🏁 Conclusion & Success Strategies</h2>
+                <p>
+                    โปรเจกต์กลางภาคและปลายภาคถูกออกแบบมาเพื่อสร้างทักษะที่พร้อมสำหรับอุตสาหกรรม สร้างแฟ้มผลงานที่น่าประทับใจ และเป็นรากฐานที่แข็งแกร่งสำหรับการทำงานในสายอาชีพวิศวกรรมซอฟต์แวร์
+                </p>
+                <h3>Keys to Success</h3>
+                <ul>
+                    <li><strong>Start Early</strong>: เริ่มวางแผนและพัฒนาทันทีที่ได้รับมอบหมายโปรเจกต์</li>
+                    <li><strong>Follow Best Practices</strong>: ใช้มาตรฐานการเขียนโค้ดและสถาปัตยกรรมที่เหมาะสม</li>
+                    <li><strong>Test Thoroughly</strong>: ใช้กลยุทธ์การทดสอบที่ครอบคลุม</li>
+                    <li><strong>Document Well</strong>: สร้างเอกสารที่ชัดเจนและเป็นมืออาชีพ</li>
+                    <li><strong>Collaborate Effectively</strong>: พัฒนาทักษะการทำงานเป็นทีมและความเป็นผู้นำ</li>
+                </ul>
+                <h4>Final Words</h4>
+                <p>
+                    <strong>Good luck, and remember: The goal is not just to complete the assignments, but to become the software engineer you aspire to be!</strong> 🚀
+                </p>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-links">
+                <a href="mailto:thanit@rmutl.ac.th"><i class="fas fa-envelope"></i> Contact Instructors</a>
+                <a href="#"><i class="fab fa-discord"></i> Join Discord</a>
+                <a href="#"><i class="fas fa-book"></i> Access Resources</a>
+            </div>
+            <br>
+            <p><small>© 2025 ENGCE301 Course Team. All rights reserved.</small><br>
+            <small>Last Updated: July 2025 | Assessment Guidelines Version 3.0</small></p>
+        </footer>
+    </div>
+
+</body>
+</html>
