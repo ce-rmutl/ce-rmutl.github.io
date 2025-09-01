@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ENGSE206 — Week 3: SRS & UML (Slides 1–20)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root{
+      --primary:#0D47A1;--secondary:#1565C0;--accent:#FF6F00;
+      --bg:linear-gradient(135deg,#E3F2FD 0%,#BBDEFB 100%);
+      --slide:#fff;--text:#263238;--code:#263238;--base:clamp(16px,1.4vw,22px)
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow:hidden}
+    body{font-family:'Sarabun',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{height:100%;width:100%;padding:2vh 3vw;display:flex;align-items:center;justify-content:center}
+    .slide{display:none;position:relative;width:100%;height:100%;background:rgba(255,255,255,.98);border-radius:18px;box-shadow:0 18px 40px rgba(0,0,0,.15);padding:32px 40px 80px;font-size:var(--base);overflow:auto}
+    .slide.active{display:block;animation:.35s ease-out fadeIn}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    h1,h2,h3{color:var(--primary);margin:0 0 14px}
+    h1{font-size:2.2em;text-align:center}
+    h2{font-size:1.6em;border-bottom:3px solid var(--primary);padding-bottom:6px}
+    h3{font-size:1.15em;color:var(--secondary)}
+    ul{margin:10px 0 0 0;padding-left:20px}
+    li{margin:6px 0}
+    .title{background:linear-gradient(135deg,#0D47A1,#1976D2);color:#fff}
+    .title h1,.title h2,.title p{color:#fff}
+    .title h1{font-size:2.6em;margin-top:6vh}
+    .note{background:#E3F2FD;border-left:5px solid var(--primary);padding:14px 16px;border-radius:8px;margin:12px 0}
+    .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin:10px 0}
+    .tbl{width:100%;border-collapse:collapse;margin:10px 0;font-size:.95em}
+    .tbl th{background:var(--secondary);color:#fff;text-align:left;padding:10px}
+    .tbl td{border:1px solid #e0e0e0;padding:10px;vertical-align:top}
+    .mermaid{margin-top:10px}
+    .foot{position:absolute;right:16px;bottom:14px;font-size:.85em;color:#546E7A}
+    .bar{position:fixed;left:0;top:0;height:7px;width:100%;background:rgba(0,0,0,.08)}
+    .bar>i{display:block;height:100%;width:0;background:linear-gradient(120deg,#FF6F00,#FFB300)}
+    .ctrl{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:10px;background:rgba(13,71,161,.9);color:#fff;padding:8px 12px;border-radius:999px;backdrop-filter:blur(8px)}
+    .btn{width:40px;height:40px;border-radius:50%;border:0;background:#1565C0;color:#fff;font-weight:700;cursor:pointer}
+    .btn:hover{background:#FF6F00}
+    .counter{min-width:64px;display:flex;align-items:center;justify-content:center;font-weight:600}
+    code,kbd{background:#ECEFF1;padding:2px 6px;border-radius:4px}
+  </style>
+</head>
+<body>
+  <div class="bar"><i id="prog"></i></div>
+  <div class="wrap" id="deck">
+
+    <!-- 1 -->
+    <section class="slide title active">
+      <h2>ENGSE206 — Software Requirements & Design</h2>
+      <h1>สัปดาห์ที่ 3: เอกสาร SRS และแบบจำลอง UML</h1>
+      <p>RMUTL (Doi Saket) · ภาคการศึกษา 2/2567</p>
+      <div class="foot">1 / 20</div>
+    </section>
+
+    <!-- 2 -->
+    <section class="slide">
+      <h2>Agenda</h2>
+      <ul>
+        <li>ทบทวน Elicitation → Documentation</li>
+        <li>โครงสร้างเอกสาร SRS (IEEE 29148)</li>
+        <li>Use Case & Actors</li>
+        <li>UML: Sequence, Class, State, ER</li>
+        <li>Case Study: Agent Wallboard</li>
+      </ul>
+      <div class="foot">2 / 20</div>
+    </section>
+
+    <!-- 3 -->
+    <section class="slide">
+      <h2>ภาพรวมการไหลของงาน</h2>
+      <div class="mermaid">
+flowchart LR
+  A[สัปดาห์ที่ 2\nElicitation] --> B(สัปดาห์ที่ 3\nSRS Documentation)
+  B --> C[สัปดาห์ที่ 3\nUML Modeling]
+  C --> D[สัปดาห์ที่ 5\nDesign]
+      </div>
+      <div class="foot">3 / 20</div>
+    </section>
+
+    <!-- 4 -->
+    <section class="slide">
+      <h2>SRS คืออะไร?</h2>
+      <div class="grid2">
+        <div class="note">
+          เอกสารที่ระบุ <b>พฤติกรรม</b> ของระบบ, <bาขอบเขต</b>, และ <b>ข้อจำกัด</b> อย่างเป็นทางการให้ทีมพัฒนาและผู้มีส่วนได้ส่วนเสียเข้าใจตรงกัน
+        </div>
+        <ul>
+          <li>เป็นแหล่งอ้างอิงหลักสำหรับการออกแบบ/ทดสอบ</li>
+          <li>ลดความไม่ชัดเจน (ambiguity) และการตีความต่าง</li>
+          <li>รองรับการจัดการการเปลี่ยนแปลง (change control)</li>
+        </ul>
+      </div>
+      <div class="foot">4 / 20</div>
+    </section>
+
+    <!-- 5 -->
+    <section class="slide">
+      <h2>โครงสร้าง SRS (ตัวอย่าง)</h2>
+      <div class="mermaid">
+flowchart TB
+  A[1. บทนำ] --> B[2. ภาพรวมระบบ]
+  B --> C[3. ความต้องการเฉพาะ]
+  C --> D[4. ข้อกำหนดไม่ใช่หน้าที่]
+  D --> E[5. ส่วนต่อประสาน]
+  E --> F[6. ภาคผนวก]
+      </div>
+      <div class="foot">5 / 20</div>
+    </section>
+
+    <!-- 6 -->
+    <section class="slide">
+      <h2>คุณสมบัติของความต้องการที่ดี</h2>
+      <ul>
+        <li>ชัดเจน ไม่กำกวม</li>
+        <li>ตรวจสอบได้ (verifiable)</li>
+        <li>สอดคล้องกัน (consistent)</li>
+        <li>จำเป็น (necessary) และสมบูรณ์ (complete)</li>
+        <li>ติดตามได้ (traceable)</li>
+      </ul>
+      <div class="foot">6 / 20</div>
+    </section>
+
+    <!-- 7 -->
+    <section class="slide">
+      <h2>Use Case & Actors</h2>
+      <div class="mermaid">
+flowchart LR
+  actorA["Actor: Agent"] --> UC1((Login))
+  actorA --> UC2((Update Status))
+  actorB["Actor: Supervisor"] --> UC3((View Dashboard))
+  actorB --> UC4((Send Message))
+      </div>
+      <div class="foot">7 / 20</div>
+    </section>
+
+    <!-- 8 -->
+    <section class="slide">
+      <h2>ตัวอย่าง Use Case: Login</h2>
+      <ul>
+        <li><b>Precondition:</b> ผู้ใช้ลงทะเบียนแล้ว</li>
+        <li><b>Main Flow:</b> กรอกชื่อผู้ใช้/รหัสผ่าน → ระบบตรวจสอบ → เข้าสู่ระบบ</li>
+        <li><b>Postcondition:</b> สถานะผู้ใช้เป็น Online</li>
+        <li><b>Alternative:</b> รหัสผ่านผิด &rarr; แสดงข้อผิดพลาด</li>
+      </ul>
+      <div class="foot">8 / 20</div>
+    </section>
+
+    <!-- 9 -->
+    <section class="slide">
+      <h2>Sequence Diagram — Login</h2>
+      <div class="mermaid">
+sequenceDiagram
+  actor User
+  participant UI as Web UI
+  participant API as Auth API
+  participant DB as User DB
+  User->>UI: เข้าหน้าล็อกอิน
+  User->>UI: กรอกข้อมูล & คลิก Login
+  UI->>API: POST /auth/login
+  API->>DB: ตรวจสอบบัญชีผู้ใช้
+  DB-->>API: ข้อมูลบัญชี (ถูกต้อง)
+  API-->>UI: โทเค็นการยืนยันตัวตน
+  UI-->>User: เข้าสู่ระบบสำเร็จ
+      </div>
+      <div class="foot">9 / 20</div>
+    </section>
+
+    <!-- 10 -->
+    <section class="slide">
+      <h2>Activity Flow — Send Message</h2>
+      <div class="mermaid">
+flowchart TB
+  S([Start]) --> I[ป้อนข้อความ]
+  I --> V{ยืนยันข้อความ?}
+  V -- ใช่ --> P[ส่งผ่าน WebSocket]
+  V -- ไม่ --> I
+  P --> R{ส่งสำเร็จ?}
+  R -- ใช่ --> N[แจ้งเตือนผู้รับ]
+  R -- ไม่ --> E[แสดงข้อผิดพลาด]
+  N --> End([End])
+  E --> End
+      </div>
+      <div class="foot">10 / 20</div>
+    </section>
+
+    <!-- 11 -->
+    <section class="slide">
+      <h2>สถาปัตยกรรมระบบ Agent Wallboard</h2>
+      <div class="mermaid">
+flowchart TD
+  subgraph User_Tier [User Tier]
+    A[Agent App]
+    E[Supervisor Dashboard]
+  end
+  subgraph App_Tier [App Tier]
+    B[API Server]
+    D[WebSocket Service]
+  end
+  subgraph Data_Tier [Data Tier]
+    C[(Database)]
+  end
+  A --> B
+  E --> B
+  A --> D
+  E --> D
+  B --> C
+  D -. Push .-> A
+  D -. Push .-> E
+      </div>
+      <div class="foot">11 / 20</div>
+    </section>
+
+    <!-- 12 -->
+    <section class="slide">
+      <h2>ER Diagram — Messaging</h2>
+      <div class="mermaid">
+erDiagram
+  USERS ||--o{ MESSAGES : sends
+  USERS {
+    int id
+    string username
+    string role
+  }
+  MESSAGES {
+    int id
+    int sender_id
+    int receiver_id
+    string body
+    datetime sent_at
+  }
+  USERS ||--o{ NOTIFICATIONS : receives
+  NOTIFICATIONS {
+    int id
+    int user_id
+    string type
+    datetime created_at
+  }
+      </div>
+      <div class="foot">12 / 20</div>
+    </section>
+
+    <!-- 13 -->
+    <section class="slide">
+      <h2>State Diagram — Notification</h2>
+      <div class="mermaid">
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Pending: สร้างการแจ้งเตือน
+  Pending --> Delivered: ส่งถึงอุปกรณ์
+  Delivered --> Read: ผู้ใช้เปิดอ่าน
+  Delivered --> Expired: เวลาเกินกำหนด
+  Read --> [*]
+  Expired --> [*]
+      </div>
+      <div class="foot">13 / 20</div>
+    </section>
+
+    <!-- 14 -->
+    <section class="slide">
+      <h2>Class Diagram — Core Types</h2>
+      <div class="mermaid">
+classDiagram
+  class User {
+    +id: int
+    +username: string
+    +role: string
+  }
+  class Message {
+    +id: int
+    +body: string
+    +sentAt: datetime
+  }
+  class Notification {
+    +id: int
+    +type: string
+    +createdAt: datetime
+  }
+  User "1" --> "*" Message : sends
+  User "1" --> "*" Notification : receives
+      </div>
+      <div class="foot">14 / 20</div>
+    </section>
+
+    <!-- 15 -->
+    <section class="slide">
+      <h2>Non‑Functional Requirements (ตัวอย่าง)</h2>
+      <table class="tbl">
+        <tr><th>หมวด</th><th>ข้อกำหนด</th></tr>
+        <tr><td>ประสิทธิภาพ</td><td>Latency &lt; 200ms สำหรับข้อความภายในภูมิภาค</td></tr>
+        <tr><td>ความพร้อมใช้</td><td>Uptime ≥ 99.9% ต่อเดือน</td></tr>
+        <tr><td>ความปลอดภัย</td><td>JWT + RBAC, พักข้อมูลด้วย AES‑256</td></tr>
+        <tr><td>ปรับขยาย</td><td>รองรับผู้ใช้พร้อมกัน 5,000 คน</td></tr>
+      </table>
+      <div class="foot">15 / 20</div>
+    </section>
+
+    <!-- 16 -->
+    <section class="slide">
+      <h2>Traceability Matrix (ตัวอย่าง)</h2>
+      <table class="tbl">
+        <tr><th>Req ID</th><th>Use Case</th><th>Test Case</th></tr>
+        <tr><td>FR‑LOGIN‑01</td><td>Login</td><td>TC‑LOGIN‑SUCCESS</td></tr>
+        <tr><td>FR‑MSG‑02</td><td>Send Message</td><td>TC‑MSG‑RETRY</td></tr>
+        <tr><td>NFR‑SEC‑01</td><td>All</td><td>TC‑JWT‑VALIDATION</td></tr>
+      </table>
+      <div class="foot">16 / 20</div>
+    </section>
+
+    <!-- 17 -->
+    <section class="slide">
+      <h2>Wireflow — Message</h2>
+      <div class="mermaid">
+flowchart LR
+  UI[Chat UI] --> Compose[Compose]
+  Compose --> Preview[Preview]
+  Preview -->|ยืนยัน| Send[Send]
+  Send --> WS[WebSocket]
+  WS --> Notify[Notify Receiver]
+      </div>
+      <div class="foot">17 / 20</div>
+    </section>
+
+    <!-- 18 -->
+    <section class="slide">
+      <h2>Use Case Elements</h2>
+      <div class="mermaid">
+flowchart TD
+  sup[Supervisor] --> UC1((View Dashboard))
+  sup --> UC2((Send Message))
+      </div>
+      <div class="foot">18 / 20</div>
+    </section>
+
+    <!-- 19 -->
+    <section class="slide">
+      <h2>ความสัมพันธ์ของ Use Case</h2>
+      <div class="grid2">
+        <div>
+          <h3>Include / Extend</h3>
+          <div class="mermaid">
+flowchart LR
+  A((Send Message)) -.->|&lt;&lt;include&gt;&gt;| B((Authenticate User))
+          </div>
+          <div class="mermaid" style="margin-top:8px">
+flowchart LR
+  C((Send Message)) -.->|&lt;&lt;extend&gt;&gt;| D((Attach File))
+          </div>
+        </div>
+        <div>
+          <h3>Generalization</h3>
+          <div class="mermaid">
+classDiagram
+  ManageUsers <|-- AddUser
+  ManageUsers <|-- EditUser
+          </div>
+        </div>
+      </div>
+      <div class="foot">19 / 20</div>
+    </section>
+
+    <!-- 20 -->
+    <section class="slide">
+      <h2>Agent Wallboard — Use Case (รวม)</h2>
+      <div class="mermaid">
+flowchart TB
+  Agent[Agent]
+  Supervisor[Supervisor]
+  Manager[Manager]
+  Admin[Admin]
+  subgraph System [Agent Wallboard System]
+    UC1((Login))
+    UC2((Update Status))
+    UC3((View Dashboard))
+    UC4((Send Message))
+    UC5((Receive Notification))
+    UC7((Generate Reports))
+    UC9((Manage Users))
+    UC8((Broadcast Message))
+    UC10((Export Report))
+    UC2 -.->|&lt;&lt;include&gt;&gt;| UC1
+    UC3 -.->|&lt;&lt;include&gt;&gt;| UC1
+    UC4 -.->|&lt;&lt;include&gt;&gt;| UC1
+    UC7 -.->|&lt;&lt;include&gt;&gt;| UC1
+    UC9 -.->|&lt;&lt;include&gt;&gt;| UC1
+    UC4 -.->|&lt;&lt;extend&gt;&gt;| UC8
+    UC7 -.->|&lt;&lt;extend&gt;&gt;| UC10
+  end
+  Agent --> UC1
+  Agent --> UC2
+  Agent --> UC5
+  Supervisor --> UC3
+  Supervisor --> UC4
+  Supervisor --> UC8
+  Manager --> UC7
+  Manager --> UC10
+  Admin --> UC9
+      </div>
+      <div class="foot">20 / 20</div>
+    </section>
+
+  </div>
+
+  <div class="ctrl">
+    <button class="btn" id="prev">⬅️</button>
+    <span class="counter" id="count">1 / 20</span>
+    <button class="btn" id="next">➡️</button>
+    <button class="btn" id="fs" title="เต็มจอ">⛶</button>
+  </div>
+
+  <script>
+    mermaid.initialize({ startOnLoad:true, theme:'neutral', securityLevel:'loose' });
+    const slides=[...document.querySelectorAll('.slide')];
+    const nextBtn=document.getElementById('next');
+    const prevBtn=document.getElementById('prev');
+    const counter=document.getElementById('count');
+    const prog=document.getElementById('prog');
+    const fs=document.getElementById('fs');
+    let i=0; const total=slides.length; // should be 20
+
+    function show(n){
+      if(n<0||n>=total) return;
+      slides.forEach((s,idx)=>s.classList.toggle('active',idx===n));
+      i=n; counter.textContent=`${i+1} / ${total}`; prog.style.width=`${((i+1)/total)*100}%`;
+      prevBtn.disabled=i===0; nextBtn.disabled=i===total-1;
+    }
+    nextBtn.addEventListener('click',()=>show(i+1));
+    prevBtn.addEventListener('click',()=>show(i-1));
+    document.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight'||e.key==='PageDown') show(i+1);
+      if(e.key==='ArrowLeft'||e.key==='PageUp') show(i-1);
+      if(e.key==='f') toggleFull();
+    });
+    function toggleFull(){ if(!document.fullscreenElement){ document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } }
+    fs.addEventListener('click',toggleFull);
+    show(0);
+  </script>
+</body>
+</html>
