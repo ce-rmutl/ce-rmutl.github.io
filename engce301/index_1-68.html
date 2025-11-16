@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGCE301: Software Design and Development (Latest Update)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00a8e8;
+            --secondary-color: #007ea7;
+            --background-color: #1a1a2e;
+            --card-color: #16213e;
+            --text-color: #e3e3e3;
+            --heading-color: #ffffff;
+            --shadow-color: rgba(0, 168, 232, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(22, 33, 62, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--heading-color);
+            text-decoration: none;
+        }
+
+        .navbar ul {
+            display: flex;
+            list-style: none;
+        }
+
+        .navbar ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .navbar ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+            background: linear-gradient(rgba(26, 26, 46, 0.8), rgba(26, 26, 46, 0.95)), url('https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: var(--heading-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .hero p {
+            max-width: 700px;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero .btn {
+            background: var(--primary-color);
+            color: var(--heading-color);
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: background 0.3s ease;
+        }
+
+        .hero .btn:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--heading-color);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        /* Timeline / Roadmap Section */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--secondary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item.left { left: 0; }
+        .timeline-item.right { left: 50%; }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: var(--heading-color);
+            border: 4px solid var(--primary-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .timeline-item.right::after { left: -16px; }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: var(--card-color);
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .timeline-content h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-content h4 {
+            color: var(--heading-color);
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+        }
+        
+        .timeline-content p { font-size: 0.9rem; }
+
+        .lab-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--secondary-color);
+            color: var(--heading-color);
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        .lab-link:hover {
+            background-color: var(--primary-color);
+        }
+        
+        /* Tech Stack Section */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+        
+        .tech-item {
+            background: var(--card-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .tech-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+
+        .tech-item svg {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 1rem;
+            fill: var(--primary-color);
+        }
+        
+        /* Responsive Design */
+        @media screen and (max-width: 900px) {
+            .navbar .container { flex-direction: column; }
+            .navbar ul { margin-top: 1rem; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+
+        @media screen and (max-width: 768px) {
+            .timeline::after { left: 31px; }
+            .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .timeline-item.left, .timeline-item.right { left: 0%; }
+            .timeline-item.right::after, .timeline-item.left::after { left: 15px; }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">ENGCE301</a>
+            <ul>
+                <li><a href="#roadmap">เส้นทางการเรียนรู้</a></li>
+                <li><a href="#tech-stack">เทคโนโลยี</a></li>
+                <li><a href="#grading">การวัดผล</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>ENGCE301</h1>
+        <h2>Software Design and Development</h2>
+        <p>หลักสูตรที่จะเปลี่ยนคุณจาก "ผู้เขียนโค้ด" สู่ "วิศวกรซอฟต์แวร์" มืออาชีพ พร้อมสร้าง Full-Stack Web Application ที่ทันสมัยด้วยเทคโนโลยีที่เป็นที่ต้องการของตลาด</p>
+        <a href="#roadmap" class="btn">เริ่มต้นการเดินทาง</a>
+    </header>
+
+    <main>
+        <section id="roadmap">
+            <div class="container">
+                <h2 class="section-title">เส้นทางการเรียนรู้และปฏิบัติการ (Labs)</h2>
+                <div class="timeline">
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 1</h3>
+                            <h4>Introduction to Software Engineering</h4>
+                            <p>ภาพรวมวิศวกรรมซอฟต์แวร์, SDLC, จาก Waterfall สู่ Agile/DevOps และติดตั้งเครื่องมือพัฒนา</p>
+                            <a href="https://github.com/ce-rmutl/engce301-lab/tree/main/LAB-01" class="lab-link" target="_blank">ดูรายละเอียด Lab 01</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 2</h3>
+                            <h4>Version Control & Collaborative Development</h4>
+                            <p>เรียนรู้ Git Workflows, การทำงานร่วมกันเป็นทีมผ่าน GitHub และกระบวนการ Pull Request</p>
+                            <a href="https://github.com/ce-rmutl/engce301-lab/tree/main/LAB-02" class="lab-link" target="_blank">ดูรายละเอียด Lab 02</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 3</h3>
+                            <h4>Requirements Analysis & User Stories</h4>
+                            <p>เทคนิคการเก็บความต้องการ, การเขียน User Stories และ Acceptance Criteria ที่มีประสิทธิภาพ</p>
+                            <a href="https://github.com/ce-rmutl/engce301-lab/tree/main/LAB-03" class="lab-link" target="_blank">ดูรายละเอียด Lab 03</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 4</h3>
+                            <h4>System Modeling & UML Design</h4>
+                            <p>ออกแบบและจำลองระบบด้วย UML Diagrams (Use Case, Class, Sequence)</p>
+                            <a href="https://github.com/ce-rmutl/engce301-lab/tree/main/LAB-04" class="lab-link" target="_blank">ดูรายละเอียด Lab 04</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 5</h3>
+                            <h4>Software Architecture และ High Level Design ระดับพื้นฐาน</h4>
+                            <p>ออกแบบโครงสร้างภาพรวม (High-Level) ของระบบ, กำหนด Components หลักและความสัมพันธ์ระหว่างกัน</p>
+                            <a href="./LAB-05" class="lab-link" target="_blank">ดูรายละเอียด Lab 05</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 6</h3>
+                            <h4>Low Level Design ระดับพื้นฐาน โดยใช้ React.js</h4>
+                            <p>ออกแบบโครงสร้างภายในของ React Component ให้ดูแลรักษาง่ายและนำกลับมาใช้ใหม่ได้</p>
+                            <a href="./LAB-06" class="lab-link" target="_blank">ดูรายละเอียด Lab 06</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 7</h3>
+                            <h4>Frontend Development with Modern JavaScript</h4>
+                            <p>เจาะลึก Modern JS (ES6+), DOM, Promises, async/await และการเรียกใช้ API</p>
+                            <a href="https://github.com/ce-rmutl/engce301-lab/tree/main/LAB-07" class="lab-link" target="_blank">ดูรายละเอียด Lab 07</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content" style="border-color: #f39c12;">
+                            <h3>สัปดาห์ที่ 8: 📝 สอบกลางภาค</h3>
+                            <h4>Midterm Examination</h4>
+                            <p>ทบทวนเนื้อหา: SE Principles, UML, High-Level Design</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 9</h3>
+                            <h4>Introduction to React.js</h4>
+                            <p>เริ่มต้นสร้าง Component-based UI ด้วย React, JSX, State & Props และ React Hooks</p>
+                            <a href="./week9" class="lab-link" target="_blank">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                     <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 10</h3>
+                            <h4>Advanced React & Component Design</h4>
+                            <p>พัฒนา Custom Hooks, ทดสอบ Components และเทคนิคการทำ Performance Optimization</p>
+                            <a href="./week10" class="lab-link" target="_blank">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 11</h3>
+                            <h4>Backend Development with Node.js</h4>
+                            <p>สร้าง Server-side application ด้วย Node.js และ Express.js, ออกแบบ RESTful API</p>
+                            <a href="./week11" class="lab-link" target="_blank">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 12</h3>
+                            <h4>Database Integration & Data Management</h4>
+                            <p>เชื่อมต่อและจัดการข้อมูลด้วย NoSQL Database (MongoDB) ผ่าน Mongoose ODM</p>
+                            <a href="./week12" class="lab-link" target="_blank">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 13</h3>
+                            <h4>Full-Stack Integration & Authentication</h4>
+                            <p>เชื่อม React Frontend กับ Node.js Backend, สร้างระบบยืนยันตัวตนด้วย JWT</p>
+                             <a href="./week13" class="lab-link" target="_blank">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 14</h3>
+                            <h4>Software Testing & Quality Assurance</h4>
+                            <p>เรียนรู้กลยุทธ์การทดสอบและลงมือเขียนเทสด้วย Jest และ React Testing Library</p>
+                            <a href="./LAB-14" class="lab-link" target="_blank">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>สัปดาห์ที่ 15</h3>
+                            <h4>DevOps Overview & Deployment Demo</h4>
+                            <p>ภาพรวมของ CI/CD และชมการสาธิตการ deploy แอปพลิเคชันขึ้น Cloud (Netlify, Heroku)</p>
+                            <a href="./LAB-15" class="lab-link" target="_blank">ดูรายละเอียด</a>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content" style="border-color: #e74c3c;">
+                            <h3>สัปดาห์ที่ 16: 📝 สอบปลายภาค</h3>
+                            <h4>Final Examination</h4>
+                            <p>ทบทวนเนื้อหา: Full-stack development, Testing</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content" style="border-color: #2ecc71;">
+                            <h3>สัปดาห์ที่ 17: 🏆 Project Presentation</h3>
+                            <h4>Final Project Showcase & Wrap-up</h4>
+                            <p>นำเสนอโปรเจกต์ที่ทำมาทั้งเทอม, Peer review และเตรียมความพร้อมสู่โลกการทำงานจริง</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="tech-stack" class="container">
+            <h2 class="section-title">เครื่องมือและเทคโนโลยี</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.707 12.707l-1.414-1.414L12 19.586l-8.293-8.293-1.414 1.414L12 22.414zM12 2l8.293 8.293-1.414 1.414L12 5.414 3.707 11.707l-1.414-1.414z"/></svg>
+                    <h4>Frontend</h4>
+                    <p>React.js, HTML5, CSS3, ES6+</p>
+                </div>
+                <div class="tech-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/></svg>
+                    <h4>Backend</h4>
+                    <p>Node.js, Express.js</p>
+                </div>
+                <div class="tech-item">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 5.589 2 10c0 2.908 1.897 5.515 5 6.934V22l5.34-4.005C12.22 17.99 12.11 18 12 18c-4.411 0-8-2.686-8-6s3.589-6 8-6 8 2.686 8 6-1.897 4.515-5 5.934V12c0-3.309-3.589-6-8-6z"/></svg>
+                    <h4>Database</h4>
+                    <p>MongoDB, Mongoose</p>
+                </div>
+                <div class="tech-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"/><path d="M12 10.586L8.707 7.293 7.293 8.707 10.586 12l-3.293 3.293 1.414 1.414L12 13.414l3.293 3.293 1.414-1.414L13.414 12l3.293-3.293-1.414-1.414z"/></svg>
+                    <h4>Testing</h4>
+                    <p>Jest, React Testing Library</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer style="text-align:center; padding: 2rem; background: var(--card-color); margin-top: 4rem;">
+        <p>เตรียมตัวให้พร้อมสำหรับความท้าทายที่จะเปลี่ยนอนาคตสายอาชีพของคุณ แล้วพบกันในคลาส!</p>
+    </footer>
+
+    <script>
+        // Smooth Scrolling for Navbar links
+        document.querySelectorAll('.navbar a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animate timeline items on scroll
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        timelineItems.forEach(item => observer.observe(item));
+    </script>
+
+</body>
+</html>

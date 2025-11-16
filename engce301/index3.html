@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGCE301: การออกแบบและพัฒนาซอฟต์แวร์ (2026 Theme)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #c77dff; /* Vibrant Purple */
+            --secondary-color: #00f5ff; /* Vibrant Cyan */
+            --tertiary-color: #ff8c00; /* Vibrant Orange */
+            --bg-color: #0a0a14; /* Very Dark Navy */
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-color: #f0f0f0; /* Light Text */
+            --header-text: #ffffff;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --border-radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- Aurora Background Animation --- */
+        body {
+            font-family: 'Noto Sans Thai', 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .aurora-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .aurora-bg::before,
+        .aurora-bg::after {
+            content: '';
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            opacity: 0.2;
+            filter: blur(150px);
+            z-index: -1;
+        }
+
+        .aurora-bg::before {
+            background: radial-gradient(circle, var(--primary-color), transparent 60%);
+            top: -20%;
+            left: -30%;
+            animation: move-aurora-1 20s infinite alternate ease-in-out;
+        }
+
+        .aurora-bg::after {
+            background: radial-gradient(circle, var(--secondary-color), transparent 60%);
+            bottom: -20%;
+            right: -30%;
+            animation: move-aurora-2 25s infinite alternate ease-in-out;
+        }
+
+        @keyframes move-aurora-1 {
+            from { transform: translate(-20%, -20%) rotate(0deg); }
+            to { transform: translate(20%, 20%) rotate(45deg); }
+        }
+
+        @keyframes move-aurora-2 {
+            from { transform: translate(20%, 20%) rotate(0deg); }
+            to { transform: translate(-20%, -20%) rotate(30deg); }
+        }
+        /* --- End Aurora Background --- */
+
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- Glassmorphism Card Style --- */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 25px rgba(0, 245, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--secondary-color);
+            display: inline-block;
+        }
+        
+        /* --- Header --- */
+        .header {
+            text-align: center;
+            padding-top: 20px;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--header-text);
+            text-shadow: 0 0 10px rgba(199, 125, 255, 0.5);
+        }
+        .header h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--primary-color);
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        /* --- Info Cards --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .info-card {
+            padding: 20px;
+            border-left-width: 5px;
+        }
+        .info-card .label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+        .info-card .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        /* --- Tech Stack (Infographic) --- */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+        }
+        .tech-badge {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--text-color);
+            transition: all 0.2s ease-in-out;
+        }
+        .tech-badge:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(199, 125, 255, 0.3);
+        }
+        .tech-badge span {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* --- CLOs (Infographic) --- */
+        .clo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .clo-card {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .clo-icon {
+            font-size: 2rem;
+            padding: 15px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--header-text);
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(199, 125, 255, 0.4);
+        }
+        .clo-card .clo-id {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 3px;
+        }
+        .clo-card .clo-desc {
+            font-size: 0.95rem;
+        }
+        
+        /* --- Career Paths (Infographic) --- */
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .career-card {
+            padding: 25px;
+            text-align: center;
+        }
+        .career-card:hover {
+            border-color: var(--tertiary-color);
+            box-shadow: 0 0 25px rgba(255, 140, 0, 0.2);
+        }
+        .career-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+            color: var(--tertiary-color);
+            text-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+        }
+        .career-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--tertiary-color);
+            margin-bottom: 10px;
+        }
+        .career-desc {
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        /* --- Weekly Plan (Accordion) --- */
+        .accordion details {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            transition: background-color 0.2s;
+        }
+        .accordion details[open] {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .accordion summary {
+            padding: 18px 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        .accordion summary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .accordion summary::after {
+            content: '►';
+            font-size: 1rem;
+            color: var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+        .accordion details[open] summary::after {
+            transform: rotate(90deg);
+        }
+
+        .week-content {
+            padding: 0 30px 30px 30px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .week-content h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #eee;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .week-content ul {
+            list-style-position: inside;
+            padding-left: 10px;
+        }
+        .week-content li, .week-content p {
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+        .week-content strong {
+            color: var(--primary-color);
+        }
+
+        .clo-badge-container {
+            margin-top: 15px;
+        }
+        .clo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--tertiary-color), #ff6a00);
+            color: var(--header-text);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+
+        /* --- Evaluation Table --- */
+        .eval-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .eval-table th, .eval-table td {
+            padding: 12px 15px;
+            border: 1px solid var(--glass-border);
+            text-align: left;
+        }
+        .eval-table th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .eval-table td:nth-child(2) {
+            font-weight: 700;
+            text-align: center;
+            width: 15%;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+        .eval-table td:nth-child(3) {
+            width: 45%;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aurora-bg"></div>
+
+    <div class="container">
+        
+        <header class="header glass-card">
+            <h1>ENGCE301: การออกแบบและพัฒนาซอฟต์แวร์</h1>
+            <h2>Software Design and Development</h2>
+        </header>
+
+        <section class="glass-card">
+            <h2 class="section-title">ข้อมูลรายวิชา</h2>
+            <div class="info-grid">
+                <div class="info-card glass-card">
+                    <div class="label">รหัสวิชา</div>
+                    <div class="value">ENGCE301</div>
+                </div>
+                <div class="info-card glass-card">
+                    <div class="label">หน่วยกิต</div>
+                    <div class="value">3(2-3-5) (ทฤษฎี 2, ปฏิบัติ 3, ค้นคว้า 5)</div>
+                </div>
+                <div class="info-card glass-card">
+                    <div class="label">ผู้สอน</div>
+                    <div class="value">อาจารย์ธนิต เกตุแก้ว</div>
+                </div>
+                <div class="info-card glass-card">
+                    <div class="label">หลักสูตร</div>
+                    <div class="value">วิศวกรรมศาสตรบัณฑิต (วิศวกรรมคอมพิวเตอร์)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <h2 class="section-title">คำอธิบายรายวิชา</h2>
+            <p>ศึกษาถึงบทบาทและหน้าที่ของวิศวกรรมซอฟต์แวร์ วิวัฒนาการของซอฟต์แวร์ หลักของตัวซอฟต์แวร์ รูปแบบลักษณะของวงจรการทำงานของซอฟต์แวร์ การเข้าใจเรื่องการกำหนดความต้องการและข้อกำหนดต่างๆ ของการออกแบบซอฟต์แวร์ การออกแบบเพื่อนำไปสู่การพัฒนาซอฟต์แวร์ เทคนิคต่างๆ ที่ใช้และความสำคัญของการบำรุงรักษา คุณภาพของกระบวนการในแต่ละขั้นตอนของการพัฒนาซอฟต์แวร์ แนวคิดของกระบวนการพัฒนาซอฟต์แวร์ต่างๆ การเพิ่มประสิทธิภาพให้กับกระบวนการต่างๆ การทดสอบซอฟต์แวร์ การบริหารโครงการพัฒนาซอฟต์แวร์ การเลือกใช้เครื่องมือในการพัฒนาต่างๆ การทำการปฏิสัมพันธ์กับผู้ใช้งานในด้านของวิศวกรรมซอฟต์แวร์ ความสำคัญต่างๆ ในเรื่องของกิจกรรมที่เกิดขึ้นในทางปฏิบัติ รวมถึงประสบการณ์ของวิศวกร</p>
+        </section>
+
+        <section class="glass-card">
+            <h2 class="section-title">Tech Stack & Tools</h2>
+            <div class="tech-grid">
+                <div class="tech-badge"><span>🎨</span>Figma</div>
+                <div class="tech-badge"><span>📘</span>HTML5</div>
+                <div class="tech-badge"><span>💅</span>CSS3</div>
+                <div class="tech-badge"><span>✨</span>JavaScript</div>
+                <div class="tech-badge"><span>⚛️</span>React</div>
+                <div class="tech-badge"><span>⚙️</span>Node.js</div>
+                <div class="tech-badge"><span>🚀</span>Express</div>
+                <div class="tech-badge"><span>🗄️</span>SQLite</div>
+                <div class="tech-badge"><span>🍃</span>MongoDB</div>
+                <div class="tech-badge"><span>🐙</span>Git</div>
+                <div class="tech-badge"><span>💻</span>VSCode</div>
+                <div class="tech-badge"><span>🧪</span>Jest</div>
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <h2 class="section-title">ผลการเรียนรู้ที่คาดหวัง (CLOs)</h2>
+            <div class="clo-grid">
+                <div class="clo-card glass-card">
+                    <div class="clo-icon">🧠</div>
+                    <div class="clo-content">
+                        <div class="clo-id">CLO1: ความรู้พื้นฐาน</div>
+                        <div class="clo-desc">มีความรู้พื้นฐานด้านวิศวกรรมซอฟต์แW'n กระบวนการพัฒนา และแบบจำลอง/สถาปัตยกรรม</div>
+                    </div>
+                </div>
+                <div class="clo-card glass-card">
+                    <div class="clo-icon">🔍</div>
+                    <div class="clo-content">
+                        <div class="clo-id">CLO2: การวิเคราะห์</div>
+                        <div class="clo-desc">วิเคราะห์ปัญหาและความต้องการผู้ใช้ จัดทำเอกสาร/แบบจำลองความต้องการได้</div>
+                    </div>
+                </div>
+                <div class="clo-card glass-card">
+                    <div class="clo-icon">🎨</div>
+                    <div class="clo-content">
+                        <div class="clo-id">CLO3: การออกแบบ</div>
+                        <div class="clo-desc">ออกแบบสถาปัตยกรรม ระบบข้อมูล และ UI/UX ได้เหมาะสมกับความต้องการ</div>
+                    </div>
+                </div>
+                <div class="clo-card glass-card">
+                    <div class="clo-icon">💻</div>
+                    <div class="clo-content">
+                        <div class="clo-id">CLO4: การพัฒนา</div>
+                        <div class="clo-desc">พัฒนา ทดสอบ และบูรณาการซอฟต์แW'nต้นแบบด้วยเทคโนโลยีสมัยใหม่ได้</div>
+                    </div>
+                </div>
+                <div class="clo-card glass-card">
+                    <div class="clo-icon">✅</div>
+                    <div class="clo-content">
+                        <div class="clo-id">CLO5: การประเมินคุณภาพ</div>
+                        <div class="clo-desc">ประเมินและปรับปรุงคุณภาพซอฟต์แW'n (testing, refactoring, security, maintenance) ได้</div>
+                    </div>
+                </div>
+                <div class="clo-card glass-card">
+                    <div class="clo-icon">👥</div>
+                    <div class="clo-content">
+                        <div class="clo-id">CLO6: การทำงานเป็นทีม</div>
+                        <div class="clo-desc">ทำงานเป็นทีม ใช้เครื่องมือพัฒนา/จัดการโครงการ และสื่อสารทางเทคนิคได้อย่างมีจริยธรรม</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <h2 class="section-title">แผนการเรียนรู้รายสัปดาห์ (17 สัปดาห์)</h2>
+            <div class="accordion">
+
+                <details>
+                    <summary>สัปดาห์ที่ 1: Introduction to Software Engineering & SDLC + Dev Environment Setup</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) อธิบายบทบาทวิศวกรซอฟต์แวร์และภาพรวม SDLC ได้</li>
+                            <li>2) เปรียบเทียบ Waterfall vs Agile ได้</li>
+                            <li>3) ติดตั้งเครื่องมือพื้นฐาน และสร้างโครงโปรเจกต์ + Git repo สำหรับ term project ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> บรรยายแนวคิด SE, SDLC, Scrum roles, ตัวอย่างโปรเจกต์จริงในอุตสาหกรรม</p>
+                        <p><strong>ปฏิบัติ:</strong> Workshop ติดตั้ง Git/VSCode/Node.js, สร้าง Git repo สำหรับกลุ่ม, ฝึก Git init/add/commit/push, สร้างหน้า HTML แรก (“Hello ENGCE301 + ชื่อกลุ่ม”) พร้อม commit แรกของ term project</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO1</span>
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO6</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 2: Requirements Engineering + HTML Structure & Semantic HTML</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) ระบุ Stakeholder และ requirement พื้นฐานได้</li>
+                            <li>2) ร่างโครง SRS ฉบับแรกได้</li>
+                            <li>3) สร้างหน้า HTML ที่ใช้แทน “หน้า landing / overview” ของระบบ ตาม requirement ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> ประเภทของความต้องการ, เทคนิคเก็บ requirement, วิเคราะห์กรณีศึกษาจากระบบจริง</p>
+                        <p><strong>ปฏิบัติ:</strong> Brainstorm requirement โครงงานกลุ่ม, Role-play สัมภาษณ์ผู้ใช้, เริ่มร่าง SRS; สร้างหน้า Landing Page ด้วย HTML5 semantic tags (header/nav/main/footer/section/article) ตามเนื้อหา requirement และ push ขึ้น Git</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO1</span>
+                            <span class="clo-badge">CLO2</span>
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO6</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 3: Agile Requirements & Use Cases + HTML/CSS Layout</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) เขียน User Story + Acceptance Criteria ได้</li>
+                            <li>2) ออกแบบ Use Case Diagram สำหรับระบบได้</li>
+                            <li>3) ออกแบบหน้าเว็บด้วย CSS เบื้องต้น (layout, color, typography) ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> อธิบาย User Story (INVEST), Use Case vs User Story, แนะนำ CSS (box model, selectors, layout), ตัวอย่าง UI จากเว็บจริง</p>
+                        <p><strong>ปฏิบัติ:</strong> แปลง SRS → Product Backlog บน Trello/Jira, เขียน Acceptance Criteria, วาด Use Case Diagram (diagrams.net); ต่อเติม Landing Page ด้วย CSS (layout responsive ง่าย ๆ) และสร้าง 1–2 หน้า HTML เพิ่ม (เช่น About/Features) ของ term project</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO2</span>
+                            <span class="clo-badge">CLO3</span>
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO6</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 4: Software Design Principles & UX/UI + Responsive HTML/CSS</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) อธิบายหลักการออกแบบเบื้องต้นได้</li>
+                            <li>2) สร้าง Personas และ User Journey Map ของระบบได้</li>
+                            <li>3) ปรับ UI ด้วย CSS ให้รองรับจอหลายขนาด (responsive) สำหรับ term project ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> SOLID concept, UCD, responsive design principles, ดูตัวอย่าง UI ดี/ไม่ดี</p>
+                        <p><strong>ปฏิบัติ:</strong> ทำ Personas + User Journey Map ของผู้ใช้ระบบ, ปรับหน้า HTML/CSS ให้เป็น responsive layout (flexbox/grid), เตรียมโครงหน้า “ฟอร์มหลัก” (เช่น สมัครสมาชิก/สร้างรายการ) ที่จะใช้ต่อใน JS/React ภายหลัง</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO1</span>
+                            <span class="clo-badge">CLO3</span>
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO6</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 5: UI Design & Prototyping + Modern CSS & Basic JavaScript</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) ออกแบบ UI บน Figma เป็น High-fidelity Mockup ได้</li>
+                            <li>2) อธิบาย Heuristics พื้นฐานและนำมาใช้ปรับ UI ได้</li>
+                            <li>3) ใช้ JavaScript เบื้องต้นจับ event และตรวจข้อมูลฟอร์มในหน้า HTML ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> หลักการ UI (CRAP), Usability heuristics, แนะนำ JS/DOM/Events พื้นฐาน</p>
+                        <p><strong>ปฏิบัติ:</strong> ออกแบบหน้าหลักใน Figma (ตาม HTML/CSS ที่มีอยู่), จากนั้นเพิ่ม JavaScript บนฟอร์มใน term project เช่น ตรวจช่องว่าง, validate email/phone, แสดง/ซ่อน error message โดยไม่ reload หน้า</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO3</span>
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO6</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 6: Software Architecture & Design Patterns + Node.js/Express Intro (JSON File)</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) เลือกสถาปัตยกรรมที่เหมาะกับระบบได้</li>
+                            <li>2) อธิบายบทบาทของ backend API ในสถาปัตยกรรมเว็บได้</li>
+                            <li>3) สร้าง Express server ที่อ่าน/เขียนข้อมูลจาก JSON file อย่างง่ายได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> อธิบายสถาปัตยกรรมเว็บ (Client–Server, API), ยกตัวอย่าง design patterns ที่เกี่ยวกับเลเยอร์, แนะนำ Node.js runtime & Express</p>
+                        <p><strong>ปฏิบัติ:</strong> สร้างโปรเจกต์ Node.js/Express สำหรับ term project, สร้าง route ง่าย ๆ (GET/POST) ที่อ่าน/เขียนข้อมูลจากไฟล์ `data.json` (เช่น รายการสินค้า/งาน/โพสต์), ทดสอบด้วย browser และ Postman, เชื่อมหน้า HTML/JS ให้เรียก API นี้ (fetch) ได้</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO1</span>
+                            <span class="clo-badge">CLO3</span>
+                            <span class="clo-badge">CLO4</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 7: Backend & API Design + SQLite Integration</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) ออกแบบ RESTful API endpoint ตาม resource ของระบบได้</li>
+                            <li>2) สร้าง ER Diagram และ map จาก requirement → table ได้</li>
+                            <li>3) เชื่อม Express API กับ SQLite (CRUD เบื้องต้น) ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> REST principles, ER modelling, เปรียบเทียบ JSON file vs SQLite, การแบ่งเลเยอร์ (router/controller/service/db)</p>
+                        <p><strong>ปฏิบัติ:</strong> ออกแบบ endpoints หลักของ term project, วาด ER Diagram, สร้างฐานข้อมูล SQLite และเชื่อม Express กับ SQLite (เช่น สร้าง/อ่าน/อัปเดต/ลบ record), ปรับโค้ดจากอ่าน JSON file → อ่านจาก DB สำหรับบางส่วนของระบบ</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO2</span>
+                            <span class="clo-badge">CLO3</span>
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO5</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details style="border-color: var(--tertiary-color); background: rgba(255, 140, 0, 0.1);">
+                    <summary>สัปดาห์ที่ 8: 🚨 สอบกลางภาค (Midterm Examination) 🚨</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) แสดงความเข้าใจแนวคิด SE, Requirements, Architecture, UI/UX และการออกแบบ/ใช้ API ได้ผ่านข้อสอบ</li>
+                            <li>2) ประยุกต์ความรู้เพื่อออกแบบหน้าเว็บและ API จากโจทย์ใหม่ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี (2 ชม.):</strong> สอบข้อเขียน (ปรนัย/อัตนัย/กรณีศึกษา) ครอบคลุมสัปดาห์ 1–7</p>
+                        <p><strong>ปฏิบัติ (3 ชม.):</strong> สอบปฏิบัติ: ให้ออกแบบ Use Case, หน้า HTML/CSS/JS เบื้องต้น และกำหนด API endpoints สำหรับโจทย์ใหม่ (เขียน pseudo Express route)</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO1</span>
+                            <span class="clo-badge">CLO2</span>
+                            <span class="clo-badge">CLO3</span>
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO6</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 9: Implementation & Version Control + Refactor HTML/CSS/JS</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) ใช้ Git branching strategy เพื่อพัฒนาร่วมกันในทีมได้</li>
+                            <li>2) ทำ Code review พื้นฐานและปรับปรุงโค้ดให้อ่านง่ายขึ้นได้</li>
+                            <li>3) แยกไฟล์/โครงสร้างโปรเจกต์ frontend (HTML/CSS/JS) เป็นสัดส่วน พร้อมเตรียมย้ายขึ้น React ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> Standard code style, linters, Git workflow, หลักการ review code</p>
+                        <p><strong>ปฏิบัติ:</strong> ตั้งค่า branching strategy สำหรับ term project, แบ่ง feature branch ให้แต่ละคน (เช่น หน้า/ฟีเจอร์), ทำ PR + review กันเอง, refactor HTML/CSS/JS ให้แยกส่วน (component-like) และเตรียม plan migrate ไป React ในสัปดาห์ถัดไป</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO5</span>
+                            <span class="clo-badge">CLO6</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 10: Frontend Development with React</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) อธิบายแนวคิด React component และข้อดีเหนือ HTML/JS แบบเดิมได้</li>
+                            <li>2) สร้าง React components จาก UI เดิม (เช่น Navbar, Form, Card) ได้</li>
+                            <li>3) เรียกใช้ backend API (JSON/SQLite) จาก React ผ่าน fetch/axios ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> อธิบาย React ecosystem, component, props, state, lifecycle (useState/useEffect)</p>
+                        <p><strong>ปฏิบัติ:</strong> ตั้งค่า React app (เช่น Vite/CRA), แปลงหน้า UI หลักจาก HTML เดิมเป็น React components, เชื่อม React กับ Express API ที่สร้างไว้แล้ว (ดึงรายการ/บันทึกข้อมูล), push โครง React เข้า term project</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO3</span>
+                            <span class="clo-badge">CLO4</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 11: Backend Development (Node.js/Express) + MongoDB Intro</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) ออกแบบเลเยอร์ backend ให้แยกชั้น controller/service/db ได้</li>
+                            <li>2) อธิบายความแตกต่างพื้นฐานระหว่าง RDB (SQLite) กับ NoSQL (MongoDB) ได้</li>
+                            <li>3) เขียน Express API ที่เชื่อมกับ MongoDB สำหรับ resource บางส่วนของระบบได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> ทบทวน Express+SQLite, แนะนำ MongoDB และ ODM (เช่น Mongoose) แนวคิด collection/document</p>
+                        <p><strong>ปฏิบัติ:</strong> เพิ่ม module ใหม่ใน term project ใช้ MongoDB (เช่น user/account หรือ log), สร้าง model/schema อย่างง่าย, เชื่อม React → Express → MongoDB สำหรับ flow เล็ก ๆ (เช่น register user), ร่วมกับ SQLite ที่ใช้ในส่วนอื่นของระบบ</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO3</span>
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO5</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 12: Full-Stack Integration & Security</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) เชื่อมต่อ React, Express และ DB (SQLite/MongoDB) เป็น flow สมบูรณ์ได้</li>
+                            <li>2) ติดตั้งระบบ Authentication แบบง่าย (JWT) ได้</li>
+                            <li>3) ใช้มาตรการ security เบื้องต้นในฟอร์มและ API ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> อธิบาย CORS, JWT, OWASP Top 10 (ระดับ intro), error handling pattern ใน Express</p>
+                        <p><strong>ปฏิบัติ:</strong> เชื่อมหน้า Login/Register ใน React เข้ากับ Express+DB, เพิ่ม middleware ตรวจ JWT, ทำ validation ที่ฝั่ง client+server (sanitize input, ป้องกัน XSS ง่าย ๆ), ทดสอบ flow เข้าสู่ระบบ/เข้าหน้า protected</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO5</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 13: Software Testing Principles + Testing React & Node</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) อธิบายระดับการทดสอบและหลักการ Testing pyramid ได้</li>
+                            <li>2) เขียน test case จาก user story ได้</li>
+                            <li>3) เขียน unit test/ integration test สำหรับ React component หรือ Express API ของ term project ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> Testing concepts, TDD vs BDD, ตัวอย่าง test ดี/ไม่ดี</p>
+                        <p><strong>ปฏิบัติ:</strong> ตั้งค่า Jest (สำหรับ backend) และ React Testing Library (frontend), สร้าง unit test อย่างน้อย 1–2 ชุดสำหรับ function/ component สำคัญ, เขียน integration test สำหรับ API หลักด้วย Supertest หรือเทคนิคที่เหมาะสม, รัน test และตีความผล</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO5</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 14: Software Quality & Maintenance + Refactoring Day</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) ระบุ code smell ในโค้ด React/Node ของตนเองได้</li>
+                            <li>2) ใช้เครื่องมือ static analysis (ESLint, Prettier) เพื่อหาปัญหาคุณภาพโค้ดได้</li>
+                            <li>3) Refactor โค้ด term project โดยยังรักษาพฤติกรรมเดิมผ่าน test ได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> SQA processes, Technical debt, ประเภท maintenance (Corrective/Adaptive/Perfective)</p>
+                        <p><strong>ปฏิบัติ:</strong> รัน ESLint/Prettier กับ term project, ให้แต่ละทีมเลือกส่วนที่มี code smell มา refactor (ทั้ง React และ Express), รัน test ที่เขียนไว้เพื่อยืนยัน, บันทึก “ก่อน–หลัง refactor” เป็น evidence คุณภาพ</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO1</span>
+                            <span class="clo-badge">CLO5</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>สัปดาห์ที่ 15: Project Management & Deployment (CI/CD)</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) วางแผน Sprint สุดท้ายและจัดการ backlog ของ term project ได้</li>
+                            <li>2) อธิบายแนวคิด CI/CD และตั้งค่า pipeline build/test ง่าย ๆ ได้</li>
+                            <li>3) Deploy ระบบ full-stack ของ term project ขึ้น server ภายนอกได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี:</strong> Agile PM concept, ตัวอย่าง CI/CD pipeline, ประเด็น environment (dev/test/prod), config และ secret</p>
+                        <p><strong>ปฏิบัติ:</strong> Sprint planning & Retros สั้น ๆ ของทีม, ตั้งค่า script build/test และ (ถ้าเป็นไปได้) GitHub Actions ให้รัน test เมื่อ push, Deploy frontend (เช่น Vercel) และ backend (เช่น Render/railway) เชื่อมกับ SQLite/MongoDB หรือ mock DB สำหรับเดโม, ทดสอบระบบ deployed เตรียมสัปดาห์นำเสนอ</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO1</span>
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO5</span>
+                            <span class="clo-badge">CLO6</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details style="border-color: var(--primary-color); background: rgba(199, 125, 255, 0.1);">
+                    <summary>สัปดาห์ที่ 16: 🏆 Final Project Presentation & Demo 🏆</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) นำเสนอ term project (Full-stack web app) ได้อย่างมืออาชีพ</li>
+                            <li>2) อธิบาย design decision, technology stack, process การพัฒนาได้</li>
+                            <li>3) สะท้อนสิ่งที่เรียนรู้และประเด็นที่อยากปรับปรุงในอนาคตได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ปฏิบัติ 5 ชม.)</h4>
+                        <p><strong>ปฏิบัติ:</strong> แต่ละทีมทำ Final presentation & live demo (React + Node/Express + DB), อธิบาย Requirement → Design → Implementation → Testing → Deployment → Maintenance idea, ช่วง Q&A & Peer evaluation, ทำทีม Retrospective และ Reflection รายบุคคล (เชื่อมกับ CLO6)</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO5</span>
+                            <span class="clo-badge">CLO6</span>
+                        </div>
+                    </div>
+                </details>
+
+                <details style="border-color: var(--tertiary-color); background: rgba(255, 140, 0, 0.1);">
+                    <summary>สัปดาห์ที่ 17: 🚨 สอบปลายภาค (Final Examination) 🚨</summary>
+                    <div class="week-content">
+                        <h4>🎯 จุดประสงค์รายสัปดาห์</h4>
+                        <ul>
+                            <li>1) บูรณาการความรู้ทั้งหมดในวิชาในการวิเคราะห์/ออกแบบ/ประเมินซอฟต์แวร์ได้</li>
+                            <li>2) แก้โจทย์ “Change Request” ได้โดยคำนึงถึงผลกระทบต่อ requirement, design, code, test</li>
+                            <li>3) แสดงทักษะพื้นฐานด้าน programming (HTML/CSS/JS/React/Node) ตามโจทย์ย่อยในข้อสอบได้</li>
+                        </ul>
+                        <h4>💡 กิจกรรมการเรียนการสอน (ทฤษฎี 2 / ปฏิบัติ 3)</h4>
+                        <p><strong>ทฤษฎี (2 ชม.):</strong> สอบข้อเขียนครอบคลุม SE process, design, QA, PM, full-stack architecture</p>
+                        <p><strong>ปฏิบัติ (3 ชม.):</strong> สอบปฏิบัติแบบ Change Request: แก้/เพิ่ม feature เล็ก ๆ ใน React/Node (เช่น เพิ่ม field บนฟอร์ม + validate + ปรับ API + test) และเขียนอธิบายผลกระทบต่อระบบ</p>
+                        <div class="clo-badge-container">
+                            <span class="clo-badge">CLO1</span>
+                            <span class="clo-badge">CLO2</span>
+                            <span class="clo-badge">CLO3</span>
+                            <span class="clo-badge">CLO4</span>
+                            <span class="clo-badge">CLO5</span>
+                            <span class="clo-badge">CLO6</span>
+                        </div>
+                    </div>
+                </details>
+
+            </div> </section>
+
+        <section class="glass-card">
+            <h2 class="section-title">สายอาชีพ (Career Paths)</h2>
+            <div class="career-grid">
+                <div class="career-card glass-card">
+                    <span class="career-icon">🖥️</span>
+                    <h3 class="career-title">Frontend Developer</h3>
+                    <p class="career-desc">พัฒนาส่วนติดต่อผู้ใช้ (UI) ด้วย React, HTML, CSS, JavaScript และเชื่อมต่อ API เพื่อสร้างประสบการณ์ใช้งาน (UX) ที่ดี</p>
+                </div>
+                <div class="career-card glass-card">
+                    <span class="career-icon">🗃️</span>
+                    <h3 class="career-title">Backend Developer</h3>
+                    <p class="career-desc">สร้างและจัดการระบบหลังบ้าน, ออกแบบ API ด้วย Node.js, Express และเชื่อมต่อฐานข้อมูล (SQLite, MongoDB) เพื่อรองรับการทำงานของแอปพลิเคชัน</p>
+                </div>
+                <div class="career-card glass-card">
+                    <span class="career-icon">🚀</span>
+                    <h3 class="career-title">Full-Stack Developer</h3>
+                    <p class="career-desc">นักพัฒนาที่ทำได้ทั้ง Frontend และ Backend สามารถสร้างเว็บแอปพลิเคชันทั้งระบบได้ด้วยตัวเอง ตั้งแต่หน้าบ้านถึงหลังบ้าน</p>
+                </div>
+                <div class="career-card glass-card">
+                    <span class="career-icon">🎨</span>
+                    <h3 class="career-title">UX/UI Designer</h3>
+                    <p class="career-desc">วิเคราะห์ความต้องการผู้ใช้ (Requirements) และออกแบบหน้าตา (UI) และประสบการณ์ใช้งาน (UX) ด้วยเครื่องมืออย่าง Figma</p>
+                </div>
+                <div class="career-card glass-card">
+                    <span class="career-icon">🐞</span>
+                    <h3 class="career-title">Software Tester / QA</h3>
+                    <p class="career-desc">วางแผนและดำเนินการทดสอบซอฟต์แวร์ (Testing) เพื่อค้นหาข้อผิดพลาดและประกันคุณภาพ (QA) ของระบบก่อนส่งมอบ</p>
+                </div>
+                <div class="career-card glass-card">
+                    <span class="career-icon">📈</span>
+                    <h3 class="career-title">Project Manager (Agile)</h3>
+                    <p class="career-desc">บริหารโครงการซอฟต์แวร์ด้วยแนวคิดแบบ Agile/Scrum วางแผนงาน (Backlog) และติดตามความคืบหน้าของทีมพัฒนา</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <h2 class="section-title">แผนการประเมินผลการเรียนรู้</h2>
+            <div class="table-container">
+                <table class="eval-table">
+                    <thead>
+                        <tr>
+                            <th>กิจกรรมการประเมิน</th>
+                            <th>สัดส่วน (%)</th>
+                            <th>CLOs ที่เกี่ยวข้อง</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>การมีส่วนร่วมในชั้นเรียนและกิจกรรมกลุ่ม</td>
+                            <td>10%</td>
+                            <td>CLO1, CLO2, CLO6</td>
+                        </tr>
+                        <tr>
+                            <td>แบบทดสอบสั้น/Quiz (ระหว่างภาค)</td>
+                            <td>15%</td>
+                            <td>CLO1, CLO2, CLO3</td>
+                        </tr>
+                        <tr>
+                            <td>ใบงาน/แบบฝึกหัดเดี่ยวและงานปฏิบัติ</td>
+                            <td>15%</td>
+                            <td>CLO2, CLO3, CLO4</td>
+                        </tr>
+                        <tr>
+                            <td>โครงงานกลุ่ม (Term Project)</td>
+                            <td>30%</td>
+                            <td>CLO2, CLO3, CLO4, CLO5, CLO6</td>
+                        </tr>
+                        <tr>
+                            <td>สอบกลางภาค</td>
+                            <td>15%</td>
+                            <td>CLO1, CLO2, CLO3, CLO4</td>
+                        </tr>
+                        <tr>
+                            <td>สอบปลายภาค</td>
+                            <td>15%</td>
+                            <td>CLO1, CLO2, CLO3, CLO4, CLO5, CLO6</td>
+                        </tr>
+                        <tr style="background: rgba(255, 255, 255, 0.1);">
+                            <th>รวม</th>
+                            <th>100%</th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>หลักสูตรวิศวกรรมคอมพิวเตอร์ | คณะวิศวกรรมศาสตร์</p>
+            <p>มหาวิทยาลัยเทคโนโลยีราชมงคลล้านนา</p>
+        </footer>
+
+    </div> </body>
+</html>

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGCE301 - Software Design and Development</title>
+    <style>
+        /* General Body Styles */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+            line-height: 1.6; 
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        /* --- NEW HERO SECTION STYLES --- */
+        .custom-hero {
+            text-align: center;
+            padding: 40px 20px 30px 20px;
+            background-color: #f8f9fa; /* Light background for emphasis */
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-bottom: 4px solid #007bff; /* Strong accent */
+        }
+        .custom-hero h2 {
+            font-size: 2.5rem; /* Larger title */
+            color: #0056b3;
+            margin: 0;
+            padding: 0;
+            border: none; /* Override default h2 border */
+            font-weight: 700;
+        }
+        .custom-hero .tagline {
+            font-size: 1.15rem; /* Clear tagline */
+            color: #4a5568;
+            margin: 15px 0 25px 0;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+        .custom-hero .cta-button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.3s;
+            display: inline-block;
+        }
+        .custom-hero .cta-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+        /* --- END NEW HERO STYLES --- */
+
+        /* Headings */
+        h1, h2, h3 {
+            color: #0056b3;
+            font-weight: 700;
+        }
+        /* h1 is replaced by custom-hero h2 */
+        h2 {
+            border-bottom: 2px solid #eef2f5;
+            padding-bottom: 10px;
+            margin-top: 1.5em;
+        }
+
+        /* Tab Navigation */
+        .tabs { 
+            overflow: hidden; 
+            border-bottom: 1px solid #ccc; 
+            margin-bottom: 20px; 
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .tablink { 
+            background-color: #f1f1f1; 
+            border: none; 
+            outline: none; 
+            cursor: pointer; 
+            padding: 14px 16px; 
+            transition: background-color 0.3s, color 0.3s; 
+            font-size: 1rem; 
+            font-weight: 500;
+            flex-grow: 1;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .tablink:hover { 
+            background-color: #e2e6ea; 
+        }
+        .tablink.active { 
+            background-color: #007bff; 
+            color: white;
+            font-weight: 600; 
+        }
+
+        /* Tab Content Area */
+        .tabcontent { 
+            display: none; 
+            padding: 20px; 
+            border: 1px solid #ddd;
+            border-top: none; 
+            animation: fadeEffect 0.6s; 
+            border-radius: 0 0 12px 12px;
+            background-color: #fff;
+        }
+        @keyframes fadeEffect { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* Table Styles */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
+        }
+        th { 
+            background-color: #f8f9fa; 
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Code Blocks */
+        pre { 
+            background-color: #2d2d2d; 
+            color: #f8f8f2;
+            padding: 15px; 
+            border-radius: 8px; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+        }
+        code { 
+            font-family: inherit;
+        }
+
+        /* Links and Images */
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Lists */
+        ul.styled {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        ul.styled li {
+            padding-left: 25px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        ul.styled li::before {
+            content: '✔️';
+            position: absolute;
+            left: 0;
+            color: #28a745;
+        }
+        /* Custom list for schedule */
+        ul.schedule-obj {
+            list-style-type: decimal;
+            padding-left: 20px; 
+            margin: 0;
+        }
+        ul.schedule-obj li {
+            padding-left: 5px;
+            margin-bottom: 5px;
+            position: static;
+        }
+        ul.schedule-obj li::before {
+            content: ''; /* Remove checkmark */
+        }
+
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .footer a { 
+            font-weight: bold; 
+            margin: 0 10px;
+        }
+        .footer p {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="custom-hero">
+        <h2>Software Design and Development</h2>
+        <p class="tagline">หลักสูตรที่จะเปลี่ยนคุณจาก "ผู้เขียนโค้ด" สู่ "วิศวกรซอฟต์แวร์" มืออาชีพ พร้อมสร้าง Full-Stack Web Application ที่ทันสมัยด้วยเทคโนโลยีที่เป็นที่ต้องการของตลาด</p>
+        <a href="#overview" class="cta-button" onclick="document.querySelector('.tablink[onclick*=\'overview\']').click(); return false;">เริ่มต้นการเดินทาง</a>
+    </div>
+
+    <div class="tabs">
+      <button class="tablink active" onclick="openTab(event, 'overview')">ภาพรวมรายวิชา</button>
+      <button class="tablink" onclick="openTab(event, 'schedule')">แผนการสอน (17 สัปดาห์)</button>
+      <button class="tablink" onclick="openTab(event, 'grading')">การวัดผล</button>
+      <button class="tablink" onclick="openTab(event, 'clo')">ผลการเรียนรู้ (CLO)</button>
+      <button class="tablink" onclick="openTab(event, 'setup')">การเตรียมตัว</button>
+      <button class="tablink" onclick="openTab(event, 'resources')">แหล่งข้อมูล</button>
+    </div>
+
+    <div id="overview" class="tabcontent" style="display:block;">
+      <h2>📚 ภาพรวมรายวิชา (Course Overview)</h2>
+      <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="รูปภาพการเขียนโค้ดสมัยใหม่">
+      <p><strong>ENGCE301 - การออกแบบและพัฒนาซอฟต์แวร์</strong> เป็นรายวิชาที่ศึกษาถึงบทบาทและหน้าที่ของวิศวกรรมซอฟต์แวร์, วิวัฒนาการ, วงจรการทำงาน, การกำหนดความต้องการ, การออกแบบ, การพัฒนา, การทดสอบ, และการบำรุงรักษาซอฟต์แวร์</p>
+    
+      <h3>🎯 วัตถุประสงค์ของรายวิชา</h3>
+      <ul class="styled">
+        <li>มีความรู้ความเข้าใจเกี่ยวกับวงจรการพัฒนาซอฟต์แวร์สมัยใหม่ การวิเคราะห์ความต้องการ และการออกแบบ</li>
+        <li>มีทักษะในการพัฒนาเว็บแอปพลิเคชันแบบ Full-stack (React, Node.js, Express, SQLite, MongoDB)</li>
+        <li>ส่งเสริมการทำงานเป็นทีม การใช้เครื่องมือพัฒนา (Git) และการจัดการโครงการในแนวทาง Agile</li>
+      </ul>
+    
+      <h3>📖 เทคโนโลยีที่ใช้ (Technology Stack)</h3>
+      <pre><code># Frontend
+HTML5, CSS3, JavaScript (ES6+), React.js
+
+# Backend
+Node.js, Express.js
+
+# Database
+SQLite, MongoDB
+
+# Tools & Principles
+Git, VSCode, Figma, Agile (Scrum), RESTful API, JWT, Jest
+
+# Deployment
+Vercel, Render (Heroku alternative)</code></pre>
+    </div>
+    
+    <div id="schedule" class="tabcontent">
+      <h2>🧪 แผนการสอน (ทฤษฎีและปฏิบัติ)</h2>
+      <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="รูปภาพ Workshop การเขียนโค้ด">
+      <p>แผนการสอนนี้ครอบคลุม 17 สัปดาห์ โดยในแต่ละสัปดาห์จะประกอบด้วย <strong>ทฤษฎี 2 ชั่วโมง</strong> และ <strong>ปฏิบัติ 3 ชั่วโมง</strong> ซึ่งจะมีการพัฒนาโครงงานกลุ่ม (Term Project) เป็นเว็บแอปพลิเคชัน Full-stack (React + Node/Express + DB) ต่อเนื่องตลอดทั้งภาคการศึกษา</p>
+      
+      <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 5%; text-align: center;">สัปดาห์</th>
+            <th style="width: 20%;">หัวข้อ (ทฤษฎี / ปฏิบัติ)</th>
+            <th style="width: 30%;">จุดประสงค์รายสัปดาห์</th>
+            <th style="width: 35%;">กิจกรรมการเรียนการสอน</th>
+            <th style="width: 10%; text-align: center;">CLO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center;"><b>1</b></td>
+            <td><b>Introduction to Software Engineering & SDLC</b><br><small>+ Dev Environment Setup</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>อธิบายบทบาทวิศวกรซอฟต์แวร์และภาพรวม SDLC</li>
+                <li>เปรียบเทียบ Waterfall vs Agile</li>
+                <li>ติดตั้งเครื่องมือพื้นฐาน และสร้างโครงโปรเจกต์ + Git repo</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> บรรยายแนวคิด SE, SDLC, Scrum roles</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> Workshop ติดตั้ง Git/VSCode/Node.js, สร้าง Git repo, ฝึก Git init/add/commit, สร้างหน้า HTML แรก</p>
+            </td>
+            <td style="text-align: center;">1, 4, 6</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>2</b></td>
+            <td><b>Requirements Engineering</b><br><small>+ HTML Structure & Semantic HTML</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>ระบุ Stakeholder และ requirement พื้นฐาน</li>
+                <li>ร่างโครง SRS ฉบับแรก</li>
+                <li>สร้างหน้า Landing Page ด้วย Semantic HTML</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> ประเภทของความต้องการ, เทคนิคเก็บ requirement</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> Brainstorm requirement, Role-play, เริ่มร่าง SRS, สร้างหน้า Landing Page ด้วย HTML5</p>
+            </td>
+            <td style="text-align: center;">1, 2, 4, 6</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>3</b></td>
+            <td><b>Agile Requirements & Use Cases</b><br><small>+ HTML/CSS Layout</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>เขียน User Story + Acceptance Criteria</li>
+                <li>ออกแบบ Use Case Diagram</li>
+                <li>ออกแบบหน้าเว็บด้วย CSS เบื้องต้น</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> อธิบาย User Story (INVEST), Use Case vs User Story, แนะนำ CSS (box model)</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> แปลง SRS → Product Backlog (Trello/Jira), วาด Use Case Diagram, ต่อเติม Landing Page ด้วย CSS</p>
+            </td>
+            <td style="text-align: center;">2, 3, 4, 6</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>4</b></td>
+            <td><b>Software Design Principles & UX/UI</b><br><small>+ Responsive HTML/CSS</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>อธิบายหลักการออกแบบเบื้องต้น (SOLID)</li>
+                <li>สร้าง Personas และ User Journey Map</li>
+                <li>ปรับ UI ด้วย CSS ให้ Responsive</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> SOLID concept, UCD, responsive design principles</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> ทำ Personas + User Journey Map, ปรับหน้า HTML/CSS (flexbox/grid), เตรียมโครงหน้าฟอร์ม</p>
+            </td>
+            <td style="text-align: center;">1, 3, 4, 6</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>5</b></td>
+            <td><b>UI Design & Prototyping</b><br><small>+ Modern CSS & Basic JavaScript</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>ออกแบบ UI บน Figma (High-fidelity Mockup)</li>
+                <li>อธิบาย Heuristics พื้นฐาน</li>
+                <li>ใช้ JavaScript เบื้องต้น (DOM, event, validation)</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> หลักการ UI (CRAP), Usability heuristics, แนะนำ JS/DOM/Events</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> ออกแบบหน้าหลักใน Figma, เพิ่ม JavaScript บนฟอร์ม (ตรวจช่องว่าง, validate email)</p>
+            </td>
+            <td style="text-align: center;">3, 4, 6</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>6</b></td>
+            <td><b>Software Architecture & Design Patterns</b><br><small>+ Node.js/Express Intro (JSON File)</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>เลือกสถาปัตยกรรม (Client-Server)</li>
+                <li>อธิบายบทบาท backend API</li>
+                <li>สร้าง Express server ที่อ่าน/เขียน JSON file</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> อธิบายสถาปัตยกรรมเว็บ, แนะนำ Node.js & Express</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> สร้างโปรเจกต์ Node.js/Express, สร้าง route (GET/POST) อ่าน/เขียน `data.json`, ทดสอบด้วย Postman</p>
+            </td>
+            <td style="text-align: center;">1, 3, 4</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>7</b></td>
+            <td><b>Backend & API Design</b><br><small>+ SQLite Integration</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>ออกแบบ RESTful API endpoint</li>
+                <li>สร้าง ER Diagram</li>
+                <li>เชื่อม Express API กับ SQLite (CRUD)</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> REST principles, ER modelling, เปรียบเทียบ JSON vs SQLite</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> ออกแบบ endpoints, วาด ER Diagram, สร้างฐานข้อมูล SQLite และเชื่อม Express (CRUD)</p>
+            </td>
+            <td style="text-align: center;">2, 3, 4, 5</td>
+          </tr>
+          <tr style="background-color: #fffbe6; border: 2px solid #fbbf24;">
+            <td style="text-align: center;"><b>8</b></td>
+            <td><b>สอบกลางภาค (Midterm Examination)</b></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>แสดงความเข้าใจแนวคิด SE, Requirements, UI/UX, API</li>
+                <li>ประยุกต์ความรู้เพื่อออกแบบเว็บและ API จากโจทย์ใหม่</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> สอบข้อเขียน (ครอบคลุมสัปดาห์ 1–7)</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> สอบปฏิบัติ (ออกแบบ Use Case, HTML/CSS/JS, API endpoints)</p>
+            </td>
+            <td style="text-align: center;">1, 2, 3, 4, 6</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>9</b></td>
+            <td><b>Implementation & Version Control</b><br><small>+ Refactor HTML/CSS/JS</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>ใช้ Git branching strategy (Git Flow)</li>
+                <li>ทำ Code review พื้นฐาน</li>
+                <li>แยกโครงสร้าง frontend (component-like)</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> Standard code style, linters, Git workflow, review code</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> ตั้งค่า branching, แบ่ง feature branch, ทำ PR + review, refactor HTML/CSS/JS</p>
+            </td>
+            <td style="text-align: center;">4, 5, 6</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>10</b></td>
+            <td><b>Frontend Development with React</b></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>อธิบายแนวคิด React component</li>
+                <li>สร้าง React components (Props, State)</li>
+                <li>เรียกใช้ backend API จาก React</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> อธิบาย React ecosystem, component, props, state, lifecycle (useState/useEffect)</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> ตั้งค่า React app (Vite/CRA), แปลงหน้า UI เดิมเป็น React components, เชื่อม React กับ Express API</p>
+            </td>
+            <td style="text-align: center;">3, 4</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>11</b></td>
+            <td><b>Backend Development (Node.js/Express)</b><br><small>+ MongoDB Intro</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>ออกแบบเลเยอร์ backend (controller/service)</li>
+                <li>อธิบาย RDB (SQLite) vs NoSQL (MongoDB)</li>
+                <li>เขียน Express API ที่เชื่อมกับ MongoDB</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> ทบทวน Express+SQLite, แนะนำ MongoDB และ ODM (Mongoose)</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> เพิ่ม module ใหม่ในโปรเจกต์ที่ใช้ MongoDB (เช่น user/log), สร้าง model/schema, เชื่อม React → Express → MongoDB</p>
+            </td>
+            <td style="text-align: center;">3, 4, 5</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>12</b></td>
+            <td><b>Full-Stack Integration & Security</b></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>เชื่อมต่อ React + Express + DB (Full-stack flow)</li>
+                <li>ติดตั้ง Authentication (JWT)</li>
+                <li>ใช้มาตรการ security เบื้องต้น (validation, XSS)</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> อธิบาย CORS, JWT, OWASP Top 10 (intro)</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> เชื่อมหน้า Login/Register, เพิ่ม middleware ตรวจ JWT, ทำ validation (client+server), ทดสอบ flow เข้าระบบ</p>
+            </td>
+            <td style="text-align: center;">4, 5</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>13</b></td>
+            <td><b>Software Testing Principles</b><br><small>+ Testing React & Node</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>อธิบาย Testing Pyramid</li>
+                <li>เขียน Test Case จาก User Story</li>
+                <li>เขียน Unit Test/Integration Test</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> Testing concepts, TDD vs BDD</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> ตั้งค่า Jest & React Testing Library, สร้าง Unit Test สำหรับ function/component, เขียน Integration Test (Supertest)</p>
+            </td>
+            <td style="text-align: center;">4, 5</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>14</b></td>
+            <td><b>Software Quality & Maintenance</b><br><small>+ Refactoring Day</small></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>ระบุ Code Smell</li>
+                <li>ใช้ Static analysis (ESLint)</li>
+                <li>Refactor โค้ดโดยมี Test คุม</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> SQA processes, Technical Debt, ประเภท maintenance</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> รัน ESLint/Prettier, เลือกส่วนที่มี code smell มา refactor (React/Express), รัน test เพื่อยืนยัน</p>
+            </td>
+            <td style="text-align: center;">1, 5</td>
+          </tr>
+          <tr>
+            <td style="text-align: center;"><b>15</b></td>
+            <td><b>Project Management & Deployment (CI/CD)</b></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>วางแผน Sprint สุดท้าย (Agile PM)</li>
+                <li>อธิบาย CI/CD (Intro)</li>
+                <li>Deploy Full-stack app (Vercel/Render)</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> Agile PM concept, CI/CD pipeline, environment (dev/prod)</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> Sprint planning/Retros, ตั้งค่า script build/test, Deploy (Vercel/Render), ทดสอบระบบ deployed</p>
+            </td>
+            <td style="text-align: center;">1, 4, 5, 6</td>
+          </tr>
+          <tr style="background-color: #f0fdf4; border: 2px solid #22c55e;">
+            <td style="text-align: center;"><b>16</b></td>
+            <td><b>Final Project Presentation & Demo</b></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>นำเสนอ Term project (Full-stack)</li>
+                <li>อธิบาย Design Decision & Process</li>
+                <li>สะท้อนสิ่งที่เรียนรู้ (Reflection)</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0;"><strong>ปฏิบัติ (5 ชม.):</strong> แต่ละทีมทำ Final presentation & live demo, Q&A, Peer evaluation, Retrospective</p>
+            </td>
+            <td style="text-align: center;">4, 5, 6</td>
+          </tr>
+          <tr style="background-color: #fffbe6; border: 2px solid #fbbf24;">
+            <td style="text-align: center;"><b>17</b></td>
+            <td><b>สอบปลายภาค (Final Examination)</b></td>
+            <td>
+              <ul class="schedule-obj">
+                <li>บูรณาการความรู้ทั้งหมด</li>
+                <li>แก้โจทย์ “Change Request”</li>
+                <li>แสดงทักษะ programming (React/Node)</li>
+              </ul>
+            </td>
+            <td>
+              <p style="margin: 0 0 5px 0;"><strong>ทฤษฎี (2 ชม.):</strong> สอบข้อเขียน (SE process, design, QA, PM)</p>
+              <p style="margin: 0;"><strong>ปฏิบัติ (3 ชม.):</strong> สอบปฏิบัติแบบ Change Request (แก้/เพิ่ม feature + อธิบายผลกระทบ)</p>
+            </td>
+            <td style="text-align: center;">1-6</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    
+    <div id="grading" class="tabcontent">
+      <h2>📊 การวัดผลและเกณฑ์การให้คะแนน</h2>
+      <img src="https://images.unsplash.com/photo-1556740714-a8395b3bf30f?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="รูปภาพการประเมินผล">
+      <h3>สัดส่วนคะแนน (อ้างอิงจาก ENGCE301.md)</h3>
+      <table>
+        <thead><tr><th>องค์ประกอบ</th><th>น้ำหนัก</th><th>CLOs ที่เกี่ยวข้อง</th></tr></thead>
+        <tbody>
+          <tr><td><b>การมีส่วนร่วมในชั้นเรียนและกิจกรรมกลุ่ม</b></td><td>10%</td><td>CLO1, CLO2, CLO6</td></tr>
+          <tr><td><b>แบบทดสอบสั้น/Quiz</b></td><td>15%</td><td>CLO1, CLO2, CLO3</td></tr>
+          <tr><td><b>ใบงาน/แบบฝึกหัด/งานปฏิบัติ</b></td><td>15%</td><td>CLO2, CLO3, CLO4</td></tr>
+          <tr><td><b>โครงงานกลุ่ม (Term Project)</b></td><td>30%</td><td>CLO2, CLO3, CLO4, CLO5, CLO6</td></tr>
+          <tr><td><b>สอบกลางภาค</b></td><td>15%</td><td>CLO1, CLO2, CLO3, CLO4</td></tr>
+          <tr><td><b>สอบปลายภาค</b></td><td>15%</td><td>CLO1-CLO6</td></tr>
+          <tr style="background-color: #f8f9fa;"><td><b>รวม</b></td><td><b>100%</b></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="setup" class="tabcontent">
+      <h2>🛠️ การเตรียมตัวและสิ่งที่ต้องใช้</h2>
+      <img src="https://images.unsplash.com/photo-1516116216624-53e6973bea12?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="รูปภาพพื้นที่ทำงานของนักพัฒนา">
+      <h3>ซอฟต์แวร์ที่จำเป็น (อ้างอิงจากแผนการสอน)</h3>
+      <pre><code># Runtime / Environment
+https://nodejs.org/ (LTS version)
+
+# Version Control
+https://git-scm.com/
+
+# Code Editor
+https://code.visualstudio.com/
+
+# Database Tools
+https://sqlitebrowser.org/ (สำหรับ SQLite)
+https://www.mongodb.com/try/download/compass (สำหรับ MongoDB)
+
+# API Client
+https://www.postman.com/downloads/
+
+# Design Tool (Optional but recommended)
+https://www.figma.com/</code></pre>
+    
+      <h3>VS Code Extensions ที่แนะนำ</h3>
+      <pre><code>{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "dsznajder.es7-react-js-snippets",
+    "eamodio.gitlens",
+    "humao.rest-client", // หรือใช้ Postman
+    "ms-vscode.vscode-typescript-next"
+  ]
+}</code></pre>
+    </div>
+    
+    <div id="clo" class="tabcontent">
+      <h2>🎯 ผลการเรียนรู้ที่คาดหวัง (CLO)</h2>
+      <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="รูปภาพผลการเรียนรู้">
+      <p>เมื่อสิ้นสุดรายวิชา นักศึกษาจะสามารถ:</p>
+      
+      <h3>CLO Assessment Matrix</h3>
+        <div class="table-wrapper">
+        <table>
+          <thead>
+              <tr><th style="width: 15%;">CLO</th><th>คำอธิบาย (อ้างอิงจาก ENGCE301.md)</th></tr>
+          </thead>
+          <tbody>
+              <tr><td><b>CLO1</b></td><td><b>ความรู้พื้นฐาน:</b> อธิบายบทบาทของวิศวกรซอฟต์แวร์, กระบวนการพัฒนา, แบบจำลอง และสถาปัตยกรรมพื้นฐาน</td></tr>
+              <tr><td><b>CLO2</b></td><td><b>การวิเคราะห์:</b> วิเคราะห์ปัญหาและความต้องการผู้ใช้ และจัดทำเอกสาร/แบบจำลองความต้องการของระบบ</td></tr>
+              <tr><td><b>CLO3</b></td><td><b>การออกแบบ:</b> ออกแบบสถาปัตยกรรม, โครงสร้างข้อมูล และ UI/UX ของเว็บแอปพลิเคชันให้สอดคล้องกับความต้องการ</td></tr>
+              <tr><td><b>CLO4</b></td><td><b>การพัฒนา:</b> พัฒนาและทดสอบเว็บแอปพลิเคชันแบบ Full-stack (React, Node.js) ตามเกณฑ์คุณภาพ</td></tr>
+              <tr><td><b>CLO5</b></td><td><b>การประเมินคุณภาพ:</b> ประเมินและปรับปรุงคุณภาพซอฟต์แวร์ (testing, refactoring, security, maintenance)</td></tr>
+              <tr><td><b>CLO6</b></td><td><b>การทำงานเป็นทีม:</b> ทำงานร่วมกับผู้อื่น, ใช้เครื่องมือ (Git), จัดการโครงการ (Agile) และสื่อสารเชิงเทคนิคอย่างมีจริยธรรม</td></tr>
+          </tbody>
+      </table>
+      </div>
+    </div>
+    
+    <div id="resources" class="tabcontent">
+      <h2>📚 แหล่งข้อมูล (Learning Resources)</h2>
+      <img src="https://images.unsplash.com/photo-1491841550275-5b462bf48569?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="รูปภาพแหล่งข้อมูลการเรียนรู้">
+      <h3>Official Documentation (สำคัญที่สุด)</h3>
+      <ul class="styled">
+          <li><a href="https://developer.mozilla.org/ (MDN)" target="_blank">MDN Web Docs (สำหรับ HTML, CSS, JS)</a></li>
+          <li><a href="https://react.dev/" target="_blank">React Official Docs</a></li>
+          <li><a href="https://nodejs.org/docs/" target="_blank">Node.js Documentation</a></li>
+          <li><a href="https://expressjs.com/" target="_blank">Express.js Documentation</a></li>
+          <li><a href="https://www.sqlite.org/docs.html" target="_blank">SQLite Documentation</a></li>
+          <li><a href="https://www.mongodb.com/docs/" target="_blank">MongoDB Documentation</a></li>
+      </ul>
+    
+      <h3>หนังสือแนะนำ (อ้างอิงจาก ENGCE301.md)</h3>
+      <ul class="styled">
+          <li>"Software Engineering" by Ian Somerville</li>
+          <li>"JavaScript: The Definitive Guide" by David Flanagan</li>
+          <li>(และหนังสือ/คอร์สออนไลน์อื่นๆ ที่เกี่ยวข้องกับ MERN Stack)</li>
+      </ul>
+    </div>
+    
+    <div id="success" class="tabcontent">
+      <h2>🏁 คำแนะนำสู่ความสำเร็จ</h2>
+      <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=1200" alt="รูปภาพความสำเร็จทางเทคโนโลยี">
+      <p>โครงงานกลุ่ม (Term Project) ไม่ได้ออกแบบมาเพื่อประเมินทักษะทางเทคนิคของคุณเท่านั้น แต่ยังเตรียมความพร้อมสำหรับความท้าทายและโอกาสในอาชีพวิศวกรซอฟต์แวร์อีกด้วย</p>
+    
+      <h3>กุญแจสู่ความสำเร็จ</h3>
+      <ul class="styled">
+          <li><b>Technical Excellence:</b> เริ่มต้นเร็ว, ทำตาม Best Practices, ทดสอบอย่างละเอียด และเขียนเอกสารที่ดี</li>
+          <li><b>Project Management:</b> วางแผนอย่างมีประสิทธิภาพ, จัดการเวลา, และสื่อสารอย่างสม่ำเสมอ (Agile)</li>
+          <li><b>Professional Development:</b> สร้าง Portfolio, สร้างเครือข่าย, และเรียนรู้อย่างต่อเนื่อง</li>
+      </ul>
+    
+      <hr style="margin: 30px 0; border: 1px solid #eee;">
+      <p style="text-align:center; font-style:italic; font-size:1.1em;">
+      <b>ขอให้โชคดี และจำไว้ว่า: เป้าหมายไม่ใช่แค่การทำงานให้เสร็จ แต่คือการเป็นวิศวกรซอฟต์แวร์ที่คุณอยากจะเป็น!</b> 🚀
+      </p>
+    </div>
+    
+    <div class="footer">
+      <h3>🌟 พร้อมที่จะสร้างสิ่งที่น่าทึ่งแล้วหรือยัง?</h3>
+      <p><b>การเดินทางสู่การเป็นวิศวกรซอฟต์แวร์มืออาชีพเริ่มต้นที่นี่!</b></p>
+      <p>
+        <a href="mailto:thanit@rmutl.ac.th">📧 ติดต่อผู้สอน (อ.ธนิต เกตุแก้ว)</a>
+        <a href="#" target="_blank">💬 เข้าร่วม Discord (จะประกาศในชั้นเรียน)</a>
+      </p>
+      <p style="font-size:0.8em; color:#666; margin-top:20px;">
+        <i>Last Updated: Nov 2025 | © 2025 ENGCE301 Course Team. All rights reserved.</i>
+      </p>
+    </div>
+</div>
+
+<script>
+  // Function to switch tabs
+  function openTab(evt, tabName) {
+    let i, tabcontent, tablinks;
+    
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    
+    // Get all elements with class="tablink" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(tabName).style.display = "block";
+    if (evt) { // Check if evt is null (for default load)
+        evt.currentTarget.className += " active";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+      // Find the hero button and make it click the first tab
+      document.querySelector('.cta-button').addEventListener('click', function(e) {
+          e.preventDefault(); // Stop anchor jump
+          // Manually click the tablink that opens 'overview'
+          document.querySelector('.tablink[onclick*="overview"]').click();
+      });
+  
+      // Trigger a click on the first tab link to open it by default
+      document.querySelector('.tablink').click();
+  });
+</script>
+
+</body>
+</html>
