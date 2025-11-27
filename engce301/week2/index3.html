@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGCE301 Week 2: Requirements Engineering & HTML Semantic</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700;900&family=Kanit:wght@300;400;600;700;900&family=IBM+Plex+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+            
+            --font-size-base: 1rem;
+            --font-size-scale: 1;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-card: #0f3460;
+            --text-primary: #edf2f7;
+            --text-secondary: #cbd5e0;
+            --text-muted: #a0aec0;
+            --border-color: #2d3748;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans Thai', 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .slide {
+            width: 100%;
+            max-width: 1200px;
+            height: 100%;
+            max-height: 90vh;
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: calc(3rem * var(--font-size-scale));
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            animation: slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-header {
+            margin-bottom: calc(2rem * var(--font-size-scale));
+            text-align: center;
+        }
+
+        .slide-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: calc(2.5rem * var(--font-size-scale));
+            font-weight: 900;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: calc(1rem * var(--font-size-scale));
+            line-height: 1.2;
+        }
+
+        .slide-subtitle {
+            font-size: calc(1.2rem * var(--font-size-scale));
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .slide-content {
+            font-size: calc(1.1rem * var(--font-size-scale));
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        h2 {
+            font-family: 'Kanit', sans-serif;
+            font-size: calc(2rem * var(--font-size-scale));
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: calc(1.5rem * var(--font-size-scale));
+            margin-top: calc(1rem * var(--font-size-scale));
+        }
+
+        h3 {
+            font-family: 'Prompt', sans-serif;
+            font-size: calc(1.5rem * var(--font-size-scale));
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: calc(1rem * var(--font-size-scale));
+            margin-top: calc(1rem * var(--font-size-scale));
+        }
+
+        .hero-slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .hero-slide .slide-title {
+            font-size: calc(4rem * var(--font-size-scale));
+            -webkit-text-fill-color: white;
+            margin-bottom: calc(1rem * var(--font-size-scale));
+        }
+
+        .hero-slide .slide-subtitle {
+            font-size: calc(1.8rem * var(--font-size-scale));
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: calc(2rem * var(--font-size-scale));
+        }
+
+        .hero-info {
+            display: flex;
+            gap: calc(3rem * var(--font-size-scale));
+            margin-top: calc(3rem * var(--font-size-scale));
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-info-item {
+            text-align: center;
+        }
+
+        .hero-info-label {
+            font-size: calc(0.9rem * var(--font-size-scale));
+            opacity: 0.8;
+            margin-bottom: calc(0.5rem * var(--font-size-scale));
+        }
+
+        .hero-info-value {
+            font-size: calc(1.5rem * var(--font-size-scale));
+            font-weight: 700;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: calc(2rem * var(--font-size-scale));
+            margin: calc(2rem * var(--font-size-scale)) 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: calc(1.5rem * var(--font-size-scale));
+            margin: calc(2rem * var(--font-size-scale)) 0;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: calc(1.5rem * var(--font-size-scale));
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .card-icon {
+            font-size: calc(2.5rem * var(--font-size-scale));
+            margin-bottom: calc(1rem * var(--font-size-scale));
+        }
+
+        .card-title {
+            font-size: calc(1.3rem * var(--font-size-scale));
+            font-weight: 600;
+            margin-bottom: calc(0.5rem * var(--font-size-scale));
+            color: var(--text-primary);
+        }
+
+        .card-content {
+            font-size: calc(1rem * var(--font-size-scale));
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: calc(0.5rem * var(--font-size-scale)) calc(1rem * var(--font-size-scale));
+            border-radius: 20px;
+            font-size: calc(0.85rem * var(--font-size-scale));
+            font-weight: 600;
+            margin: calc(0.25rem * var(--font-size-scale));
+        }
+
+        .badge-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .badge-accent {
+            background: var(--accent-gradient);
+            color: white;
+        }
+
+        .badge-success {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .list-fancy {
+            list-style: none;
+            padding: 0;
+        }
+
+        .list-fancy li {
+            padding: calc(1rem * var(--font-size-scale));
+            margin-bottom: calc(0.5rem * var(--font-size-scale));
+            background: var(--bg-secondary);
+            border-left: 4px solid;
+            border-image: var(--primary-gradient) 1;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .list-fancy li:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+
+        .highlight-box {
+            background: var(--primary-gradient);
+            color: white;
+            padding: calc(2rem * var(--font-size-scale));
+            border-radius: 15px;
+            margin: calc(2rem * var(--font-size-scale)) 0;
+            box-shadow: var(--shadow);
+        }
+
+        .quote-box {
+            border-left: 5px solid;
+            border-image: var(--accent-gradient) 1;
+            padding-left: calc(2rem * var(--font-size-scale));
+            margin: calc(2rem * var(--font-size-scale)) 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+        }
+
+        .control-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--primary-gradient);
+            color: white;
+            transform: scale(1.1);
+            border-color: transparent;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            color: var(--text-primary);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+
+        .diagram-container {
+            width: 100%;
+            height: 400px;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: calc(2rem * var(--font-size-scale)) 0;
+            border: 2px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .diagram-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(1.5rem * var(--font-size-scale));
+            margin: calc(2rem * var(--font-size-scale)) 0;
+        }
+
+        .stat-card {
+            background: var(--primary-gradient);
+            color: white;
+            padding: calc(2rem * var(--font-size-scale));
+            border-radius: 15px;
+            text-align: center;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .stat-value {
+            font-size: calc(3rem * var(--font-size-scale));
+            font-weight: 900;
+            font-family: 'Kanit', sans-serif;
+            margin-bottom: calc(0.5rem * var(--font-size-scale));
+        }
+
+        .stat-label {
+            font-size: calc(1rem * var(--font-size-scale));
+            opacity: 0.9;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: calc(2rem * var(--font-size-scale));
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary-gradient);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: calc(2rem * var(--font-size-scale));
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: calc(-2rem * var(--font-size-scale) - 6px);
+            top: 0;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid;
+            border-image: var(--primary-gradient) 1;
+        }
+
+        .clo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: calc(1.5rem * var(--font-size-scale));
+            margin: calc(2rem * var(--font-size-scale)) 0;
+        }
+
+        .clo-card {
+            background: var(--bg-secondary);
+            padding: calc(1.5rem * var(--font-size-scale));
+            border-radius: 15px;
+            border-top: 4px solid transparent;
+            border-image: var(--primary-gradient) 1;
+            transition: all 0.3s ease;
+        }
+
+        .clo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .clo-number {
+            font-size: calc(2rem * var(--font-size-scale));
+            font-weight: 900;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: calc(0.5rem * var(--font-size-scale));
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: calc(2rem * var(--font-size-scale)) 0;
+            font-size: calc(1rem * var(--font-size-scale));
+        }
+
+        th, td {
+            padding: calc(1rem * var(--font-size-scale));
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--primary-gradient);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .emoji-icon {
+            font-size: calc(2rem * var(--font-size-scale));
+            margin-right: calc(0.5rem * var(--font-size-scale));
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: calc(2rem * var(--font-size-scale));
+            }
+            
+            .hero-slide .slide-title {
+                font-size: calc(2.5rem * var(--font-size-scale));
+            }
+            
+            .controls {
+                bottom: 1rem;
+                padding: 0.75rem 1rem;
+            }
+            
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        code {
+            background: var(--bg-secondary);
+            padding: calc(0.2rem * var(--font-size-scale)) calc(0.5rem * var(--font-size-scale));
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: calc(0.9rem * var(--font-size-scale));
+            color: #e83e8c;
+        }
+
+        pre {
+            background: var(--bg-secondary);
+            padding: calc(1.5rem * var(--font-size-scale));
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: calc(1.5rem * var(--font-size-scale)) 0;
+        }
+
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(2rem * var(--font-size-scale));
+            margin: calc(2rem * var(--font-size-scale)) 0;
+        }
+
+        .comparison-column {
+            background: var(--bg-secondary);
+            padding: calc(2rem * var(--font-size-scale));
+            border-radius: 15px;
+        }
+
+        .comparison-column h3 {
+            text-align: center;
+            margin-bottom: calc(1.5rem * var(--font-size-scale));
+        }
+
+        @media (max-width: 768px) {
+            .comparison-table {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const slides = [
+            // Slide 1: Title
+            {
+                type: 'hero',
+                content: (
+                    <>
+                        <div className="slide-title">ENGCE301</div>
+                        <div className="slide-subtitle">การออกแบบและพัฒนาซอฟต์แวร์<br/>Software Design and Development</div>
+                        <div style={{fontSize: 'calc(2.5rem * var(--font-size-scale))', margin: '2rem 0', fontWeight: '900'}}>
+                            สัปดาห์ที่ 2
+                        </div>
+                        <div style={{fontSize: 'calc(1.8rem * var(--font-size-scale))', fontWeight: '600'}}>
+                            Requirements Engineering + HTML Structure & Semantic HTML
+                        </div>
+                        <div className="hero-info">
+                            <div className="hero-info-item">
+                                <div className="hero-info-label">ทฤษฎี</div>
+                                <div className="hero-info-value">2 ชั่วโมง</div>
+                            </div>
+                            <div className="hero-info-item">
+                                <div className="hero-info-label">ปฏิบัติ</div>
+                                <div className="hero-info-value">3 ชั่วโมง</div>
+                            </div>
+                            <div className="hero-info-item">
+                                <div className="hero-info-label">อาจารย์</div>
+                                <div className="hero-info-value">ธนิต เกตุแก้ว</div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+            
+            // Slide 2: จุดประสงค์การเรียนรู้
+            {
+                title: '🎯 จุดประสงค์การเรียนรู้',
+                subtitle: 'Learning Outcomes',
+                content: (
+                    <>
+                        <p style={{fontSize: 'calc(1.2rem * var(--font-size-scale))', marginBottom: '2rem', color: 'var(--text-primary)'}}>
+                            เมื่อจบสัปดาห์นี้ นักศึกษาจะสามารถ:
+                        </p>
+                        <div className="grid-3">
+                            <div className="card">
+                                <div className="card-icon">📋</div>
+                                <div className="card-title">1. ระบุ Stakeholder</div>
+                                <div className="card-content">
+                                    ระบุผู้มีส่วนได้ส่วนเสีย (Stakeholder) และ Requirements พื้นฐานของระบบซอฟต์แวร์ได้อย่างถูกต้อง
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">📝</div>
+                                <div className="card-title">2. ร่างโครง SRS</div>
+                                <div className="card-content">
+                                    ร่างโครง Software Requirements Specification (SRS) ฉบับแรกได้ตามมาตรฐาน
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">🌐</div>
+                                <div className="card-title">3. สร้างหน้า HTML</div>
+                                <div className="card-content">
+                                    สร้างหน้า HTML โดยใช้ Semantic HTML5 tags เพื่อใช้เป็น Landing Page ของระบบได้
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 3: CLO
+            {
+                title: '🎓 Course Learning Outcomes (CLO)',
+                subtitle: 'สัปดาห์นี้เกี่ยวข้องกับ CLO1, CLO2, CLO4, CLO6',
+                content: (
+                    <>
+                        <div className="clo-grid">
+                            <div className="clo-card">
+                                <div className="clo-number">CLO1</div>
+                                <div className="card-title">ความรู้พื้นฐาน</div>
+                                <div className="card-content">
+                                    ความรู้พื้นฐานด้านวิศวกรรมซอฟต์แวร์ กระบวนการพัฒนา และแบบจำลอง/สถาปัตยกรรม
+                                </div>
+                            </div>
+                            <div className="clo-card">
+                                <div className="clo-number">CLO2</div>
+                                <div className="card-title">วิเคราะห์ความต้องการ</div>
+                                <div className="card-content">
+                                    วิเคราะห์ปัญหาและความต้องการผู้ใช้ จัดทำเอกสาร/แบบจำลองความต้องการได้
+                                </div>
+                            </div>
+                            <div className="clo-card">
+                                <div className="clo-number">CLO4</div>
+                                <div className="card-title">พัฒนาซอฟต์แวร์</div>
+                                <div className="card-content">
+                                    พัฒนา ทดสอบ และบูรณาการซอฟต์แวร์ต้นแบบด้วยเทคโนโลยีสมัยใหม่ได้
+                                </div>
+                            </div>
+                            <div className="clo-card">
+                                <div className="clo-number">CLO6</div>
+                                <div className="card-title">ทำงานเป็นทีม</div>
+                                <div className="card-content">
+                                    ทำงานเป็นทีม ใช้เครื่องมือพัฒนาซอฟต์แวร์/จัดการโครงการ และสื่อสารทางเทคนิคได้อย่างมีจริยธรรม
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 4: ทบทวนสัปดาห์ที่ 1
+            {
+                title: '📚 ทบทวน: สัปดาห์ที่ 1',
+                subtitle: 'ความรู้พื้นฐานที่ได้เรียนมาแล้ว',
+                content: (
+                    <>
+                        <div className="grid-2">
+                            <div className="card">
+                                <div className="card-icon">🏗️</div>
+                                <div className="card-title">Software Engineering</div>
+                                <div className="card-content">
+                                    <ul style={{paddingLeft: '1.5rem', lineHeight: '1.8'}}>
+                                        <li>ความหมายและความสำคัญของ Software Engineering</li>
+                                        <li>วิวัฒนาการของซอฟต์แวร์ (4 ยุค)</li>
+                                        <li>Iron Triangle: Scope, Cost, Time</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">🔄</div>
+                                <div className="card-title">SDLC & Methodologies</div>
+                                <div className="card-content">
+                                    <ul style={{paddingLeft: '1.5rem', lineHeight: '1.8'}}>
+                                        <li>Software Development Life Cycle (SDLC)</li>
+                                        <li>Waterfall vs Agile</li>
+                                        <li>Scrum Framework (Roles, Artifacts, Events)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{marginTop: '2rem', padding: '1.5rem', background: 'var(--bg-secondary)', borderRadius: '15px', textAlign: 'center'}}>
+                            <span className="emoji-icon">💡</span>
+                            <strong>Key Takeaway:</strong> การพัฒนาซอฟต์แวร์เป็นกระบวนการที่ต้องมีระเบียบแบบแผน ไม่ใช่แค่การเขียนโค้ด
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 5: ปัญหาของโปรเจกต์ซอฟต์แวร์
+            {
+                title: '🚨 ทำไม Requirements สำคัญ?',
+                subtitle: 'CHAOS Report by Standish Group',
+                content: (
+                    <>
+                        <div className="stats-container">
+                            <div className="stat-card" style={{background: 'var(--accent-gradient)'}}>
+                                <div className="stat-value">31.1%</div>
+                                <div className="stat-label">โปรเจกต์ล้มเหลว<br/>(ยกเลิกก่อนเสร็จ)</div>
+                            </div>
+                            <div className="stat-card" style={{background: 'var(--warning-gradient)'}}>
+                                <div className="stat-value">52.7%</div>
+                                <div className="stat-label">เกินงบและล่าช้า</div>
+                            </div>
+                            <div className="stat-card" style={{background: 'var(--success-gradient)'}}>
+                                <div className="stat-value">16.2%</div>
+                                <div className="stat-label">สำเร็จตามแผน</div>
+                            </div>
+                        </div>
+                        
+                        <h3 style={{marginTop: '2rem'}}>🎯 สาเหตุหลักที่โปรเจกต์ล้มเหลว:</h3>
+                        <ul className="list-fancy">
+                            <li>❌ Incomplete requirements (13.1%)</li>
+                            <li>❌ Lack of user involvement (12.4%)</li>
+                            <li>❌ Lack of resources (10.6%)</li>
+                            <li>❌ Unrealistic expectations (9.9%)</li>
+                            <li>❌ Lack of executive support (9.3%)</li>
+                        </ul>
+                        
+                        <div className="quote-box" style={{marginTop: '2rem'}}>
+                            "The hardest single part of building a software system is deciding precisely what to build."
+                            <br/><br/>
+                            <strong>— Fred Brooks, The Mythical Man-Month</strong>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 6: Requirements Engineering
+            {
+                title: '🔍 Requirements Engineering คืออะไร?',
+                subtitle: 'กระบวนการที่เป็นระบบในการจัดการความต้องการ',
+                content: (
+                    <>
+                        <div className="highlight-box" style={{marginBottom: '2rem'}}>
+                            <h3 style={{color: 'white', marginTop: 0}}>นิยาม</h3>
+                            <p style={{fontSize: 'calc(1.1rem * var(--font-size-scale))', lineHeight: '1.8', margin: 0}}>
+                                <strong>Requirements Engineering (RE)</strong> คือ กระบวนการที่เป็นระบบในการค้นหา วิเคราะห์ 
+                                กำหนด ยืนยัน และจัดการความต้องการของระบบซอฟต์แวร์ตลอดวงจรชีวิตของโปรเจกต์
+                            </p>
+                        </div>
+                        
+                        <div className="timeline">
+                            <div className="timeline-item">
+                                <h3>1️⃣ Elicitation (ค้นหา)</h3>
+                                <p>รวบรวมความต้องการจากผู้มีส่วนได้ส่วนเสีย (Stakeholders)</p>
+                            </div>
+                            <div className="timeline-item">
+                                <h3>2️⃣ Analysis (วิเคราะห์)</h3>
+                                <p>ตรวจสอบความเป็นไปได้และความขัดแย้งของความต้องการ</p>
+                            </div>
+                            <div className="timeline-item">
+                                <h3>3️⃣ Specification (กำหนด)</h3>
+                                <p>เขียนเป็นเอกสารอย่างชัดเจนและไม่คลุมเครือ</p>
+                            </div>
+                            <div className="timeline-item">
+                                <h3>4️⃣ Validation (ยืนยัน)</h3>
+                                <p>ตรวจสอบว่าตรงกับความต้องการจริงหรือไม่</p>
+                            </div>
+                            <div className="timeline-item">
+                                <h3>5️⃣ Management (จัดการ)</h3>
+                                <p>ติดตามการเปลี่ยนแปลงตลอดโปรเจกต์</p>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 7: Diagram 1 - Requirements Process
+            {
+                title: '📊 Requirements Engineering Process',
+                subtitle: 'กระบวนการที่เชื่อมโยงกัน',
+                content: (
+                    <>
+                        <div className="diagram-container" style={{height: '500px'}}>
+                            <div className="diagram-placeholder">
+                                <h3>Requirements Engineering Process Diagram</h3>
+                                <p>แสดงกระบวนการ 5 ขั้นตอน:</p>
+                                <ul style={{textAlign: 'left', maxWidth: '600px', margin: '2rem auto'}}>
+                                    <li><strong>Elicitation</strong> → รวบรวมความต้องการ (Interviews, Surveys, Observation)</li>
+                                    <li><strong>Analysis</strong> → วิเคราะห์ความเป็นไปได้และแก้ไขความขัดแย้ง</li>
+                                    <li><strong>Specification</strong> → เขียนเป็นเอกสาร SRS</li>
+                                    <li><strong>Validation</strong> → ตรวจสอบกับ Stakeholders</li>
+                                    <li><strong>Management</strong> → จัดการการเปลี่ยนแปลง (อยู่ตรงกลาง)</li>
+                                </ul>
+                                <p style={{marginTop: '2rem', fontSize: '0.9rem', color: 'var(--text-muted)'}}>
+                                    📁 diagram1_requirements_process.drawio
+                                </p>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 8: Functional Requirements
+            {
+                title: '⚙️ Functional Requirements (FR)',
+                subtitle: 'สิ่งที่ระบบ "ต้องทำ" (What the system should do)',
+                content: (
+                    <>
+                        <div className="highlight-box">
+                            <h3 style={{color: 'white', marginTop: 0}}>คำจำกัดความ</h3>
+                            <p style={{margin: 0, fontSize: 'calc(1.1rem * var(--font-size-scale))'}}>
+                                อธิบาย<strong>พฤติกรรม</strong>, <strong>ฟังก์ชัน</strong>, และ<strong>การตอบสนอง</strong>ของระบบต่อ input
+                            </p>
+                        </div>
+
+                        <h3 style={{marginTop: '2rem'}}>📝 ตัวอย่าง FR:</h3>
+                        <ul className="list-fancy">
+                            <li>ระบบต้องสามารถให้ผู้ใช้ login ด้วย email และ password</li>
+                            <li>ระบบต้องแสดงรายการสินค้าทั้งหมดเมื่อผู้ใช้เข้าหน้าแรก</li>
+                            <li>ระบบต้องส่ง notification เมื่อมีคำสั่งซื้อใหม่</li>
+                            <li>ระบบต้องคำนวณส่วนลด 10% สำหรับลูกค้าสมาชิก VIP</li>
+                        </ul>
+
+                        <div style={{marginTop: '2rem', background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: '15px'}}>
+                            <h3>✅ วิธีเขียน FR ที่ดี:</h3>
+                            <pre><code>Format: ระบบต้อง [verb] + [object] + [condition (ถ้ามี)]
+
+✅ ดี: "ระบบต้องส่งอีเมลยืนยันภายใน 5 นาทีหลังจากผู้ใช้สมัครสมาชิก"
+❌ ไม่ดี: "ระบบต้องมีฟีเจอร์อีเมล"</code></pre>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 9: Non-Functional Requirements
+            {
+                title: '🎯 Non-Functional Requirements (NFR)',
+                subtitle: 'คุณภาพและข้อจำกัดที่ระบบ "ต้องเป็น" (What the system should be)',
+                content: (
+                    <>
+                        <div className="grid-2">
+                            <div className="card">
+                                <div className="card-icon">⚡</div>
+                                <div className="card-title">1. Performance</div>
+                                <div className="card-content">
+                                    • หน้าเว็บต้องโหลดเสร็จภายใน 2 วินาที<br/>
+                                    • รองรับผู้ใช้พร้อมกัน 10,000 คน
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">🔒</div>
+                                <div className="card-title">2. Security</div>
+                                <div className="card-content">
+                                    • รหัสผ่านต้อง hash ด้วย bcrypt<br/>
+                                    • ข้อมูลบัตรเครดิตต้องเข้ารหัส AES-256
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">👥</div>
+                                <div className="card-title">3. Usability</div>
+                                <div className="card-content">
+                                    • ผู้ใช้ต้องทำธุรกรรมสำเร็จใน 3 คลิก<br/>
+                                    • รองรับภาษาไทยและอังกฤษ
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">✅</div>
+                                <div className="card-title">4. Reliability</div>
+                                <div className="card-content">
+                                    • Uptime 99.9% (downtime ไม่เกิน 8.76 ชม./ปี)<br/>
+                                    • Backup ข้อมูลทุก 24 ชั่วโมง
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">🔧</div>
+                                <div className="card-title">5. Maintainability</div>
+                                <div className="card-content">
+                                    • โค้ดต้องผ่าน ESLint standard<br/>
+                                    • Unit test coverage อย่างน้อย 80%
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">📱</div>
+                                <div className="card-title">6. Portability</div>
+                                <div className="card-content">
+                                    • ทำงานบน Chrome, Firefox, Safari, Edge<br/>
+                                    • รองรับ Desktop, Tablet, และ Mobile
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 10: FR vs NFR
+            {
+                title: '⚖️ เปรียบเทียบ FR vs NFR',
+                subtitle: 'ความแตกต่างที่ต้องเข้าใจ',
+                content: (
+                    <>
+                        <div className="comparison-table">
+                            <div className="comparison-column">
+                                <h3 style={{color: '#667eea'}}>⚙️ Functional Requirements</h3>
+                                <div className="card" style={{marginBottom: '1rem'}}>
+                                    <div className="card-title">ถาม: "ทำอะไร?"</div>
+                                    <div className="card-content">What the system DOES</div>
+                                </div>
+                                <div className="card" style={{marginBottom: '1rem'}}>
+                                    <div className="card-title">ตัวอย่าง</div>
+                                    <div className="card-content">
+                                        • Login ด้วย email/password<br/>
+                                        • บันทึกข้อมูลลงฐานข้อมูล<br/>
+                                        • ส่ง email notification<br/>
+                                        • คำนวณส่วนลด
+                                    </div>
+                                </div>
+                                <div className="card">
+                                    <div className="card-title">เน้น</div>
+                                    <div className="card-content">พฤติกรรมและฟังก์ชันของระบบ</div>
+                                </div>
+                            </div>
+                            
+                            <div className="comparison-column">
+                                <h3 style={{color: '#f5576c'}}>🎯 Non-Functional Requirements</h3>
+                                <div className="card" style={{marginBottom: '1rem'}}>
+                                    <div className="card-title">ถาม: "ทำได้ดีแค่ไหน?"</div>
+                                    <div className="card-content">What the system IS</div>
+                                </div>
+                                <div className="card" style={{marginBottom: '1rem'}}>
+                                    <div className="card-title">ตัวอย่าง</div>
+                                    <div className="card-content">
+                                        • Login เสร็จใน 1 วินาที<br/>
+                                        • Backup ข้อมูลทุกวัน<br/>
+                                        • Email ส่งภายใน 5 นาที<br/>
+                                        • คำนวณถูกต้อง 100%
+                                    </div>
+                                </div>
+                                <div className="card">
+                                    <div className="card-title">เน้น</div>
+                                    <div className="card-content">คุณภาพและข้อจำกัดของระบบ</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="highlight-box" style={{marginTop: '2rem'}}>
+                            <p style={{margin: 0, fontSize: 'calc(1.2rem * var(--font-size-scale))'}}>
+                                💡 <strong>จำง่ายๆ:</strong> FR = ทำอะไร | NFR = ทำได้ดีแค่ไหน
+                            </p>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 11: Stakeholders
+            {
+                title: '👥 Stakeholders คือใคร?',
+                subtitle: 'ผู้มีส่วนได้ส่วนเสียกับระบบ',
+                content: (
+                    <>
+                        <div className="highlight-box">
+                            <h3 style={{color: 'white', marginTop: 0}}>นิยาม</h3>
+                            <p style={{margin: 0, fontSize: 'calc(1.1rem * var(--font-size-scale))'}}>
+                                <strong>Stakeholders</strong> คือ บุคคลหรือกลุ่มบุคคลที่มีส่วนได้ส่วนเสีย 
+                                ได้รับผลกระทบ หรือมีอิทธิพลต่อระบบซอฟต์แวร์
+                            </p>
+                        </div>
+
+                        <h3 style={{marginTop: '2rem'}}>🎯 แบ่งเป็น 3 ระดับ:</h3>
+                        
+                        <div className="grid-3">
+                            <div className="card" style={{borderTop: '4px solid #667eea'}}>
+                                <div className="card-icon">🎯</div>
+                                <div className="card-title">Primary Stakeholders</div>
+                                <div className="card-content">
+                                    <strong>ใช้ระบบโดยตรง</strong><br/>
+                                    • End Users<br/>
+                                    • Customers<br/>
+                                    • Product Owner
+                                </div>
+                            </div>
+                            
+                            <div className="card" style={{borderTop: '4px solid #4facfe'}}>
+                                <div className="card-icon">⚙️</div>
+                                <div className="card-title">Secondary Stakeholders</div>
+                                <div className="card-content">
+                                    <strong>สนับสนุนการทำงาน</strong><br/>
+                                    • Developers<br/>
+                                    • Testers/QA<br/>
+                                    • Project Managers<br/>
+                                    • System Admins
+                                </div>
+                            </div>
+                            
+                            <div className="card" style={{borderTop: '4px solid #fa709a'}}>
+                                <div className="card-icon">🌐</div>
+                                <div className="card-title">Indirect Stakeholders</div>
+                                <div className="card-content">
+                                    <strong>ได้รับผลกระทบทางอ้อม</strong><br/>
+                                    • Regulators<br/>
+                                    • Competitors<br/>
+                                    • Investors<br/>
+                                    • Society
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 12: Diagram 2 - Stakeholder Onion
+            {
+                title: '📊 Stakeholder Onion Model',
+                subtitle: 'แบบจำลองผู้มีส่วนได้ส่วนเสียแบบหัวหอม',
+                content: (
+                    <>
+                        <div className="diagram-container" style={{height: '500px'}}>
+                            <div className="diagram-placeholder">
+                                <h3>Stakeholder Onion Model Diagram</h3>
+                                <p>แสดงความสัมพันธ์แบบวงกลมซ้อน 3 ชั้น:</p>
+                                <div style={{textAlign: 'left', maxWidth: '700px', margin: '2rem auto'}}>
+                                    <div style={{padding: '1rem', background: '#fff3cd', borderRadius: '10px', marginBottom: '1rem'}}>
+                                        <strong>🎯 Layer 1 (ชั้นใน - สีเหลือง):</strong> Primary Stakeholders<br/>
+                                        End Users, Customers, Product Owner
+                                    </div>
+                                    <div style={{padding: '1rem', background: '#cfe2ff', borderRadius: '10px', marginBottom: '1rem'}}>
+                                        <strong>⚙️ Layer 2 (ชั้นกลาง - สีฟ้า):</strong> Secondary Stakeholders<br/>
+                                        Developers, Testers, PM, System Admins, Marketing, Support
+                                    </div>
+                                    <div style={{padding: '1rem', background: '#e2d5f0', borderRadius: '10px'}}>
+                                        <strong>🌐 Layer 3 (ชั้นนอก - สีม่วง):</strong> Indirect Stakeholders<br/>
+                                        Regulators, Competitors, Investors, Society, Government
+                                    </div>
+                                </div>
+                                <p style={{marginTop: '2rem', fontSize: '0.9rem', color: 'var(--text-muted)'}}>
+                                    📁 diagram2_stakeholder_onion.drawio
+                                </p>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 13: Requirements Elicitation Techniques
+            {
+                title: '🔍 Requirements Elicitation Techniques',
+                subtitle: 'เทคนิคในการรวบรวมความต้องการ',
+                content: (
+                    <>
+                        <div className="grid-2">
+                            <div className="card">
+                                <div className="card-icon">💬</div>
+                                <div className="card-title">1. Interviews</div>
+                                <div className="card-content">
+                                    สัมภาษณ์เชิงลึกกับ Stakeholders<br/>
+                                    <span className="badge badge-success">แนะนำ</span> ใช้คำถามแบบเปิด (Open-ended)
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">📋</div>
+                                <div className="card-title">2. Questionnaires</div>
+                                <div className="card-content">
+                                    แบบสอบถามสำหรับกลุ่มใหญ่<br/>
+                                    <span className="badge badge-primary">เหมาะกับ</span> การเก็บข้อมูลจำนวนมาก
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">👀</div>
+                                <div className="card-title">3. Observation</div>
+                                <div className="card-content">
+                                    สังเกตการทำงานจริง<br/>
+                                    <span className="badge badge-accent">ระวัง</span> Hawthorne Effect
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">🎨</div>
+                                <div className="card-title">4. Prototyping</div>
+                                <div className="card-content">
+                                    สร้างต้นแบบให้ผู้ใช้ทดลอง<br/>
+                                    <span className="badge badge-success">ดี</span> Low-fi → High-fi
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">💡</div>
+                                <div className="card-title">5. Brainstorming</div>
+                                <div className="card-content">
+                                    ระดมสมองเป็นทีม<br/>
+                                    <span className="badge badge-primary">กฎ</span> ไม่ตัดสินความคิด
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">📖</div>
+                                <div className="card-title">6. Use Case Workshops</div>
+                                <div className="card-content">
+                                    Workshop สร้าง Use Cases<br/>
+                                    <span className="badge badge-accent">ร่วมกัน</span> Stakeholders ทุกฝ่าย
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 14: SRS Document
+            {
+                title: '📄 Software Requirements Specification (SRS)',
+                subtitle: 'มาตรฐาน IEEE 830-1998',
+                content: (
+                    <>
+                        <div className="highlight-box">
+                            <h3 style={{color: 'white', marginTop: 0}}>SRS คืออะไร?</h3>
+                            <p style={{margin: 0, fontSize: 'calc(1.1rem * var(--font-size-scale))'}}>
+                                เอกสารที่<strong>ระบุความต้องการของระบบอย่างละเอียด</strong>และชัดเจน 
+                                ใช้เป็นสัญญาระหว่างทีมพัฒนากับลูกค้า และเป็นแนวทางในการออกแบบและทดสอบ
+                            </p>
+                        </div>
+
+                        <h3 style={{marginTop: '2rem'}}>📋 โครงสร้างหลัก (3 ส่วน):</h3>
+                        <div className="grid-3">
+                            <div className="card">
+                                <div className="card-title">1️⃣ Introduction</div>
+                                <div className="card-content">
+                                    • Purpose<br/>
+                                    • Scope<br/>
+                                    • Definitions<br/>
+                                    • References
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">2️⃣ Overall Description</div>
+                                <div className="card-content">
+                                    • Product Perspective<br/>
+                                    • Product Functions<br/>
+                                    • User Characteristics<br/>
+                                    • Constraints
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">3️⃣ Specific Requirements</div>
+                                <div className="card-content">
+                                    • Functional Requirements<br/>
+                                    • Non-Functional Requirements<br/>
+                                    • Use Cases<br/>
+                                    • Data Requirements
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{marginTop: '2rem', background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: '15px'}}>
+                            <h3>✅ คุณสมบัติของ SRS ที่ดี:</h3>
+                            <div className="grid-2" style={{margin: '1rem 0'}}>
+                                <div>
+                                    ✓ Correct (ถูกต้อง)<br/>
+                                    ✓ Unambiguous (ไม่คลุมเครือ)<br/>
+                                    ✓ Complete (สมบูรณ์)<br/>
+                                    ✓ Consistent (สอดคล้อง)
+                                </div>
+                                <div>
+                                    ✓ Ranked (จัดลำดับความสำคัญ)<br/>
+                                    ✓ Verifiable (ตรวจสอบได้)<br/>
+                                    ✓ Modifiable (แก้ไขได้)<br/>
+                                    ✓ Traceable (ติดตามได้)
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 15: Case Study - Ariane 5
+            {
+                title: '💥 Case Study: ความล้มเหลวจาก Requirements',
+                subtitle: 'Ariane 5 Flight 501 (1996)',
+                content: (
+                    <>
+                        <div className="stats-container">
+                            <div className="stat-card" style={{background: 'var(--accent-gradient)'}}>
+                                <div className="stat-value">$370M</div>
+                                <div className="stat-label">มูลค่าความเสียหาย</div>
+                            </div>
+                            <div className="stat-card" style={{background: 'var(--warning-gradient)'}}>
+                                <div className="stat-value">37 วิ</div>
+                                <div className="stat-label">ระเบิดหลังปล่อย</div>
+                            </div>
+                            <div className="stat-card" style={{background: 'var(--primary-gradient)'}}>
+                                <div className="stat-value">10 ปี</div>
+                                <div className="stat-label">ระยะเวลาพัฒนา</div>
+                            </div>
+                        </div>
+
+                        <h3>🔍 สาเหตุ:</h3>
+                        <div className="card" style={{marginBottom: '1rem', background: '#ffe5e5'}}>
+                            <div className="card-title" style={{color: '#c41e3a'}}>Integer Overflow</div>
+                            <div className="card-content" style={{color: '#333'}}>
+                                โค้ดที่ใช้ซ้ำจาก Ariane 4 ไม่สามารถรองรับความเร็วที่สูงกว่าของ Ariane 5<br/>
+                                การแปลง 64-bit floating-point เป็น 16-bit integer ทำให้เกิด overflow
+                            </div>
+                        </div>
+
+                        <h3>💡 บทเรียน:</h3>
+                        <ul className="list-fancy">
+                            <li>ต้องทบทวน Requirements เมื่อนำโค้ดเก่ามาใช้ใหม่</li>
+                            <li>NFR ด้าน Performance มีความสำคัญเท่า FR</li>
+                            <li>Testing ต้องครอบคลุมทุกเงื่อนไข รวมถึง Edge Cases</li>
+                            <li>Requirements ที่ไม่ชัดเจนอาจก่อให้เกิดความเสียหายมหาศาล</li>
+                        </ul>
+
+                        <div className="quote-box" style={{marginTop: '2rem'}}>
+                            "A small software bug can have devastating consequences."
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 16: HTML Semantic - Introduction
+            {
+                title: '🌐 HTML Semantic Structure',
+                subtitle: 'ทำไมต้องใช้ Semantic HTML?',
+                content: (
+                    <>
+                        <div className="highlight-box">
+                            <h3 style={{color: 'white', marginTop: 0}}>Semantic HTML คืออะไร?</h3>
+                            <p style={{margin: 0, fontSize: 'calc(1.1rem * var(--font-size-scale))'}}>
+                                การใช้ HTML tags ที่<strong>มีความหมาย</strong>และบอกได้ว่าเนื้อหาส่วนนั้นคืออะไร 
+                                ไม่ใช่แค่การจัดรูปแบบ แต่เป็นการให้<strong>ความหมายเชิงโครงสร้าง</strong>
+                            </p>
+                        </div>
+
+                        <h3 style={{marginTop: '2rem'}}>🎯 ประโยชน์ของ Semantic HTML:</h3>
+                        <div className="grid-2">
+                            <div className="card">
+                                <div className="card-icon">♿</div>
+                                <div className="card-title">1. Accessibility</div>
+                                <div className="card-content">
+                                    Screen readers สามารถเข้าใจโครงสร้างเว็บได้ดีขึ้น 
+                                    ช่วยให้คนพิการทางสายตาใช้งานได้สะดวก
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">🔍</div>
+                                <div className="card-title">2. SEO</div>
+                                <div className="card-content">
+                                    Search engines เข้าใจเนื้อหาได้ดีขึ้น 
+                                    ช่วยให้เว็บไซต์ติดอันดับการค้นหาได้ดีขึ้น
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">🔧</div>
+                                <div className="card-title">3. Maintainability</div>
+                                <div className="card-content">
+                                    โค้ดอ่านง่าย เข้าใจง่าย แก้ไขง่าย 
+                                    Developer คนอื่นสามารถเข้ามาทำงานต่อได้สะดวก
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">📱</div>
+                                <div className="card-title">4. Standards Compliance</div>
+                                <div className="card-content">
+                                    ทำตามมาตรฐาน W3C HTML5 
+                                    ทำให้เว็บไซต์ทำงานได้ดีบนทุก browser
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 17: Semantic Tags
+            {
+                title: '🏷️ HTML5 Semantic Tags',
+                subtitle: 'Tags ที่มีความหมายสำคัญ',
+                content: (
+                    <>
+                        <div className="grid-2">
+                            <div className="card">
+                                <div className="card-title">&lt;header&gt;</div>
+                                <div className="card-content">
+                                    ส่วนหัวของเอกสารหรือ section<br/>
+                                    มักประกอบด้วย logo, navigation, heading
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">&lt;nav&gt;</div>
+                                <div className="card-content">
+                                    ส่วนของ navigation links<br/>
+                                    เมนูหลักของเว็บไซต์
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">&lt;main&gt;</div>
+                                <div className="card-content">
+                                    เนื้อหาหลักของเอกสาร<br/>
+                                    มีได้เพียง 1 tag ในหนึ่งหน้า
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">&lt;section&gt;</div>
+                                <div className="card-content">
+                                    กลุ่มเนื้อหาที่เกี่ยวข้องกัน<br/>
+                                    มักมี heading ของตัวเอง
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">&lt;article&gt;</div>
+                                <div className="card-content">
+                                    เนื้อหาที่สมบูรณ์ในตัวเอง<br/>
+                                    เช่น blog post, news article
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">&lt;aside&gt;</div>
+                                <div className="card-content">
+                                    เนื้อหาเสริมหรือ sidebar<br/>
+                                    เนื้อหาที่เกี่ยวข้องแต่ไม่ใช่เนื้อหาหลัก
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">&lt;footer&gt;</div>
+                                <div className="card-content">
+                                    ส่วนท้ายของเอกสารหรือ section<br/>
+                                    ข้อมูลลิขสิทธิ์, ติดต่อ, links
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">&lt;figure&gt; & &lt;figcaption&gt;</div>
+                                <div className="card-content">
+                                    รูปภาพหรือ diagram พร้อมคำบรรยาย<br/>
+                                    Self-contained content
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 18: Diagram 3 - HTML5 Semantic
+            {
+                title: '📊 HTML5 Semantic Structure Diagram',
+                subtitle: 'โครงสร้างหน้าเว็บที่ดี',
+                content: (
+                    <>
+                        <div className="diagram-container" style={{height: '500px'}}>
+                            <div className="diagram-placeholder">
+                                <h3>HTML5 Semantic Structure</h3>
+                                <p>แสดงโครงสร้างหน้าเว็บแบบ Landing Page:</p>
+                                <div style={{textAlign: 'left', maxWidth: '700px', margin: '2rem auto', lineHeight: '1.8'}}>
+                                    <strong>&lt;header&gt;</strong> - Logo + Navigation<br/>
+                                    <div style={{paddingLeft: '2rem'}}>
+                                        <strong>&lt;nav&gt;</strong> - เมนูหลัก
+                                    </div>
+                                    <strong>&lt;main&gt;</strong> - เนื้อหาหลัก<br/>
+                                    <div style={{paddingLeft: '2rem'}}>
+                                        <strong>&lt;section id="hero"&gt;</strong> - Hero section<br/>
+                                        <strong>&lt;section id="features"&gt;</strong> - Features<br/>
+                                        <div style={{paddingLeft: '2rem'}}>
+                                            <strong>&lt;article&gt;</strong> - Feature card (3 cards)
+                                        </div>
+                                        <strong>&lt;section id="contact"&gt;</strong> - Contact form
+                                    </div>
+                                    <strong>&lt;aside&gt;</strong> - Sidebar (Latest News, Quick Links)<br/>
+                                    <strong>&lt;footer&gt;</strong> - Company info, Links, Contact
+                                </div>
+                                <p style={{marginTop: '2rem', fontSize: '0.9rem', color: 'var(--text-muted)'}}>
+                                    📁 diagram3_html5_semantic.drawio
+                                </p>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 19: Non-Semantic vs Semantic
+            {
+                title: '⚖️ Non-Semantic vs Semantic HTML',
+                subtitle: 'ความแตกต่างที่ต้องรู้',
+                content: (
+                    <>
+                        <div className="comparison-table">
+                            <div className="comparison-column">
+                                <h3 style={{color: '#c41e3a'}}>❌ Non-Semantic (ไม่ดี)</h3>
+                                <pre style={{fontSize: 'calc(0.85rem * var(--font-size-scale))'}}><code>{`<div id="header">
+  <div id="nav">
+    <div class="nav-item">Home</div>
+    <div class="nav-item">About</div>
+  </div>
+</div>
+
+<div id="content">
+  <div class="post">
+    <div class="post-title">Title</div>
+    <div class="post-content">...</div>
+  </div>
+</div>
+
+<div id="sidebar">
+  <div class="widget">...</div>
+</div>
+
+<div id="footer">
+  <div class="copyright">...</div>
+</div>`}</code></pre>
+                                <div className="card" style={{background: '#ffe5e5', marginTop: '1rem'}}>
+                                    <div className="card-content" style={{color: '#333'}}>
+                                        <strong>ปัญหา:</strong><br/>
+                                        • ไม่มีความหมาย<br/>
+                                        • Screen readers สับสน<br/>
+                                        • SEO ไม่ดี<br/>
+                                        • อ่านโค้ดยาก
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="comparison-column">
+                                <h3 style={{color: '#28a745'}}>✅ Semantic (ดี)</h3>
+                                <pre style={{fontSize: 'calc(0.85rem * var(--font-size-scale))'}}><code>{`<header>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+  </nav>
+</header>
+
+<main>
+  <article>
+    <h1>Title</h1>
+    <p>...</p>
+  </article>
+</main>
+
+<aside>
+  <section class="widget">...</section>
+</aside>
+
+<footer>
+  <p class="copyright">...</p>
+</footer>`}</code></pre>
+                                <div className="card" style={{background: '#d4edda', marginTop: '1rem'}}>
+                                    <div className="card-content" style={{color: '#333'}}>
+                                        <strong>ข้อดี:</strong><br/>
+                                        • มีความหมายชัดเจน<br/>
+                                        • Accessibility ดี<br/>
+                                        • SEO ดีขึ้น<br/>
+                                        • โค้ดอ่านง่าย
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 20: Best Practices
+            {
+                title: '✨ Best Practices สำหรับ HTML Semantic',
+                subtitle: 'แนวทางปฏิบัติที่ดี',
+                content: (
+                    <>
+                        <div className="grid-2">
+                            <div className="card">
+                                <div className="card-icon">✅</div>
+                                <div className="card-title">DO (ควรทำ)</div>
+                                <div className="card-content">
+                                    • ใช้ semantic tags ที่เหมาะสม<br/>
+                                    • &lt;header&gt; สำหรับส่วนหัว<br/>
+                                    • &lt;nav&gt; สำหรับเมนู<br/>
+                                    • &lt;main&gt; สำหรับเนื้อหาหลัก<br/>
+                                    • &lt;article&gt; สำหรับเนื้อหาสมบูรณ์<br/>
+                                    • &lt;footer&gt; สำหรับส่วนท้าย<br/>
+                                    • ใส่ alt attribute ให้รูปภาพ<br/>
+                                    • ใช้ heading hierarchy ที่ถูกต้อง
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">❌</div>
+                                <div className="card-title">DON'T (ไม่ควรทำ)</div>
+                                <div className="card-content">
+                                    • ใช้ &lt;div&gt; สำหรับทุกอย่าง<br/>
+                                    • ข้าม heading levels (h1 → h3)<br/>
+                                    • ลืมใส่ alt text ให้รูปภาพ<br/>
+                                    • ใช้ &lt;br&gt; เยอะๆ แทน CSS<br/>
+                                    • ใช้ table สำหรับ layout<br/>
+                                    • ใช้ inline styles มากเกินไป<br/>
+                                    • ลืม responsive design<br/>
+                                    • เขียน HTML ที่ไม่ valid
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="highlight-box" style={{marginTop: '2rem'}}>
+                            <h3 style={{color: 'white', marginTop: 0}}>💡 จำง่ายๆ:</h3>
+                            <p style={{margin: 0, fontSize: 'calc(1.2rem * var(--font-size-scale))'}}>
+                                <strong>"Use the right tag for the right job"</strong><br/>
+                                ใช้ tag ที่เหมาะสมกับงานนั้นๆ ไม่ใช่ &lt;div&gt; ทุกอย่าง
+                            </p>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 21: Lab Overview
+            {
+                title: '🔬 LAB Week 2: ภาพรวม',
+                subtitle: 'ปฏิบัติการ 3 ชั่วโมง (15 คะแนน)',
+                content: (
+                    <>
+                        <div className="grid-2" style={{marginBottom: '2rem'}}>
+                            <div className="card" style={{background: 'var(--primary-gradient)', color: 'white'}}>
+                                <div className="card-title" style={{color: 'white'}}>Part 1: Requirements Elicitation</div>
+                                <div className="card-content" style={{color: 'white'}}>
+                                    ⏱️ 45 นาที | 📊 4 คะแนน<br/>
+                                    • Brainstorming & Stakeholder Analysis<br/>
+                                    • Role-play User Interview
+                                </div>
+                            </div>
+                            <div className="card" style={{background: 'var(--success-gradient)', color: 'white'}}>
+                                <div className="card-title" style={{color: 'white'}}>Part 2: Requirements Specification</div>
+                                <div className="card-content" style={{color: 'white'}}>
+                                    ⏱️ 45 นาที | 📊 4 คะแนน<br/>
+                                    • Requirements Categorization (FR/NFR)<br/>
+                                    • Draft SRS Document
+                                </div>
+                            </div>
+                            <div className="card" style={{background: 'var(--accent-gradient)', color: 'white'}}>
+                                <div className="card-title" style={{color: 'white'}}>Part 3: HTML Landing Page</div>
+                                <div className="card-content" style={{color: 'white'}}>
+                                    ⏱️ 60 นาที | 📊 5 คะแนน<br/>
+                                    • HTML5 Semantic Structure<br/>
+                                    • CSS Styling & Responsive Design
+                                </div>
+                            </div>
+                            <div className="card" style={{background: 'var(--warning-gradient)', color: 'white'}}>
+                                <div className="card-title" style={{color: 'white'}}>Part 4: Git & Collaboration</div>
+                                <div className="card-content" style={{color: 'white'}}>
+                                    ⏱️ 30 นาที | 📊 2 คะแนน<br/>
+                                    • Git Commit & Push<br/>
+                                    • Pull Request & Code Review
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="highlight-box">
+                            <h3 style={{color: 'white', marginTop: 0}}>🎯 โปรเจกต์ที่เลือกได้:</h3>
+                            <div className="grid-3" style={{margin: '1rem 0', gap: '1rem'}}>
+                                <div style={{background: 'rgba(255,255,255,0.2)', padding: '1rem', borderRadius: '10px'}}>
+                                    <strong>1. EcoTrack</strong><br/>
+                                    Carbon footprint tracker
+                                </div>
+                                <div style={{background: 'rgba(255,255,255,0.2)', padding: '1rem', borderRadius: '10px'}}>
+                                    <strong>2. StudyBuddy</strong><br/>
+                                    Study partner matching
+                                </div>
+                                <div style={{background: 'rgba(255,255,255,0.2)', padding: '1rem', borderRadius: '10px'}}>
+                                    <strong>3. CampusEats</strong><br/>
+                                    University food ordering
+                                </div>
+                                <div style={{background: 'rgba(255,255,255,0.2)', padding: '1rem', borderRadius: '10px'}}>
+                                    <strong>4. FitnessPal</strong><br/>
+                                    Fitness & nutrition
+                                </div>
+                                <div style={{background: 'rgba(255,255,255,0.2)', padding: '1rem', borderRadius: '10px'}}>
+                                    <strong>5. EventHub</strong><br/>
+                                    Event management
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 22: Tools & Resources
+            {
+                title: '🛠️ เครื่องมือและแหล่งข้อมูล',
+                subtitle: 'สิ่งที่ต้องเตรียม',
+                content: (
+                    <>
+                        <div className="grid-3">
+                            <div className="card">
+                                <div className="card-icon">💻</div>
+                                <div className="card-title">Code Editor</div>
+                                <div className="card-content">
+                                    • Visual Studio Code<br/>
+                                    • Extensions: Live Server, Prettier
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">🔄</div>
+                                <div className="card-title">Version Control</div>
+                                <div className="card-content">
+                                    • Git<br/>
+                                    • GitHub Account<br/>
+                                    • GitHub Desktop (optional)
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">🎨</div>
+                                <div className="card-title">Design Tools</div>
+                                <div className="card-content">
+                                    • Draw.io (diagrams)<br/>
+                                    • Figma (wireframes)<br/>
+                                    • Canva (graphics)
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">🌐</div>
+                                <div className="card-title">Browsers</div>
+                                <div className="card-content">
+                                    • Chrome (DevTools)<br/>
+                                    • Firefox<br/>
+                                    • Edge
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">📚</div>
+                                <div className="card-title">Documentation</div>
+                                <div className="card-content">
+                                    • MDN Web Docs<br/>
+                                    • W3Schools<br/>
+                                    • IEEE 830 Standard
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-icon">💬</div>
+                                <div className="card-title">Communication</div>
+                                <div className="card-content">
+                                    • Discord/Slack<br/>
+                                    • Google Meet<br/>
+                                    • Line Group
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 23: Tips for Success
+            {
+                title: '💡 เคล็ดลับสู่ความสำเร็จ',
+                subtitle: 'สิ่งที่ควรจำ',
+                content: (
+                    <>
+                        <div className="grid-2">
+                            <div>
+                                <h3>📝 สำหรับ Requirements:</h3>
+                                <ul className="list-fancy">
+                                    <li><strong>ถามคำถามที่ดี</strong> - ใช้ 5W1H</li>
+                                    <li><strong>ฟังอย่างตั้งใจ</strong> - จด Pain Points</li>
+                                    <li><strong>เขียนให้ชัดเจน</strong> - หลีกเลี่ยงคำคลุมเครือ</li>
+                                    <li><strong>จัดลำดับความสำคัญ</strong> - ใช้ MoSCoW</li>
+                                    <li><strong>Review กับทีม</strong> - ตรวจสอบซ้ำ</li>
+                                </ul>
+
+                                <h3 style={{marginTop: '2rem'}}>🌐 สำหรับ HTML:</h3>
+                                <ul className="list-fancy">
+                                    <li><strong>Think Semantic First</strong> - เลือก tag ที่ถูก</li>
+                                    <li><strong>Mobile First</strong> - เริ่มจาก mobile</li>
+                                    <li><strong>Test ใน Browser จริง</strong> - อย่าแค่ Dev Tools</li>
+                                    <li><strong>Validate HTML</strong> - ใช้ W3C Validator</li>
+                                    <li><strong>Keep it Simple</strong> - อย่าทำซับซ้อนเกินไป</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3>👥 สำหรับการทำงานเป็นทีม:</h3>
+                                <ul className="list-fancy">
+                                    <li><strong>แบ่งหน้าที่ชัดเจน</strong> - ใครทำอะไร</li>
+                                    <li><strong>Communicate บ่อยๆ</strong> - อัพเดทความคืบหน้า</li>
+                                    <li><strong>Respect Deadline</strong> - ส่งงานตรงเวลา</li>
+                                    <li><strong>Help แลกเปลี่ยน</strong> - ช่วยเหลือกัน</li>
+                                    <li><strong>Document ทุกอย่าง</strong> - เก็บหลักฐาน</li>
+                                </ul>
+
+                                <h3 style={{marginTop: '2rem'}}>🚀 Git Best Practices:</h3>
+                                <ul className="list-fancy">
+                                    <li><strong>Commit บ่อยๆ</strong> - แต่มีความหมาย</li>
+                                    <li><strong>Write Good Messages</strong> - feat:, fix:, docs:</li>
+                                    <li><strong>Pull ก่อน Push</strong> - หลีกเลี่ยง conflicts</li>
+                                    <li><strong>Review Code</strong> - ก่อน merge</li>
+                                    <li><strong>Backup เสมอ</strong> - push to GitHub</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 24: Common Mistakes
+            {
+                title: '⚠️ ข้อผิดพลาดที่พบบ่อย',
+                subtitle: 'และวิธีหลีกเลี่ยง',
+                content: (
+                    <>
+                        <div className="grid-2">
+                            <div className="card" style={{background: '#ffe5e5', border: '2px solid #c41e3a'}}>
+                                <div className="card-title" style={{color: '#c41e3a'}}>❌ Requirements ไม่ชัดเจน</div>
+                                <div className="card-content" style={{color: '#333'}}>
+                                    <strong>ปัญหา:</strong> "ระบบต้องเร็ว", "UI ต้องสวย"<br/>
+                                    <strong>แก้ไข:</strong> ระบุตัวเลข "โหลดภายใน 2 วิ", "สอดคล้อง Material Design"
+                                </div>
+                            </div>
+
+                            <div className="card" style={{background: '#ffe5e5', border: '2px solid #c41e3a'}}>
+                                <div className="card-title" style={{color: '#c41e3a'}}>❌ ข้าม Stakeholders สำคัญ</div>
+                                <div className="card-content" style={{color: '#333'}}>
+                                    <strong>ปัญหา:</strong> คุยแค่กับ Product Owner<br/>
+                                    <strong>แก้ไข:</strong> สัมภาษณ์ End Users, Developers, Support
+                                </div>
+                            </div>
+
+                            <div className="card" style={{background: '#ffe5e5', border: '2px solid #c41e3a'}}>
+                                <div className="card-title" style={{color: '#c41e3a'}}>❌ ใช้ &lt;div&gt; ทุกอย่าง</div>
+                                <div className="card-content" style={{color: '#333'}}>
+                                    <strong>ปัญหา:</strong> &lt;div id="header"&gt; ทั้งหมด<br/>
+                                    <strong>แก้ไข:</strong> ใช้ &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;
+                                </div>
+                            </div>
+
+                            <div className="card" style={{background: '#ffe5e5', border: '2px solid #c41e3a'}}>
+                                <div className="card-title" style={{color: '#c41e3a'}}>❌ ลืม Alt Text</div>
+                                <div className="card-content" style={{color: '#333'}}>
+                                    <strong>ปัญหา:</strong> &lt;img src="logo.png"&gt;<br/>
+                                    <strong>แก้ไข:</strong> &lt;img src="logo.png" alt="Company Logo"&gt;
+                                </div>
+                            </div>
+
+                            <div className="card" style={{background: '#ffe5e5', border: '2px solid #c41e3a'}}>
+                                <div className="card-title" style={{color: '#c41e3a'}}>❌ ไม่ Test Responsive</div>
+                                <div className="card-content" style={{color: '#333'}}>
+                                    <strong>ปัญหา:</strong> ดูดีแค่บน Desktop<br/>
+                                    <strong>แก้ไข:</strong> Test บน Mobile, Tablet, Desktop
+                                </div>
+                            </div>
+
+                            <div className="card" style={{background: '#ffe5e5', border: '2px solid #c41e3a'}}>
+                                <div className="card-title" style={{color: '#c41e3a'}}>❌ Git Conflicts</div>
+                                <div className="card-content" style={{color: '#333'}}>
+                                    <strong>ปัญหา:</strong> แก้ไขไฟล์เดียวกันพร้อมกัน<br/>
+                                    <strong>แก้ไข:</strong> Pull ก่อน Push, แบ่งงานชัดเจน
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 25: Review Week 2
+            {
+                title: '📝 สรุปสัปดาห์ที่ 2',
+                subtitle: 'สิ่งที่เราได้เรียนรู้',
+                content: (
+                    <>
+                        <div className="grid-2">
+                            <div className="card" style={{background: 'var(--primary-gradient)', color: 'white'}}>
+                                <div className="card-title" style={{color: 'white'}}>🔍 Requirements Engineering</div>
+                                <div className="card-content" style={{color: 'white'}}>
+                                    ✓ เข้าใจกระบวนการ 5 ขั้นตอน<br/>
+                                    ✓ แยก FR และ NFR ได้<br/>
+                                    ✓ ระบุ Stakeholders ได้<br/>
+                                    ✓ ใช้เทคนิค Elicitation<br/>
+                                    ✓ เขียน SRS เบื้องต้น
+                                </div>
+                            </div>
+
+                            <div className="card" style={{background: 'var(--success-gradient)', color: 'white'}}>
+                                <div className="card-title" style={{color: 'white'}}>🌐 HTML Semantic</div>
+                                <div className="card-content" style={{color: 'white'}}>
+                                    ✓ เข้าใจความสำคัญของ Semantic<br/>
+                                    ✓ ใช้ tags ที่ถูกต้อง<br/>
+                                    ✓ สร้าง Landing Page<br/>
+                                    ✓ CSS Styling พื้นฐาน<br/>
+                                    ✓ Responsive Design
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="highlight-box" style={{marginTop: '2rem'}}>
+                            <h3 style={{color: 'white', marginTop: 0}}>🎯 Key Takeaways:</h3>
+                            <ul style={{fontSize: 'calc(1.1rem * var(--font-size-scale))', lineHeight: '2', marginBottom: 0}}>
+                                <li><strong>Requirements เป็นรากฐานของโปรเจกต์</strong> - ผิดตรงนี้ ผิดทั้งหมด</li>
+                                <li><strong>Semantic HTML ไม่ได้แค่สวยงาม</strong> - แต่ช่วย accessibility และ SEO</li>
+                                <li><strong>การสื่อสารกับ Stakeholders สำคัญที่สุด</strong> - ต้องถามให้ได้ใจความ</li>
+                                <li><strong>เอกสารดีช่วยให้ทีมทำงานง่ายขึ้น</strong> - SRS เป็นสัญญา</li>
+                            </ul>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 26: Next Week Preview
+            {
+                title: '🔜 สัปดาห์ที่ 3: สิ่งที่เราจะเรียน',
+                subtitle: 'Use Case & User Stories + React Basics',
+                content: (
+                    <>
+                        <div className="highlight-box" style={{marginBottom: '2rem'}}>
+                            <h2 style={{color: 'white', marginTop: 0, fontSize: 'calc(2rem * var(--font-size-scale))'}}>
+                                สัปดาห์ที่ 3: Use Case & User Stories + React Basics
+                            </h2>
+                            <p style={{fontSize: 'calc(1.2rem * var(--font-size-scale))', margin: 0}}>
+                                จากความต้องการสู่การออกแบบการใช้งาน พร้อมเริ่มต้น React
+                            </p>
+                        </div>
+
+                        <div className="grid-2">
+                            <div>
+                                <h3>📚 ทฤษฎี (2 ชั่วโมง):</h3>
+                                <ul className="list-fancy">
+                                    <li><strong>Use Case Diagram</strong> - แสดงการใช้งานระบบ</li>
+                                    <li><strong>Use Case Specification</strong> - เขียนรายละเอียด</li>
+                                    <li><strong>User Stories</strong> - แบบ Agile</li>
+                                    <li><strong>Story Mapping</strong> - จัดลำดับความสำคัญ</li>
+                                    <li><strong>React Introduction</strong> - Components & JSX</li>
+                                    <li><strong>React State & Props</strong> - การจัดการข้อมูล</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3>🔬 ปฏิบัติ (3 ชั่วโมง):</h3>
+                                <ul className="list-fancy">
+                                    <li>สร้าง Use Case Diagram ด้วย Draw.io</li>
+                                    <li>เขียน Use Case Specification</li>
+                                    <li>เขียน User Stories พร้อม Acceptance Criteria</li>
+                                    <li>สร้าง Story Map</li>
+                                    <li>Setup React Project</li>
+                                    <li>สร้าง Components แรก</li>
+                                    <li>ทำ Landing Page เป็น React</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div style={{marginTop: '2rem', padding: '2rem', background: 'var(--bg-secondary)', borderRadius: '15px', textAlign: 'center'}}>
+                            <h3>🎯 เตรียมตัว:</h3>
+                            <div className="grid-3" style={{margin: '1rem 0'}}>
+                                <div className="badge badge-primary" style={{padding: '1rem'}}>
+                                    ติดตั้ง Node.js
+                                </div>
+                                <div className="badge badge-accent" style={{padding: '1rem'}}>
+                                    ทบทวน JavaScript ES6
+                                </div>
+                                <div className="badge badge-success" style={{padding: '1rem'}}>
+                                    อ่าน React Docs
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 27: Assignment Reminder
+            {
+                title: '📌 การบ้านและกำหนดส่ง',
+                subtitle: 'อย่าลืม!',
+                content: (
+                    <>
+                        <div className="stats-container">
+                            <div className="stat-card" style={{background: 'var(--primary-gradient)'}}>
+                                <div className="stat-value">15</div>
+                                <div className="stat-label">คะแนน LAB</div>
+                            </div>
+                            <div className="stat-card" style={{background: 'var(--accent-gradient)'}}>
+                                <div className="stat-value">4</div>
+                                <div className="stat-label">ไฟล์ที่ต้องส่ง</div>
+                            </div>
+                            <div className="stat-card" style={{background: 'var(--success-gradient)'}}>
+                                <div className="stat-value">+2</div>
+                                <div className="stat-label">คะแนนพิเศษ</div>
+                            </div>
+                        </div>
+
+                        <h3>📦 สิ่งที่ต้องส่ง:</h3>
+                        <div className="grid-2">
+                            <div className="card">
+                                <div className="card-title">1. GitHub Repository</div>
+                                <div className="card-content">
+                                    • URL ของ Repo<br/>
+                                    • README.md ครบถ้วน<br/>
+                                    • Code ที่ clean
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">2. เอกสาร Requirements</div>
+                                <div className="card-content">
+                                    • SRS_Draft_GroupXX.pdf<br/>
+                                    • Interview_Notes_GroupXX.pdf<br/>
+                                    • Stakeholder_Analysis_GroupXX.xlsx
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">3. Screenshots</div>
+                                <div className="card-content">
+                                    • Landing page (Desktop & Mobile)<br/>
+                                    • GitHub repository<br/>
+                                    • Pull request & Code review
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-title">4. Video Demo (พิเศษ +2)</div>
+                                <div className="card-content">
+                                    • 3-5 นาที<br/>
+                                    • อธิบายฟีเจอร์<br/>
+                                    • แสดงการทำงาน
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="highlight-box" style={{marginTop: '2rem'}}>
+                            <h3 style={{color: 'white', marginTop: 0}}>⏰ กำหนดส่ง</h3>
+                            <p style={{fontSize: 'calc(1.5rem * var(--font-size-scale))', margin: 0}}>
+                                <strong>ส่งภายในสัปดาห์หน้า (ก่อนคาบเรียนสัปดาห์ที่ 3)</strong><br/>
+                                <span style={{fontSize: 'calc(1rem * var(--font-size-scale))'}}>ส่งช้า: หัก 10% ต่อวัน</span>
+                            </p>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 28: Q&A
+            {
+                title: '❓ Questions & Answers',
+                subtitle: 'พร้อมตอบคำถาม',
+                content: (
+                    <>
+                        <div style={{textAlign: 'center', padding: '3rem'}}>
+                            <div style={{fontSize: 'calc(5rem * var(--font-size-scale))', marginBottom: '2rem'}}>
+                                🤔
+                            </div>
+                            <h2 style={{fontSize: 'calc(3rem * var(--font-size-scale))', marginBottom: '2rem'}}>
+                                มีคำถามไหมครับ?
+                            </h2>
+                            
+                            <div className="grid-3" style={{marginTop: '3rem'}}>
+                                <div className="card">
+                                    <div className="card-icon">💬</div>
+                                    <div className="card-title">ถามในคลาส</div>
+                                    <div className="card-content">ยกมือถามได้เลย</div>
+                                </div>
+                                <div className="card">
+                                    <div className="card-icon">📧</div>
+                                    <div className="card-title">Email</div>
+                                    <div className="card-content">อาจารย์ตอบภายใน 24 ชม.</div>
+                                </div>
+                                <div className="card">
+                                    <div className="card-icon">💻</div>
+                                    <div className="card-title">Office Hours</div>
+                                    <div className="card-content">นัดหมายล่วงหน้า</div>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            },
+
+            // Slide 29: Thank You
+            {
+                type: 'hero',
+                content: (
+                    <>
+                        <div style={{fontSize: 'calc(5rem * var(--font-size-scale))', marginBottom: '2rem'}}>
+                            🙏
+                        </div>
+                        <div className="slide-title" style={{fontSize: 'calc(4rem * var(--font-size-scale))'}}>
+                            ขอบคุณครับ!
+                        </div>
+                        <div className="slide-subtitle" style={{marginTop: '2rem'}}>
+                            สัปดาห์ที่ 2: Requirements Engineering + HTML Semantic
+                        </div>
+                        
+                        <div style={{marginTop: '4rem', fontSize: 'calc(1.3rem * var(--font-size-scale))'}}>
+                            <p><strong>อาจารย์ธนิต เกตุแก้ว</strong></p>
+                            <p>ENGCE301: การออกแบบและพัฒนาซอฟต์แวร์</p>
+                            <p>มหาวิทยาลัยเทคโนโลยีราชมงคลล้านนา</p>
+                        </div>
+
+                        <div style={{marginTop: '4rem'}}>
+                            <span className="badge badge-primary" style={{fontSize: 'calc(1.2rem * var(--font-size-scale))', padding: '1rem 2rem'}}>
+                                พบกันสัปดาห์หน้า! 👋
+                            </span>
+                        </div>
+                    </>
+                )
+            }
+        ];
+
+        function SlidePresentation() {
+            const [currentSlide, setCurrentSlide] = useState(0);
+            const [theme, setTheme] = useState('light');
+            const [fontSize, setFontSize] = useState(1);
+            const [isFullscreen, setIsFullscreen] = useState(false);
+
+            useEffect(() => {
+                document.documentElement.setAttribute('data-theme', theme);
+            }, [theme]);
+
+            useEffect(() => {
+                document.documentElement.style.setProperty('--font-size-scale', fontSize);
+            }, [fontSize]);
+
+            useEffect(() => {
+                const handleKeyPress = (e) => {
+                    if (e.key === 'ArrowRight' || e.key === ' ') {
+                        nextSlide();
+                    } else if (e.key === 'ArrowLeft') {
+                        prevSlide();
+                    } else if (e.key === 'f' || e.key === 'F') {
+                        toggleFullscreen();
+                    }
+                };
+
+                window.addEventListener('keydown', handleKeyPress);
+                return () => window.removeEventListener('keydown', handleKeyPress);
+            }, [currentSlide]);
+
+            const nextSlide = () => {
+                setCurrentSlide((prev) => (prev + 1) % slides.length);
+            };
+
+            const prevSlide = () => {
+                setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+            };
+
+            const toggleTheme = () => {
+                setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+            };
+
+            const increaseFontSize = () => {
+                setFontSize((prev) => Math.min(prev + 0.1, 1.5));
+            };
+
+            const decreaseFontSize = () => {
+                setFontSize((prev) => Math.max(prev - 0.1, 0.7));
+            };
+
+            const toggleFullscreen = () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                    setIsFullscreen(true);
+                } else {
+                    document.exitFullscreen();
+                    setIsFullscreen(false);
+                }
+            };
+
+            const slide = slides[currentSlide];
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+
+            return (
+                <div className="presentation-container">
+                    <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+                    
+                    <div className="slide-number">
+                        {currentSlide + 1} / {slides.length}
+                    </div>
+
+                    <div className="slide-wrapper">
+                        <div className={`slide ${slide.type === 'hero' ? 'hero-slide' : ''}`}>
+                            {slide.type === 'hero' ? (
+                                slide.content
+                            ) : (
+                                <>
+                                    <div className="slide-header">
+                                        <h1 className="slide-title">{slide.title}</h1>
+                                        {slide.subtitle && (
+                                            <div className="slide-subtitle">{slide.subtitle}</div>
+                                        )}
+                                    </div>
+                                    <div className="slide-content">
+                                        {slide.content}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="controls">
+                        <button className="control-btn" onClick={prevSlide} title="Previous (←)">
+                            ←
+                        </button>
+                        <button className="control-btn" onClick={nextSlide} title="Next (→ or Space)">
+                            →
+                        </button>
+                        <button className="control-btn" onClick={decreaseFontSize} title="Decrease font size">
+                            A-
+                        </button>
+                        <button className="control-btn" onClick={increaseFontSize} title="Increase font size">
+                            A+
+                        </button>
+                        <button className="control-btn" onClick={toggleTheme} title="Toggle theme">
+                            {theme === 'light' ? '🌙' : '☀️'}
+                        </button>
+                        <button className="control-btn" onClick={toggleFullscreen} title="Fullscreen (F)">
+                            {isFullscreen ? '⊡' : '⛶'}
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SlidePresentation />);
+    </script>
+</body>
+</html>

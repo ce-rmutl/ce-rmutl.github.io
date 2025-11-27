@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ENGCE301 - สัปดาห์ที่ 1: Introduction to Software Engineering & SDLC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* === 1. Variables & Base === */
+        :root {
+            --primary-color: #0f766e;  /* Teal */
+            --secondary-color: #2563eb;/* Blue */
+            --accent-color: #f97316;   /* Orange */
+            --bg-color: #e5ebf3;       /* Light BG */
+            --slide-bg: #ffffff;
+            --text-color: #111827;
+            --heading-color: #0f172a;
+            --code-bg: #0f172a;
+            --code-text: #e5e7eb;
+            --border-radius: 14px;
+            --shadow: 0 14px 40px rgba(15, 23, 42, 0.2);
+
+            --base-font-size: 1.2rem;  /* ใหญ่ขึ้นสำหรับ present */
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden; /* prevent page scroll */
+        }
+
+        /* === 2. Slide Deck Container === */
+        #slide-deck {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            font-size: var(--base-font-size);
+            line-height: 1.7;
+        }
+
+        /* === 3. Individual Slide Styling === */
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--slide-bg);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.985);
+            transition:
+              opacity 0.35s ease-in-out,
+              transform 0.35s ease-in-out,
+              visibility 0.35s;
+
+            padding: 32px;
+            box-sizing: border-box;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        .slide-content {
+            width: 100%;
+            max-width: 1180px;
+            max-height: 90%;
+            overflow-y: auto;
+            padding: 2.2rem 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            background: #ffffff;
+        }
+
+        /* Title slide */
+        .slide.title-slide .slide-content {
+            text-align: center;
+            background: radial-gradient(circle at top left, #22c55e, #2563eb);
+            color: white;
+            border: none;
+        }
+
+        .slide.title-slide h1 {
+            font-size: 3.4em;
+            color: #f9fafb;
+            margin: 0.2em 0 0.1em;
+        }
+        .slide.title-slide h2 {
+            font-size: 2em;
+            color: #e0f2fe;
+            font-weight: 500;
+            margin-top: 0;
+        }
+        .slide.title-slide p {
+            font-size: 1.15em;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.95em;
+            color: #6b7280;
+            z-index: 11;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background-color: rgba(15, 23, 42, 0.04);
+        }
+
+        /* === 4. Typography & Elements === */
+        h1, h2, h3, h4 {
+            color: var(--heading-color);
+            font-weight: 700;
+            margin-bottom: 0.7em;
+        }
+
+        h2 { 
+            font-size: 2.25em;
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+        }
+        h3 { 
+            font-size: 1.6em; 
+            color: var(--secondary-color);
+        }
+        h4 { font-size: 1.3em; }
+
+        p, li, span { font-size: 1.05em; }
+
+        ul, ol { padding-left: 26px; }
+        li { margin-bottom: 0.4em; }
+
+        ul.check-list li {
+            list-style-type: '✅ ';
+            padding-left: 6px;
+        }
+
+        .tagline {
+            font-size: 0.95em;
+            color: #64748b;
+            margin-bottom: 0.35em;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .highlight-chip {
+            display: inline-block;
+            background: linear-gradient(135deg, #22c55e, #0ea5e9);
+            color: #f9fafb;
+            border-radius: 999px;
+            padding: 0.15em 0.8em;
+            font-size: 0.9em;
+            margin: 0 0.15em;
+            white-space: nowrap;
+        }
+
+        .soft-chip {
+            display: inline-block;
+            border-radius: 999px;
+            padding: 0.15em 0.8em;
+            font-size: 0.9em;
+            background: #e0f2fe;
+            color: #0f172a;
+            margin: 0 0.15em 0.25em 0;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 1em 1.1em;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            font-size: 0.95em;
+            overflow-x: auto;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1.1em;
+            margin: 1.2em 0;
+            font-style: italic;
+            font-size: 1.02em;
+            color: #4b5563;
+            background: #fff7ed;
+            border-radius: 4px;
+        }
+
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 2em;
+        }
+
+        .split-50 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8em;
+        }
+
+        @media (max-width: 1024px) {
+            .slide { padding: 18px; }
+            .slide-content { padding: 1.7rem 1.4rem; }
+            .split-layout,
+            .split-50 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Infographic-style boxes */
+        .info-card {
+            border-radius: 12px;
+            padding: 0.9em 1.1em;
+            background: #ecfdf5;
+            border: 1px solid #bbf7d0;
+            margin-bottom: 0.8em;
+        }
+
+        .info-card h4 {
+            margin-top: 0;
+            margin-bottom: 0.4em;
+            color: #166534;
+        }
+
+        .warn-card {
+            border-radius: 12px;
+            padding: 0.9em 1.1em;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            margin-bottom: 0.8em;
+        }
+
+        .warn-card h4 {
+            margin-top: 0;
+            margin-bottom: 0.4em;
+            color: #9a3412;
+        }
+
+        .stat-pill {
+            display: inline-block;
+            padding: 0.2em 0.7em;
+            border-radius: 999px;
+            font-size: 0.9em;
+            background: #fee2e2;
+            color: #b91c1c;
+            margin: 0.1em 0.2em 0.3em 0;
+        }
+
+        .good-pill {
+            display: inline-block;
+            padding: 0.2em 0.7em;
+            border-radius: 999px;
+            font-size: 0.9em;
+            background: #dcfce7;
+            color: #166534;
+            margin: 0.1em 0.2em 0.3em 0;
+        }
+
+        .placeholder-image {
+            width: 100%;
+            min-height: 200px;
+            background: #e5f0ff;
+            border-radius: 10px;
+            border: 2px dashed #bfdbfe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #1d4ed8;
+            font-size: 0.95em;
+            text-align: center;
+            padding: 0.6em;
+        }
+
+        .tiny-caption {
+            font-size: 0.88em;
+            color: #6b7280;
+            margin-top: 0.4em;
+        }
+
+        .two-column-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.4em 2em;
+        }
+
+        @media (max-width: 900px) {
+            .two-column-list { grid-template-columns: 1fr; }
+        }
+
+        /* Comparison table style (infographic) */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.4em;
+        }
+        @media (max-width: 900px) {
+            .compare-grid { grid-template-columns: 1fr; }
+        }
+        .compare-box {
+            border-radius: 12px;
+            padding: 0.9em 1.1em;
+            background: #f9fafb;
+            border: 1px solid #d1d5db;
+        }
+        .compare-title {
+            font-weight: 700;
+            margin-bottom: 0.4em;
+        }
+
+        /* Kanban mini-board */
+        .kanban {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.8em;
+            margin-top: 0.6em;
+        }
+        @media (max-width: 900px) {
+            .kanban { grid-template-columns: 1fr; }
+        }
+        .kanban-column {
+            border-radius: 10px;
+            padding: 0.6em 0.7em;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            font-size: 0.95em;
+        }
+        .kanban-header {
+            font-weight: 700;
+            margin-bottom: 0.25em;
+        }
+        .kanban-card {
+            border-radius: 8px;
+            padding: 0.35em 0.6em;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            margin-bottom: 0.3em;
+            font-size: 0.92em;
+        }
+
+        /* === 5. Controls === */
+        .slide-controls {
+            position: fixed;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(6px);
+            border-radius: 50px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            z-index: 1001;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.5);
+        }
+
+        .slide-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .slide-controls button:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .slide-controls button:disabled {
+            opacity: 0.35;
+            cursor: default;
+            transform: none;
+        }
+
+        #slide-counter {
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 500;
+            min-width: 76px;
+            text-align: center;
+        }
+
+        .control-separator {
+            width: 1px;
+            height: 26px;
+            background-color: rgba(148, 163, 184, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+<div id="slide-deck">
+
+    <!-- 1. TITLE -->
+    <div class="slide title-slide active">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <p>ENGCE301: การออกแบบและพัฒนาซอฟต์แวร์ (Software Design and Development)</p>
+            <h1>Lecture 01</h1>
+            <h2>Introduction to Software Engineering &amp; SDLC<br>+ Dev Environment Setup</h2>
+            <p style="margin-top: 1.5em;">
+                นายธนิต เกตุแก้ว (thanit@rmutl.ac.th)<br>
+                หลักสูตรวิศวกรรมคอมพิวเตอร์, สาขาวิศวกรรมไฟฟ้า<br>
+                คณะวิศวกรรมศาสตร์ – มทร.ล้านนา เชียงใหม่
+            </p>
+            <p style="margin-top: 1.3em; font-size: 1.1em; opacity: 0.9;">
+                สัปดาห์ที่ 1: ปูพื้นฐานความคิดแบบ “วิศวกรซอฟต์แวร์”<br>
+                ตั้งแต่ความหมายของซอฟต์แวร์ → SDLC → กระบวนการพัฒนา → เครื่องมือจริงตลอดเทอม
+            </p>
+        </div>
+    </div>
+
+    <!-- 2. WEEK 1 OVERVIEW -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">สัปดาห์ที่ 1 – ภาพรวม</div>
+            <h2>Week 1 Agenda (Introduction &amp; Setup)</h2>
+
+            <div class="split-layout">
+                <div>
+                    <ul class="check-list">
+                        <li>บทนำสู่ <span class="highlight-chip">Software Engineering</span></li>
+                        <li>ซอฟต์แวร์คืออะไร ? Program vs Software vs Software System</li>
+                        <li>วิวัฒนาการของซอฟต์แวร์ &amp; ปัญหา <span class="highlight-chip">Software Crisis</span></li>
+                        <li>ภาพรวม <span class="highlight-chip">SDLC</span> และ Software Process Models</li>
+                        <li>เปรียบเทียบ <b>Waterfall, Incremental, Iterative, RAD, Spiral, Agile</b></li>
+                        <li>Agile Mindset, Scrum, Kanban (สำหรับการทำงานเป็นทีม)</li>
+                        <li>แนะนำ Dev Environment: Git, VS Code, Node.js, Browser DevTools</li>
+                        <li>Lab 1: Setup Dev Environment &amp; Team Repository</li>
+                    </ul>
+
+                    <div class="info-card">
+                        <h4>เชื่อมกับ Term Project ทั้งเทอม</h4>
+                        <p style="margin:0;">
+                            เนื้อหาสัปดาห์นี้ = “ฐานราก” ที่จะใช้จริงใน Term Project  
+                            (ทั้งในมุมกระบวนการ และเครื่องมือ)
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="placeholder-image">
+                        Infographic: Mindmap Week 1<br>
+                        “Software • SE • SDLC • Process Models • Dev Tools”
+                    </div>
+                    <p class="tiny-caption">
+                        ใช้ภาพ mindmap นี้เปิดคลาส – ชี้ให้เห็นว่าทุกหัวข้อจะเชื่อมกันอย่างไรตลอดเทอม
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. WEEK 1 CLOs -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">จุดประสงค์การเรียนรู้สัปดาห์ที่ 1</div>
+            <h2>เมื่อจบสัปดาห์ที่ 1 นักศึกษาจะสามารถ…</h2>
+
+            <div class="split-50">
+                <div>
+                    <h3>CLO1: ภาพใหญ่ของ SE &amp; SDLC</h3>
+                    <ul class="check-list">
+                        <li>อธิบายได้ว่า <span class="highlight-chip">“วิศวกรรมซอฟต์แวร์”</span> คืออะไร  
+                            และต่างจาก “การเขียนโปรแกรมธรรมดา” อย่างไร</li>
+                        <li>อธิบายภาพรวมของ <span class="highlight-chip">SDLC</span> และบทบาทของกระบวนการพัฒนา</li>
+                        <li>เชื่อมโยง SDLC กับมาตรฐาน เช่น SWEBOK, ISO/IEC/IEEE 12207, ACM/IEEE</li>
+                        <li>เปรียบเทียบ Waterfall vs Agile (Scrum/Kanban)  
+                            พร้อมยกตัวอย่างความเหมาะสมกับโปรเจกต์</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>CLO4 &amp; CLO6: ลงมือจริง + ทำงานเป็นทีม</h3>
+                    <ul class="check-list">
+                        <li>ติดตั้งและตรวจสอบการทำงานของ Git, VS Code, Node.js, Browser DevTools</li>
+                        <li>สร้างโครงโปรเจกต์พื้นฐาน (โฟลเดอร์ + <code>index.html</code> + <code>README.md</code>)</li>
+                        <li>Init Git repo และ push ขึ้น remote สำหรับ Term Project ได้อย่างถูกต้อง</li>
+                        <li>ทำงานร่วมกันในกลุ่ม 3–4 คน เพื่อ setup environment และจัดการ Git repository</li>
+                        <li>เริ่มสะท้อนบทบาทของตนเองในทีมพัฒนาซอฟต์แวร์ (Dev / QA / DevOps / Architect ฯลฯ)</li>
+                    </ul>
+
+                    <pre>
+CLO Map (Week 1)
+┌───────────────┐
+│ CLO1: Concept │ → SE &amp; SDLC &amp; Process Models
+├───────────────┤
+│ CLO4: Tools   │ → Git / VS Code / Node / DevTools
+├───────────────┤
+│ CLO6: Team    │ → Group setup &amp; basic collaboration
+└───────────────┘
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. WHAT IS SOFTWARE -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">พื้นฐานคำสำคัญ</div>
+            <h2>ซอฟต์แวร์คืออะไร ? (What is Software?)</h2>
+
+            <div class="split-layout">
+                <div>
+                    <p><b>นิยามแบบเข้าใจง่าย</b></p>
+                    <ul>
+                        <li>ชุดของ <b>คำสั่ง (programs)</b> ที่สั่งให้คอมพิวเตอร์ทำงานเฉพาะอย่าง</li>
+                        <li>รวมถึง <b>ข้อมูล (data)</b>, <b>เอกสาร (documentation)</b>, และ  
+                            <b>ขั้นตอนการปฏิบัติงาน (operating procedures)</b> ที่เกี่ยวข้อง</li>
+                    </ul>
+
+                    <pre>
+┌────────────── Software ──────────────┐
+│  Programs (โค้ด, executable)        │
+│+ Data (ไฟล์ข้อมูล, config)          │
+│+ Documentation (คู่มือ, SRS, ฯลฯ)   │
+│+ Operating Procedures (วิธีใช้งาน)  │
+└──────────────────────────────────────┘
+                    </pre>
+                    <p class="tiny-caption">
+                        ใช้ภาพกล่องนี้อธิบายว่า “ซอฟต์แวร์” ไม่ใช่แค่ไฟล์ .exe หรือโค้ด แต่มีส่วนอื่น ๆ ที่ต้องดูแลด้วย
+                    </p>
+                </div>
+
+                <div>
+                    <h3>ตัวอย่างรอบตัวเรา</h3>
+                    <div class="two-column-list">
+                        <div>
+                            <b>System Software</b>
+                            <ul>
+                                <li>Windows, Linux, Android, iOS</li>
+                                <li>Compiler, Runtime, Drivers</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <b>Application Software</b>
+                            <ul>
+                                <li>LINE, Facebook, Shopee, Grab</li>
+                                <li>VS Code, Figma, Chrome</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>มุมมองสำคัญสำหรับวิศวกรซอฟต์แวร์</h4>
+                        <p style="margin:0;">
+                            เราไม่ได้แค่ “เขียนโค้ด” แต่ต้องคิดถึงข้อมูล, เอกสาร และวิธีการใช้งาน/ดูแลระบบ  
+                            เพื่อให้ระบบอยู่ได้ในโลกจริงนาน ๆ
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. SOFTWARE COMPONENTS -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">องค์ประกอบของซอฟต์แวร์</div>
+            <h2>Software Components (Program • Data • Docs • Procedures)</h2>
+
+            <div class="split-50">
+                <div>
+                    <h3>องค์ประกอบหลัก</h3>
+                    <ul class="check-list">
+                        <li><b>Programs</b> – โค้ดที่รันบนเครื่อง / server / cloud</li>
+                        <li><b>Data</b> – ฐานข้อมูล, ไฟล์, configuration, logs</li>
+                        <li><b>Documentation</b> – SRS, Design docs, คู่มือใช้งาน, API docs</li>
+                        <li><b>Operating Procedures</b> – วิธี deploy, วิธี backup,  
+                            วิธี handle incident, SOP ต่าง ๆ</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="placeholder-image">
+                        Infographic: 4 วงกลมซ้อนกัน – Program, Data, Docs, Procedures  
+                        = Software System
+                    </div>
+                    <p class="tiny-caption">
+                        ใช้ภาพ 4 วงกลม / 4 blocks แสดงว่า ถ้าขาดอย่างใดอย่างหนึ่ง คุณภาพของระบบจะลดลงทันที
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. PROGRAM vs SOFTWARE vs SYSTEM -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">แยกความหมายให้ชัด</div>
+            <h2>Program vs Software vs Software System</h2>
+
+            <div class="split-layout">
+                <div>
+                    <pre>
+Program
+  = โค้ดชิ้นหนึ่งที่ทำงานเฉพาะงาน
+    (เช่น โปรแกรมคำนวณเกรดเล็ก ๆ)
+
+Software
+  = Program + Data + Docs + Procedures
+    (พร้อมใช้งานจริงในองค์กร/หน่วยงาน)
+
+Software System
+  = Software หลายส่วนเชื่อมกัน
+    + Database หลายตัว
+    + External Services / API
+    + Infra / Network / Cloud
+                    </pre>
+                </div>
+
+                <div>
+                    <div class="placeholder-image">
+                        Infographic: Program → Software → Software System  
+                        (สามกล่องขยายทีละระดับ)
+                    </div>
+                    <p class="tiny-caption">
+                        หลังจากนี้เวลาพูดถึง “ระบบ” ในวิชา ENGCE301 ให้คิดเป็น Software System  
+                        ไม่ใช่แค่ไฟล์โค้ดก้อนเดียว
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. TYPES OF SOFTWARE -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">ภาพรวมประเภทซอฟต์แวร์</div>
+            <h2>Types of Software (แผนภาพต้นไม้)</h2>
+
+            <div class="split-layout">
+                <div>
+                    <pre>
+             Types of Software
+                    │
+        ┌───────────┴───────────┐
+        │                       │
+ System Software         Application Software
+ (OS / Drivers)          (Apps ที่เราใช้ทุกวัน)
+        │                       │
+   ┌────┴────┐           ┌──────┴─────────┐
+   │         │           │                │
+ OS      Utilities   Productivity     Line-of-Business
+                     (Office, IDE)   (ERP, POS, ฯลฯ)
+                    </pre>
+                    <p class="tiny-caption">
+                        ใช้แผนภาพต้นไม้ช่วยให้นักศึกษาคิดเป็นหมวดหมู่  
+                        ไม่มองซอฟต์แวร์เป็นแค่รายชื่อ app ทีละตัว
+                    </p>
+                </div>
+
+                <div>
+                    <div class="info-card">
+                        <h4>ตัวอย่าง mapping</h4>
+                        <div class="two-column-list">
+                            <div>
+                                <b>System Software</b>
+                                <ul>
+                                    <li>Windows, Linux, Android</li>
+                                    <li>GPU Driver, Printer Driver</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <b>Application Software</b>
+                                <ul>
+                                    <li>ระบบทะเบียน มหาวิทยาลัย</li>
+                                    <li>ระบบคลินิก, ระบบธนาคารออนไลน์</li>
+                                    <li>เว็บ/แอปขายสินค้า, Food Delivery</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warn-card">
+                        <h4>เชื่อมกับ Term Project</h4>
+                        <p style="margin:0;">
+                            Term Project ของ ENGCE301 จะอยู่ฝั่ง Application Software  
+                            แต่ต้องเชื่อมกับ System Software/Infra จริง เช่น OS, DB, Cloud
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. WHAT IS SOFTWARE ENGINEERING -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">จากโค้ด → วิศวกรรม</div>
+            <h2>What is Software Engineering?</h2>
+
+            <blockquote>
+                “การใช้หลักการทางวิศวกรรม กระบวนการที่มีวินัย  
+                และเครื่องมือที่เหมาะสม ในการพัฒนา ดูแล และบริหารซอฟต์แวร์  
+                ให้ตอบโจทย์ผู้ใช้และคุณภาพที่ต้องการ”
+            </blockquote>
+
+            <div class="split-50">
+                <div>
+                    <h3>ไม่ใช่แค่ “เขียนโปรแกรม”</h3>
+                    <ul>
+                        <li>สนใจทั้ง <b>วงจรชีวิตซอฟต์แวร์</b> ไม่ใช่แค่ตอนเขียนโค้ด</li>
+                        <li>ต้องคิดเรื่อง <b>คุณภาพ (Quality Attributes)</b> เช่น Performance, Security, Maintainability</li>
+                        <li>คำนึงถึงทีมหลายบทบาท: Dev, QA, Ops, Business, Users</li>
+                    </ul>
+
+                    <pre>
+Code-centric mindset
+  → "เขียนให้รันได้"
+
+SE mindset
+  → "ออกแบบให้โตได้, แก้ได้, อยู่ได้ยาว"
+                    </pre>
+                </div>
+
+                <div>
+                    <h3>คำถามชวนคิด</h3>
+                    <ul class="check-list">
+                        <li>ระบบที่ดี “เฉพาะวันนี้” กับ “อยู่ได้ 5–10 ปี” ต่างกันอย่างไร?</li>
+                        <li>ถ้าทีมใหม่เข้ามารับช่วงต่อ จะอ่านโค้ด/เอกสารแล้วเข้าใจไหม?</li>
+                        <li>ถ้าผู้ใช้โตจาก 100 → 100,000 คน ระบบยังรอดไหม?</li>
+                    </ul>
+
+                    <div class="placeholder-image">
+                        Infographic: Triangle – People • Process • Tools  
+                        = Software Engineering
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. PROGRAMMING vs SOFTWARE ENGINEERING -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">ตารางเปรียบเทียบ (จาก Lecture)</div>
+            <h2>Programming vs Software Engineering</h2>
+
+            <div class="compare-grid">
+                <div class="compare-box">
+                    <div class="compare-title">Programming</div>
+                    <ul>
+                        <li>โฟกัสที่ “เขียนโค้ดให้รันได้” ตามโจทย์เล็ก ๆ</li>
+                        <li>มักคิดทีละไฟล์ / ทีละฟังก์ชัน</li>
+                        <li>ไม่ค่อยสนใจเรื่อง deploy, scaling, maintenance</li>
+                        <li>เอกสาร/โครงกระบวนการมีน้อยหรือไม่มีเลย</li>
+                    </ul>
+                </div>
+
+                <div class="compare-box">
+                    <div class="compare-title">Software Engineering</div>
+                    <ul>
+                        <li>โฟกัสทั้ง “ทำงานได้” + “ทำงานได้ดีระยะยาว”</li>
+                        <li>คิดเป็นระบบ: Architecture, Modules, Interfaces</li>
+                        <li>สนใจ deployment, monitoring, backup, incident handling</li>
+                        <li>มี process, docs, standard, review, testing ครบวงจร</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p style="margin-top:1em;">
+                ใน ENGCE301 เราจะเริ่มขยับจากฝั่ง <b>Programming</b> → <span class="highlight-chip">Software Engineering</span>  
+                ผ่านทั้งทฤษฎี (SDLC, Process Models) และการลงมือทำใน Term Project
+            </p>
+        </div>
+    </div>
+
+    <!-- 10. SOFTWARE CRISIS -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">ปัญหาในอดีตที่ต้องเรียนรู้</div>
+            <h2>Software Crisis &amp; ทำไมต้องมี Software Engineering</h2>
+
+            <div class="split-layout">
+                <div>
+                    <h3>Software Crisis คืออะไร?</h3>
+                    <ul>
+                        <li>โครงการซอฟต์แวร์จำนวนมาก <b>ส่งไม่ทัน / เกินงบ / ใช้งานจริงไม่ได้</b></li>
+                        <li>ระบบในโดเมนสำคัญ (การแพทย์ การบิน การเงิน) เกิดบั๊กจนเกิดความเสียหายใหญ่</li>
+                        <li>ขนาดระบบใหญ่เกินกว่าที่ทีมเล็ก ๆ จะ “จำทุกอย่างในหัว” ได้</li>
+                    </ul>
+
+                    <div class="warn-card">
+                        <h4>สถิติจาก Lecture</h4>
+                        <span class="stat-pill">68% ของโครงการล้มเหลวเพราะ requirement ไม่ชัดเจน</span><br>
+                        <span class="stat-pill">การเปลี่ยน requirement ช่วงท้าย → ต้นทุนสูงขึ้น &gt; 100 เท่า</span><br>
+                        <span class="good-pill">โครงการที่จัดการ requirement ดี มีอัตราสำเร็จสูงอย่างมีนัยสำคัญ</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>Software Engineering เข้ามาช่วยอย่างไร?</h3>
+                    <pre>
+ก่อนหน้า:
+  "เก่งเขียนโค้ด = ทำโปรเจกต์ใหญ่ได้"
+
+ผลลัพธ์:
+  • ระบบซับซ้อนเกินควบคุม
+  • แก้บั๊กที = พังอีกหลายส่วน
+  • ทีมใหม่เข้ามา → อ่านโค้ดไม่รู้เรื่อง
+
+คำตอบ:
+  นำ "ความเป็นวิศวกรรม" เข้ามาช่วย
+  = หลักการ + กระบวนการ + มาตรฐาน
+                    </pre>
+
+                    <div class="placeholder-image">
+                        Infographic: Timeline “Before SE” → “Software Crisis” → “SE Era”
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. STANDARDS & SWEBOK -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">มาตรฐานและกรอบองค์ความรู้</div>
+            <h2>SWEBOK, ISO/IEC/IEEE 12207 &amp; ACM/IEEE</h2>
+
+            <div class="split-layout">
+                <div>
+                    <h3>SWEBOK (Software Engineering Body of Knowledge)</h3>
+                    <ul class="check-list">
+                        <li>สรุป “องค์ความรู้หลัก” ที่วิศวกรซอฟต์แวร์ควรรู้</li>
+                        <li>มีหลาย knowledge areas เช่น Requirements, Design, Construction, Testing, Maintenance ฯลฯ</li>
+                        <li>ใช้เป็น reference สำหรับหลักสูตรมหาวิทยาลัย และ industry</li>
+                    </ul>
+
+                    <div class="info-card">
+                        <h4>สำหรับนักศึกษา</h4>
+                        <p style="margin:0;">
+                            วิชา ENGCE301 ครอบคลุมหลายส่วนของ SWEBOK  
+                            โดยเฉพาะด้าน Requirements, Design, Construction, Process, Tools &amp; Methods
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>ISO/IEC/IEEE 12207 &amp; ACM/IEEE Curriculum</h3>
+                    <ul>
+                        <li><b>ISO/IEC/IEEE 12207</b> – มาตรฐานกระบวนการวงจรชีวิตซอฟต์แวร์ (Software Life Cycle Processes)</li>
+                        <li><b>ACM/IEEE Curriculum</b> – แนวทางออกแบบหลักสูตรวิศวกรรมซอฟต์แวร์ในระดับมหาวิทยาลัย</li>
+                    </ul>
+
+                    <div class="placeholder-image">
+                        Infographic: กล่อง 3 ใบ – SWEBOK, ISO/IEC/IEEE 12207, ACM/IEEE  
+                        → หัวใจของ “SE Profession”
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. EVOLUTION & THINKING -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">วิวัฒนาการของซอฟต์แวร์ &amp; วิธีคิดของวิศวกร</div>
+            <h2>จากโปรแกรมเล็ก ๆ → ระบบระดับโลก</h2>
+
+            <div class="split-layout">
+                <div>
+                    <h3>เส้นเวลาพัฒนาการ (Timeline)</h3>
+                    <pre>
+1960s–1980s  : Mainframe, Batch Processing
+1990s        : Client–Server, Desktop Apps
+2000s        : Web Apps, N-Tier
+2010s        : Mobile, Cloud, Microservices, DevOps
+2020s+       : Cloud-native, AI, Event-driven, Serverless
+                    </pre>
+
+                    <h3 style="margin-top:0.7em;">ผลต่อวิธีคิดของวิศวกรซอฟต์แวร์</h3>
+                    <ul>
+                        <li>ผู้ใช้เพิ่มขึ้นมหาศาล → ต้องคิดเรื่อง <b>scalability &amp; reliability</b> ตั้งแต่เริ่ม</li>
+                        <li>การเปลี่ยน requirement กลายเป็นเรื่องปกติ → ต้องใช้ process ที่รองรับการเปลี่ยน (เช่น Agile)</li>
+                        <li>ระบบเชื่อมกันเป็น network ของระบบย่อย → ต้องคิดเชิง <b>architecture</b> และ <b>integration</b> มากขึ้น</li>
+                        <li>ต้องมี <b>testing หลายระดับ</b>: unit, integration, system, end-to-end</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="placeholder-image">
+                        Infographic: กราฟ “Users ↑, Complexity ↑, Need for SE ↑”
+                    </div>
+                    <p class="tiny-caption">
+                        ใช้ภาพกราฟช่วยอธิบายว่าเมื่อผู้ใช้และความซับซ้อนสูงขึ้น  
+                        ความสำคัญของ Software Engineering &amp; Process ก็ยิ่งสูงขึ้นตาม
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 13. SDLC OVERVIEW -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">SDLC – ภาพรวมวงจรชีวิตซอฟต์แวร์</div>
+            <h2>SDLC: Software Development Life Cycle</h2>
+
+            <div class="split-layout">
+                <div>
+                    <p><b>คำนิยามในวิชา:</b></p>
+                    <p>
+                        SDLC คือกรอบขั้นตอน/ช่วงเวลาที่ใช้จัดระเบียบการพัฒนาซอฟต์แวร์  
+                        ตั้งแต่คิดไอเดีย → เก็บ requirement → ออกแบบ → พัฒนา → ทดสอบ → นำไปใช้ → บำรุงรักษา
+                    </p>
+
+                    <pre>
+SDLC (6 ขั้นตอนหลัก – เวอร์ชันวิชานี้)
+
+ IDEA → REQUIREMENTS → DESIGN → IMPLEMENTATION
+        ↓            ↓
+      TESTING    DEPLOYMENT
+        ↓
+   MAINTENANCE / EVOLUTION
+                    </pre>
+                    <p class="tiny-caption">
+                        ทุกกิจกรรมในวิชา ENGCE301 จะผูกกับอย่างน้อย 1 ขั้นของ SDLC เสมอ
+                    </p>
+                </div>
+
+                <div>
+                    <div class="info-card">
+                        <h4>ทำไมต้องมี SDLC?</h4>
+                        <ul style="margin:0;">
+                            <li>ระบุขั้นตอนให้ชัด → ทุกคนในทีมเห็นภาพรวมเดียวกัน</li>
+                            <li>ช่วยวางแผนและติดตามความคืบหน้าโครงการ</li>
+                            <li>ลดโอกาสลืมกิจกรรมสำคัญ เช่น การทดสอบ, เอกสาร, การส่งมอบ</li>
+                        </ul>
+                    </div>
+
+                    <div class="warn-card">
+                        <h4>ข้อควรจำ</h4>
+                        <p style="margin:0;">
+                            SDLC เป็น “กรอบคิด” ที่สามารถใช้กับ process model หลายแบบ  
+                            เช่น Waterfall, Iterative, Incremental, RAD, Spiral, Agile ฯลฯ
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 14. SDLC 6 STEPS DETAIL -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">ขั้นตอน SDLC (เวอร์ชันเข้าใจง่าย)</div>
+            <h2>SDLC 6 ขั้นตอน – Step-by-Step</h2>
+
+            <div class="split-50">
+                <div>
+                    <ul class="check-list">
+                        <li><b>1. Requirements</b> – เข้าใจปัญหา, ผู้ใช้, และขอบเขต</li>
+                        <li><b>2. Design</b> – ออกแบบโครงสร้างระบบ, UI คร่าว ๆ, Database, API</li>
+                        <li><b>3. Implementation</b> – เขียนโค้ด, เขียน test ขั้นต้น</li>
+                        <li><b>4. Testing</b> – ตรวจสอบว่าระบบทำงานตรงตาม requirement</li>
+                        <li><b>5. Deployment</b> – นำระบบขึ้นใช้งานจริง (หรือ demo environment)</li>
+                        <li><b>6. Maintenance</b> – แก้บั๊ก, ปรับปรุง, เพิ่มฟีเจอร์ในอนาคต</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="placeholder-image">
+                        Infographic: วงกลม 6 ชิ้น หรือขั้นบันได 6 ขั้น  
+                        พร้อมไอคอนแต่ละขั้น (Req, Design, Code, Test, Deploy, Maintain)
+                    </div>
+                    <p class="tiny-caption">
+                        ใน Term Project – จะวนผ่าน 6 ขั้นนี้แบบสเกลเล็ก ๆ หลายรอบ  
+                        เพื่อฝึกใช้ SDLC ในสถานการณ์จริง
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 15. PROCESS MODELS MAP -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">แผนที่ Software Process Models</div>
+            <h2>Process Models – จาก Waterfall ถึง Agile</h2>
+
+            <div class="split-layout">
+                <div>
+                    <pre>
+Software Process Models  (SDLC Models)
+
+Classic / Plan-driven
+  • Waterfall
+  • V-Model
+
+Incremental / Iterative
+  • Incremental Model
+  • Iterative Model
+
+Rapid / Prototype-driven
+  • RAD Model
+  • Prototyping Model
+
+Risk-based
+  • Spiral Model
+
+Agile Family
+  • Agile Model
+  • Scrum
+  • Kanban
+                    </pre>
+                    <p class="tiny-caption">
+                        แผนภาพต้นไม้: ช่วยให้นักศึกษาจำได้ว่ามี “ตระกูล” ของโมเดลอะไรบ้าง  
+                        และแต่ละแบบเกิดขึ้นมาเพื่อแก้ปัญหาอะไร
+                    </p>
+                </div>
+
+                <div>
+                    <div class="info-card">
+                        <h4>แนวเปรียบเทียบ (แบบย่อ)</h4>
+                        <ul style="margin:0;">
+                            <li><b>Waterfall / V-Model</b> – เน้นเอกสาร, ขั้นตอนชัด, เหมาะกับงานข้อกำหนดนิ่ง</li>
+                            <li><b>Incremental / Iterative</b> – ทำทีละส่วน, เพิ่มฟีเจอร์เป็นรอบ ๆ</li>
+                            <li><b>RAD / Prototyping</b> – เน้นทำ Prototype คุยกับผู้ใช้เร็ว ๆ ก่อนลงรายละเอียด</li>
+                            <li><b>Spiral</b> – เน้นวิเคราะห์ความเสี่ยง (risk) เป็นรอบ ๆ</li>
+                            <li><b>Agile, Scrum, Kanban</b> – เน้นปรับตัว, feedback บ่อย, team communication</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 16. PLAN-DRIVEN (WATERFALL & V-MODEL) -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">โมเดลแบบ Plan-driven</div>
+            <h2>Waterfall &amp; V-Model</h2>
+
+            <div class="split-50">
+                <div>
+                    <h3>Waterfall Model</h3>
+                    <ul>
+                        <li>ทำงานทีละเฟส: Requirements → Design → Implementation → Testing → Deployment → Maintenance</li>
+                        <li>ข้อดี: ขั้นตอนชัด, เอกสารครบ, เหมาะกับข้อกำหนดค่อนข้างนิ่ง</li>
+                        <li>ข้อจำกัด: Feedback จากผู้ใช้มักมาช่วงท้าย, เปลี่ยน requirement ยาก</li>
+                    </ul>
+                    <div class="placeholder-image">
+                        Infographic: Staircase Waterfall (ตาม lecture)
+                    </div>
+                </div>
+
+                <div>
+                    <h3>V-Model</h3>
+                    <ul>
+                        <li>ขยายจาก Waterfall โดยจับคู่แต่ละเฟสกับระดับของการทดสอบ</li>
+                        <li>เช่น System Requirements ↔ System Testing, Design ↔ Integration Testing ฯลฯ</li>
+                        <li>เน้นความสัมพันธ์ระหว่าง “สิ่งที่ออกแบบ” กับ “สิ่งที่ทดสอบ”</li>
+                    </ul>
+                    <div class="placeholder-image">
+                        Infographic: ตัว V – ด้านซ้าย = Development, ด้านขวา = Testing Levels
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 17. INCREMENTAL / ITERATIVE / RAD / PROTOTYPING -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">โมเดลที่เน้นการวนรอบ</div>
+            <h2>Incremental, Iterative, RAD &amp; Prototyping</h2>
+
+            <div class="split-layout">
+                <div>
+                    <h3>Incremental &amp; Iterative</h3>
+                    <ul>
+                        <li><b>Incremental</b> – แบ่งระบบเป็น “ส่วนย่อย (increments)” แล้วส่งมอบทีละส่วน</li>
+                        <li><b>Iterative</b> – ทำเวอร์ชันแรกเร็ว ๆ แล้วปรับปรุงจาก feedback หลาย ๆ รอบ</li>
+                        <li>มักใช้ร่วมกัน: วนรอบ (iterate) บน increments ต่าง ๆ</li>
+                    </ul>
+                    <div class="placeholder-image">
+                        Infographic: หลายวงกลม/กล่องต่อกัน – Version 1 → 2 → 3 พร้อมฟีเจอร์เพิ่ม
+                    </div>
+                </div>
+
+                <div>
+                    <h3>RAD &amp; Prototyping</h3>
+                    <ul>
+                        <li><b>RAD (Rapid Application Development)</b> – เน้นสร้างระบบเร็ว ๆ โดยใช้ tools/component reuse</li>
+                        <li><b>Prototyping Model</b> – ทำ Prototype เพื่อคุยกับผู้ใช้ก่อนลงรายละเอียดจริง</li>
+                        <li>เหมาะกับ requirement ยังไม่ชัด แต่ต้องการเห็นภาพระบบเร็ว ๆ</li>
+                    </ul>
+                    <div class="placeholder-image">
+                        Infographic: Loop “Quick Plan → Prototype → Feedback → Refine”
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 18. SPIRAL MODEL -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">โมเดลที่เน้นความเสี่ยง</div>
+            <h2>Spiral Model (Risk-driven)</h2>
+
+            <div class="split-layout">
+                <div>
+                    <h3>แนวคิดหลักของ Spiral</h3>
+                    <ul class="check-list">
+                        <li>แบ่งโครงการเป็น “รอบ (loops)” ซ้อนเป็นรูปเกลียว</li>
+                        <li>แต่ละรอบมี 4 ส่วนหลัก: Objective setting, Risk assessment, Development &amp; validation, Planning</li>
+                        <li>เหมาะกับโครงการใหญ่/ซับซ้อน/ความเสี่ยงสูง</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="placeholder-image">
+                        Infographic: วงเกลียว 4 ส่วน (จาก lecture – Spiral Model)
+                    </div>
+                    <p class="tiny-caption">
+                        ในวิชานี้จะพูดถึง Spiral เพื่อให้เห็นภาพ “risk-driven model”  
+                        แม้ Term Project จะไม่ได้ใช้เต็มรูปแบบ
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 19. AGILE MODEL & VALUES -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">Agile Mindset &amp; วิธีคิด</div>
+            <h2>Agile Model – ค่านิยมสำคัญ</h2>
+
+            <div class="split-layout">
+                <div>
+                    <h3>Agile Values (จาก Agile Manifesto)</h3>
+                    <ul>
+                        <li><b>Individuals &amp; Interactions</b> &gt; Processes &amp; Tools</li>
+                        <li><b>Working Software</b> &gt; Comprehensive Documentation</li>
+                        <li><b>Customer Collaboration</b> &gt; Contract Negotiation</li>
+                        <li><b>Responding to Change</b> &gt; Following a Plan</li>
+                    </ul>
+
+                    <pre>
+ตีความสำหรับนักศึกษา:
+  • พูดคุยกันบ่อย ๆ ในทีมสำคัญกว่ากระดาษเยอะ ๆ
+  • ส่งมอบงานทีละชิ้นเล็ก ๆ → ดู feedback ทันที
+  • เอกสารยังจำเป็น แต่ให้ "พอเหมาะ"
+                    </pre>
+                </div>
+
+                <div>
+                    <div class="info-card">
+                        <h4>ใน ENGCE301</h4>
+                        <ul style="margin:0;">
+                            <li>ระดับ “เทอม” ใช้โครงแบบ Stage (คล้าย Waterfall)</li>
+                            <li>ระดับ “สัปดาห์/งานย่อย” ใช้แนวคิด Agile (Kanban, feedback สั้น ๆ)</li>
+                            <li>เป้าหมายคือให้นักศึกษาสัมผัส Agile ในสเกลที่ทำได้จริงในรายวิชา</li>
+                        </ul>
+                    </div>
+
+                    <div class="placeholder-image">
+                        Infographic: Scale – “Plan-driven” ↔ “Agile”  
+                        แล้ววาง ENGCE301 Hybrid Model ไว้ตรงกลาง
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 20. SCRUM & KANBAN -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">Agile Frameworks</div>
+            <h2>Scrum &amp; Kanban – ภาพเดียวเข้าใจง่าย</h2>
+
+            <div class="split-layout">
+                <div>
+                    <h3>Scrum – วงรอบการทำงานแบบ Sprint</h3>
+                    <ul>
+                        <li>แบ่งงานเป็นรอบสั้น ๆ (Sprint) 1–4 สัปดาห์</li>
+                        <li>มี ceremony หลัก: Sprint Planning, Daily Scrum, Sprint Review, Retrospective</li>
+                        <li>บทบาทหลัก: Product Owner, Scrum Master, Development Team</li>
+                    </ul>
+
+                    <div class="placeholder-image">
+                        Infographic: วงกลม Sprint – Plan → Build → Review → Retro
+                    </div>
+                </div>
+
+                <div>
+                    <h3>Kanban – จัดการ Flow ของงาน</h3>
+                    <p>เน้น “เห็นภาพ” และจัดการงานที่กำลังทำอยู่ (WIP)</p>
+
+                    <div class="kanban">
+                        <div class="kanban-column">
+                            <div class="kanban-header">To Do</div>
+                            <div class="kanban-card">เขียน requirement เบื้องต้น</div>
+                            <div class="kanban-card">ออกแบบหน้าจอหลัก</div>
+                        </div>
+                        <div class="kanban-column">
+                            <div class="kanban-header">Doing</div>
+                            <div class="kanban-card">ตั้งค่า Git &amp; repo</div>
+                            <div class="kanban-card">ทำ wireframe</div>
+                        </div>
+                        <div class="kanban-column">
+                            <div class="kanban-header">Done</div>
+                            <div class="kanban-card">ตั้งทีม Term Project</div>
+                            <div class="kanban-card">ติดตั้ง VS Code + Node.js</div>
+                        </div>
+                    </div>
+
+                    <p class="tiny-caption">
+                        ในวิชานี้: แนะนำให้แต่ละทีมใช้ Kanban (จริงหรือในเครื่องมือออนไลน์)  
+                        เพื่อ track งานของ Term Project ตลอดเทอม
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 21. ROLES & TEAM VALUE CHAIN -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">บทบาทในทีมซอฟต์แวร์</div>
+            <h2>บทบาทในทีม &amp; Value Chain</h2>
+
+            <div class="split-50">
+                <div>
+                    <h3>บทบาทหลักในทีมซอฟต์แวร์</h3>
+                    <ul>
+                        <li><b>Software Developer / Engineer</b> – เขียนโค้ด, ทดสอบเบื้องต้น, แก้บั๊ก</li>
+                        <li><b>Requirements Engineer / BA</b> – คุยกับ “ลูกค้า/ผู้ใช้ (จำลอง)” แล้วแปลงเป็น use case / user story / SRS ย่อ</li>
+                        <li><b>Software Architect (เบื้องต้น)</b> – คิดโครงสร้างระบบ (frontend–backend–DB), API คร่าว ๆ</li>
+                        <li><b>QA Engineer / Tester</b> – ช่วยออกแบบ test case และทดสอบ feature ที่ทีมพัฒนา</li>
+                        <li><b>DevOps (เบื้องต้น)</b> – ดูเรื่องการรันระบบในเครื่อง dev / demo, script, npm command ต่าง ๆ</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Value Chain ใน Term Project</h3>
+                    <pre>
+Idea
+  ↓
+Requirements (BA / PO)
+  ↓
+Architecture &amp; Design (Architect)
+  ↓
+Implementation (Developers)
+  ↓
+Testing (QA / ทีมทั้งหมด)
+  ↓
+Deployment &amp; Demo (DevOps / Team)
+                    </pre>
+                    <p class="tiny-caption">
+                        ทุกคนในกลุ่มจะได้ “สวมหมวกหลายใบ” เพื่อสำรวจว่าตัวเองถนัดอะไร  
+                        และเข้าใจภาพรวมของการทำงานซอฟต์แวร์ทั้งสายโซ่คุณค่า
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 22. HARD/SOFT SKILLS + DEV ENV + LAB1 (สรุป) -->
+    <div class="slide">
+        <div class="slide-content">
+            <span class="slide-number"></span>
+            <div class="tagline">สรุปสัปดาห์ที่ 1 &amp; Lab</div>
+            <h2>Hard Skills • Soft Skills • Dev Environment &amp; Lab 1</h2>
+
+            <div class="split-layout">
+                <div>
+                    <h3>Hard Skills &amp; Soft Skills</h3>
+                    <ul class="check-list">
+                        <li>Programming (JS/TS, HTML/CSS, Node.js, React ในรายวิชาอื่นที่เกี่ยวข้อง)</li>
+                        <li>Basic Software Design &amp; Architecture, Web fundamentals</li>
+                        <li>Git &amp; version control, basic testing mindset</li>
+                        <li>Soft skills: การสื่อสาร, ทีมเวิร์ก, time management, การเรียนรู้ด้วยตัวเอง</li>
+                    </ul>
+
+                    <div class="info-card">
+                        <h4>เป้าหมายของวิชา</h4>
+                        <p style="margin:0;">
+                            ฝึกทั้ง Hard + Soft skills ผ่าน Term Project จริง  
+                            ไม่ใช่แค่ทำ assignment แยกคนละชิ้น
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>Dev Environment &amp; Lab 1</h3>
+                    <ul class="check-list">
+                        <li>ติดตั้ง: Git, VS Code, Node.js, Browser DevTools (และทดสอบว่าใช้ได้จริง)</li>
+                        <li>จัดกลุ่ม 3–4 คน + ตั้งชื่อทีม / โปรเจกต์</li>
+                        <li>สร้าง Team Repo บน GitHub / GitLab แล้วเชิญเพื่อนทุกคนเข้าร่วม</li>
+                        <li>สร้างโครงโฟลเดอร์พื้นฐาน + <code>index.html</code> + <code>README.md</code></li>
+                        <li>แต่ละคนสร้างไฟล์ <code>profile-รหัส.md</code> แนะนำตัวและบทบาทที่สนใจ แล้ว commit + push</li>
+                    </ul>
+
+                    <div class="warn-card">
+                        <h4>สิ่งที่ขอให้ได้จากสัปดาห์นี้</h4>
+                        <ul style="margin:0;">
+                            <li>เครื่องมือทุกอย่างพร้อมใช้งานสำหรับทั้งเทอม</li>
+                            <li>ทีมเริ่มทำงานร่วมกันจริง (ไม่ใช่แค่ชื่อกลุ่มในกระดาษ)</li>
+                            <li>เข้าใจภาพรวม SE &amp; SDLC &amp; Process Models แบบ “เห็นเป็นรูป”  
+                                ไม่ใช่แค่ท่องนิยาม</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Controls -->
+<div class="slide-controls">
+    <button id="prev-slide" title="Previous (Left Arrow)">◀</button>
+    <span id="slide-counter">1 / 22</span>
+    <button id="next-slide" title="Next (Right Arrow)">▶</button>
+
+    <div class="control-separator"></div>
+
+    <button id="font-decrease" title="Decrease Font Size (Ctrl+-)">A-</button>
+    <button id="font-increase" title="Increase Font Size (Ctrl+=)">A+</button>
+
+    <div class="control-separator"></div>
+
+    <button id="fullscreen-toggle" title="Toggle Fullscreen (F)">⛶</button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.slide');
+        const deck = document.getElementById('slide-deck');
+        const totalSlides = slides.length;
+        let currentSlideIndex = 0;
+
+        let baseFontSize = 1.2; // rem (ใหญ่ขึ้นเป็น default)
+
+        const counterElement = document.getElementById('slide-counter');
+        const prevButton = document.getElementById('prev-slide');
+        const nextButton = document.getElementById('next-slide');
+        const fontIncrButton = document.getElementById('font-increase');
+        const fontDecrButton = document.getElementById('font-decrease');
+        const fullscreenButton = document.getElementById('fullscreen-toggle');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                const active = index === currentSlideIndex;
+                slide.classList.toggle('active', active);
+
+                const numEl = slide.querySelector('.slide-number');
+                if (numEl) {
+                    numEl.textContent = `${index + 1} / ${totalSlides}`;
+                }
+            });
+
+            counterElement.textContent = `${currentSlideIndex + 1} / ${totalSlides}`;
+            prevButton.disabled = (currentSlideIndex === 0);
+            nextButton.disabled = (currentSlideIndex === totalSlides - 1);
+            prevButton.style.opacity = (currentSlideIndex === 0) ? 0.4 : 1;
+            nextButton.style.opacity = (currentSlideIndex === totalSlides - 1) ? 0.4 : 1;
+        }
+
+        function changeFontSize(delta) {
+            baseFontSize += delta;
+            baseFontSize = Math.max(0.8, Math.min(baseFontSize, 2.0));
+            deck.style.fontSize = `${baseFontSize}rem`;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(err);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        nextButton.addEventListener('click', () => {
+            if (currentSlideIndex < totalSlides - 1) {
+                currentSlideIndex++;
+                updateSlide();
+            }
+        });
+
+        prevButton.addEventListener('click', () => {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateSlide();
+            }
+        });
+
+        fontIncrButton.addEventListener('click', () => changeFontSize(0.1));
+        fontDecrButton.addEventListener('click', () => changeFontSize(-0.1));
+        fullscreenButton.addEventListener('click', toggleFullscreen);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                e.preventDefault();
+                nextButton.click();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                prevButton.click();
+            } else if (e.key.toLowerCase() === 'f') {
+                e.preventDefault();
+                toggleFullscreen();
+            } else if ((e.key === '=' || e.key === '+') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                changeFontSize(0.1);
+            } else if (e.key === '-' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                changeFontSize(-0.1);
+            }
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+            fullscreenButton.textContent = document.fullscreenElement ? '✖' : '⛶';
+        });
+
+        // Init
+        deck.style.fontSize = baseFontSize + 'rem';
+        updateSlide();
+    });
+</script>
+
+</body>
+</html>

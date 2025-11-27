@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ENGCE301 - Software Design and Development (Infographic)</title>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
+    
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    
     <style>
         /* General Body & Fonts */
         :root {
@@ -25,26 +22,17 @@
             --border-color: #e0e6ed;
         }
 
-        body {
-            font-family: 'Kanit', sans-serif;
-            /* Thai font */
-            line-height: 1.7;
+        body { 
+            font-family: 'Kanit', sans-serif; /* Thai font */
+            line-height: 1.7; 
             margin: 0;
             padding: 0;
             background-color: var(--bg-light);
             color: #333;
-            overflow-x: hidden;
-            /* Prevent horizontal scroll */
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-family: 'Poppins', sans-serif;
-            /* English/Numbers font */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif; /* English/Numbers font */
             color: var(--text-dark);
             font-weight: 600;
             margin-top: 1.5em;
@@ -57,11 +45,10 @@
             margin: auto;
             background-color: var(--bg-white);
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             margin-top: 30px;
             margin-bottom: 30px;
-            overflow: hidden;
-            /* For rounded corners */
+            overflow: hidden; /* For rounded corners */
         }
 
         /* Hero Section */
@@ -73,9 +60,8 @@
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
-
         .hero-section h1 {
             font-family: 'Kanit', sans-serif;
             font-size: 3.2rem;
@@ -84,7 +70,6 @@
             font-weight: 700;
             line-height: 1.2;
         }
-
         .hero-section p {
             font-size: 1.25rem;
             max-width: 800px;
@@ -92,10 +77,8 @@
             opacity: 0.9;
             font-weight: 300;
         }
-
         .hero-section .cta-button {
-            background-color: var(--accent-color);
-            /* Bright call to action */
+            background-color: var(--accent-color); /* Bright call to action */
             color: #333;
             padding: 15px 40px;
             border-radius: 30px;
@@ -103,13 +86,12 @@
             font-weight: 600;
             font-size: 1.1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-
         .hero-section .cta-button:hover {
             background-color: #e0a800;
             transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
         }
 
         /*
@@ -118,53 +100,40 @@
          */
         .tabs {
             display: flex;
-            flex-wrap: wrap;
-            /* เปลี่ยนจาก nowrap/auto เป็น wrap */
-            justify-content: center;
-            /* จัดกลาง */
+            flex-wrap: wrap; /* เปลี่ยนจาก nowrap/auto เป็น wrap */
+            justify-content: center; /* จัดกลาง */
             background-color: #f8f9fa;
             border-bottom: 1px solid #e9ecef;
-            padding: 10px 10px;
-            /* เพิ่ม padding ด้านข้างเล็กน้อย */
+            padding: 10px 10px; /* เพิ่ม padding ด้านข้างเล็กน้อย */
             margin-bottom: 20px;
-            gap: 5px;
-            /* เพิ่มช่องว่างระหว่างปุ่ม */
+            gap: 5px; /* เพิ่มช่องว่างระหว่างปุ่ม */
         }
-
         .tablink {
             background-color: transparent;
             border: none;
-            padding: 12px 18px;
-            /* ปรับ padding */
+            padding: 12px 18px; /* ปรับ padding */
             cursor: pointer;
-            font-size: 1.0rem;
-            /* ปรับขนาด font */
+            font-size: 1.0rem; /* ปรับขนาด font */
             font-weight: 500;
             color: #555;
             transition: all 0.3s ease;
             position: relative;
-            flex-grow: 1;
-            /* ให้ปุ่มขยายตัว */
-            flex-basis: 150px;
-            /* กำหนดขนาดพื้นฐาน */
+            flex-grow: 1; /* ให้ปุ่มขยายตัว */
+            flex-basis: 150px; /* กำหนดขนาดพื้นฐาน */
             text-align: center;
-            white-space: nowrap;
-            border-radius: 8px;
-            /* เพิ่มความโค้งมนให้ปุ่ม */
+            white-space: nowrap; 
+            border-radius: 8px; /* เพิ่มความโค้งมนให้ปุ่ม */
         }
-
         .tablink:hover {
             color: var(--primary-color);
             background-color: #e9f2fa;
         }
-
         .tablink.active {
             color: var(--primary-color);
             font-weight: 600;
             border-bottom: 3px solid var(--primary-color);
             background-color: #e9f2fa;
         }
-
         /* --- END TABS CSS --- */
 
 
@@ -174,17 +143,9 @@
             padding: 30px;
             animation: fadeIn 0.6s ease-out;
         }
-
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Course Overview - Infographic Style */
@@ -194,33 +155,28 @@
             gap: 25px;
             margin-top: 30px;
         }
-
         .overview-card {
             background-color: #fdfefe;
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
         .overview-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
-
         .overview-card .icon {
             font-size: 3rem;
             color: var(--primary-color);
             margin-bottom: 15px;
         }
-
         .overview-card h3 {
             font-size: 1.4rem;
             margin-top: 0;
             color: var(--text-dark);
         }
-
         .overview-card p {
             font-size: 0.95rem;
             color: var(--text-light);
@@ -233,7 +189,6 @@
             gap: 10px;
             margin-top: 20px;
         }
-
         .tech-badge {
             background-color: #e9f2fa;
             color: var(--primary-color);
@@ -244,9 +199,8 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-
         .tech-badge i {
             font-size: 1em;
         }
@@ -255,16 +209,14 @@
         .schedule-list {
             margin-top: 25px;
         }
-
         .week-item {
             background-color: #fdfefe;
             border: 1px solid var(--border-color);
             border-radius: 10px;
             margin-bottom: 15px;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
         }
-
         .week-header {
             display: flex;
             align-items: center;
@@ -274,15 +226,12 @@
             transition: background-color 0.3s ease;
             position: relative;
         }
-
         .week-header:hover {
             background-color: #f0f2f5;
         }
-
         .week-header.active .toggle-icon {
             transform: rotate(90deg);
         }
-
         .week-number {
             font-size: 1.6rem;
             font-weight: 700;
@@ -291,101 +240,78 @@
             text-align: center;
             margin-right: 20px;
         }
-
         .week-title-area {
             flex-grow: 1;
         }
-
         .week-title {
             font-size: 1.2rem;
             font-weight: 600;
             color: var(--text-dark);
             margin: 0;
         }
-
         .week-subtitle {
             font-size: 0.9rem;
             color: #777;
             margin-top: 5px;
             line-height: 1.4;
         }
-
         .toggle-icon {
             font-size: 1.2rem;
             color: var(--primary-color);
             margin-left: 15px;
             transition: transform 0.3s ease;
         }
-
         .week-content {
             padding: 0 25px 20px 25px;
             display: none;
             border-top: 1px solid #eee;
             background-color: #fafafa;
         }
-
-        .week-content p,
-        .week-content ul {
+        .week-content p, .week-content ul {
             margin-top: 15px;
             margin-bottom: 10px;
             font-size: 0.95rem;
             color: #444;
         }
-
         .week-content ul {
-            list-style: none;
-            /* Remove default list style */
+            list-style: none; /* Remove default list style */
             padding-left: 0;
         }
-
         .week-content ul li {
             position: relative;
-            padding-left: 25px;
-            /* Space for icon */
+            padding-left: 25px; /* Space for icon */
             margin-bottom: 8px;
         }
-
         .week-content ul li::before {
-            font-family: "Font Awesome 6 Free";
-            /* Font Awesome */
+            font-family: "Font Awesome 6 Free"; /* Font Awesome */
             font-weight: 900;
-            content: "\f00c";
-            /* Check-circle icon */
+            content: "\f00c"; /* Check-circle icon */
             color: #28a745;
             position: absolute;
             left: 0;
             top: 2px;
             font-size: 0.9em;
         }
-
         .week-content .activity strong {
             color: #0056b3;
         }
-
         .week-special {
-            background-color: #fff8e1;
-            /* Light yellow for exams */
+            background-color: #fff8e1; /* Light yellow for exams */
             border-color: #ffeb3b;
         }
-
         .week-special .week-header {
             background-color: #fff8e1;
         }
-
         .week-special .week-number {
             color: #f57f17;
         }
-
         .week-final-project {
-            background-color: #e6ffed;
-            /* Light green for final project */
+            background-color: #e6ffed; /* Light green for final project */
             border-color: #4caf50;
         }
-
         .week-final-project .week-header {
             background-color: #e6ffed;
         }
-
         .week-final-project .week-number {
             color: #2e7d32;
         }
@@ -394,11 +320,9 @@
         .progress-section {
             margin-top: 30px;
         }
-
         .progress-item {
             margin-bottom: 25px;
         }
-
         .progress-label {
             display: flex;
             justify-content: space-between;
@@ -408,20 +332,17 @@
             margin-bottom: 8px;
             font-size: 1.1rem;
         }
-
         .progress-label .percent {
             font-size: 1.2rem;
             font-weight: 600;
             color: var(--primary-color);
         }
-
         .progress-bar-container {
             background-color: #e0e0e0;
             border-radius: 10px;
             height: 15px;
             overflow: hidden;
         }
-
         .progress-bar {
             height: 100%;
             background-color: var(--primary-color);
@@ -436,15 +357,13 @@
             gap: 20px;
             margin-top: 30px;
         }
-
         .clo-card {
             background-color: #fdfefe;
             border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             border-left: 5px solid var(--primary-color);
         }
-
         .clo-card .title {
             font-size: 1.1rem;
             font-weight: 700;
@@ -452,7 +371,6 @@
             margin-top: 0;
             margin-bottom: 10px;
         }
-
         .clo-card .desc {
             font-size: 0.95rem;
             color: var(--text-light);
@@ -463,37 +381,32 @@
             overflow-x: auto;
             margin-top: 20px;
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            min-width: 600px;
-            /* Ensure table looks good on smaller screens */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+            min-width: 600px; /* Ensure table looks good on smaller screens */
         }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
             vertical-align: top;
         }
-
-        th {
-            background-color: #f8f9fa;
+        th { 
+            background-color: #f8f9fa; 
             font-weight: 600;
             color: #333;
         }
 
         /* Code Blocks */
-        pre {
-            background-color: #2d2d2d;
+        pre { 
+            background-color: #2d2d2d; 
             color: #f8f8f2;
-            padding: 15px;
-            border-radius: 8px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            padding: 15px; 
+            border-radius: 8px; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
             font-family: 'Fira Code', 'Courier New', Courier, monospace;
             font-size: 0.9em;
             margin-top: 20px;
@@ -509,7 +422,7 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         /* Links */
@@ -518,39 +431,33 @@
             text-decoration: none;
             font-weight: 500;
         }
-
         a:hover {
             text-decoration: underline;
         }
-
+        
         /* Styled Lists (for resources, etc.) */
         ul.styled {
             list-style-type: none;
             padding-left: 0;
             margin-top: 20px;
         }
-
         ul.styled li {
             padding-left: 30px;
             position: relative;
             margin-bottom: 12px;
             font-size: 1rem;
         }
-
         ul.styled li::before {
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
-            content: "\f138";
-            /* Right Arrow Circle */
+            content: "\f138"; /* Right Arrow Circle */
             position: absolute;
             left: 0;
             top: 2px;
             color: var(--primary-color);
         }
-
         ul.styled.success-list li::before {
-            content: "\f00c";
-            /* Check */
+            content: "\f00c"; /* Check */
             color: #28a745;
         }
 
@@ -564,37 +471,31 @@
             border-bottom-left-radius: 15px;
             border-bottom-right-radius: 15px;
         }
-
         .footer h3 {
             color: var(--primary-color);
             margin-bottom: 15px;
             font-size: 1.8rem;
         }
-
         .footer p {
             margin-bottom: 15px;
             font-size: 1.05rem;
         }
-
-        .footer .social-links a {
-            font-weight: bold;
+        .footer .social-links a { 
+            font-weight: bold; 
             margin: 0 15px;
             font-size: 1.1rem;
             color: #555;
             transition: color 0.3s ease;
         }
-
         .footer .social-links a:hover {
             color: var(--primary-color);
         }
-
         .footer .social-links i {
             margin-right: 5px;
         }
-
         .footer .copyright {
-            font-size: 0.85rem;
-            color: #888;
+            font-size: 0.85rem; 
+            color: #888; 
             margin-top: 25px;
         }
 
@@ -603,127 +504,98 @@
             .hero-section h1 {
                 font-size: 2.8rem;
             }
-
             .hero-section p {
                 font-size: 1.1rem;
             }
-
             .container {
                 margin: 20px;
                 border-radius: 10px;
             }
         }
-
         @media (max-width: 768px) {
             .hero-section {
                 padding: 40px 15px;
             }
-
             .hero-section h1 {
                 font-size: 2.2rem;
             }
-
             .hero-section p {
                 font-size: 1rem;
             }
-
             .hero-section .cta-button {
                 padding: 12px 30px;
                 font-size: 1rem;
             }
-
             .tabcontent {
                 padding: 20px;
             }
-
             .overview-card h3 {
                 font-size: 1.25rem;
             }
-
             .overview-card .icon {
                 font-size: 2.5rem;
             }
-
             .week-header {
                 padding: 15px 20px;
             }
-
             .week-number {
                 font-size: 1.4rem;
                 min-width: 40px;
                 margin-right: 15px;
             }
-
             .week-title {
                 font-size: 1.1rem;
             }
-
             .week-content {
                 padding: 0 20px 15px 20px;
             }
-
             .week-content ul li {
                 padding-left: 20px;
             }
-
             .footer .social-links a {
                 margin: 0 10px;
                 font-size: 1rem;
             }
         }
-
         @media (max-width: 480px) {
             .hero-section h1 {
                 font-size: 1.8rem;
             }
-
             .hero-section p {
                 font-size: 0.9rem;
             }
-
             .overview-grid {
-                grid-template-columns: 1fr;
-                /* Single column on very small screens */
+                grid-template-columns: 1fr; /* Single column on very small screens */
             }
-
             .week-header {
                 flex-wrap: wrap;
                 justify-content: center;
                 text-align: center;
             }
-
             .week-number {
                 width: 100%;
                 margin-bottom: 10px;
             }
-
             .week-title-area {
                 width: 100%;
                 margin-bottom: 10px;
             }
-
             .toggle-icon {
                 margin-left: 0;
             }
-
             .tabs {
-                padding: 10px 5px;
-                /* Less padding for small screens */
+                padding: 10px 5px; /* Less padding for small screens */
             }
-
             .tablink {
-                padding: 12px 10px;
-                /* Less padding for tabs */
+                padding: 12px 10px; /* Less padding for tabs */
                 font-size: 0.9rem;
             }
         }
-
         /* --- เพิ่มส่วนนี้ใน <style> --- */
         .material-links {
             margin-top: 15px;
             padding: 12px;
-            background-color: #eef6fc;
-            /* สีฟ้าอ่อน */
+            background-color: #eef6fc; /* สีฟ้าอ่อน */
             border-left: 4px solid var(--primary-color);
             border-radius: 4px;
             display: flex;
@@ -731,11 +603,9 @@
             gap: 15px;
             align-items: center;
         }
-
         .material-btn {
             text-decoration: none;
-            color: #0366d6;
-            /* GitHub Blue Link color */
+            color: #0366d6; /* GitHub Blue Link color */
             font-weight: 600;
             font-size: 0.95rem;
             display: inline-flex;
@@ -743,105 +613,84 @@
             gap: 5px;
             transition: color 0.2s;
         }
-
         .material-btn:hover {
             color: #004085;
             text-decoration: underline;
         }
-
         .material-label {
             font-weight: 700;
             color: #333;
             margin-right: 5px;
         }
-
-        /* เพิ่มสีเฉพาะให้ปุ่ม Canva (สีม่วงฟ้า) และ GitHub (สีดำ) */
-        .btn-canva { color: #563FD8; }
-        .btn-canva:hover { color: #3e2bbb; background-color: #f3f0ff; }
-        
-        .btn-github { color: #24292e; }
-        .btn-github:hover { color: #000000; background-color: #f0f3f6; }
-
     </style>
 </head>
-
 <body>
 
-    <div class="hero-section">
-        <h1><i class="fas fa-code-branch"></i> ENGCE301</h1>
-        <h1 style="font-size: 2.5rem; margin-top: 0;">Software Design and Development</h1>
-        <p>หลักสูตรที่จะเปลี่ยนคุณจาก "ผู้เขียนโค้ด" สู่ "วิศวกรซอฟต์แวร์" มืออาชีพ<br>พร้อมสร้าง Full-Stack Web
-            Application ที่ทันสมัยด้วยเทคโนโลยีที่เป็นที่ต้องการของตลาด</p>
-        <a href="#overview" class="cta-button"
-            onclick="document.querySelector('.tablink[onclick*=\'overview\']').click(); return false;"><i
-                class="fas fa-rocket"></i> เริ่มต้นการเดินทาง</a>
+<div class="hero-section">
+    <h1><i class="fas fa-code-branch"></i> ENGCE301</h1>
+    <h1 style="font-size: 2.5rem; margin-top: 0;">Software Design and Development</h1>
+    <p>หลักสูตรที่จะเปลี่ยนคุณจาก "ผู้เขียนโค้ด" สู่ "วิศวกรซอฟต์แวร์" มืออาชีพ<br>พร้อมสร้าง Full-Stack Web Application ที่ทันสมัยด้วยเทคโนโลยีที่เป็นที่ต้องการของตลาด</p>
+    <a href="#overview" class="cta-button" onclick="document.querySelector('.tablink[onclick*=\'overview\']').click(); return false;"><i class="fas fa-rocket"></i> เริ่มต้นการเดินทาง</a>
+</div>
+
+<div class="container">
+    
+    <div class="tabs">
+      <button class="tablink active" onclick="openTab(event, 'overview')"><i class="fas fa-book-open"></i> ภาพรวม</button>
+      <button class="tablink" onclick="openTab(event, 'schedule')"><i class="fas fa-calendar-alt"></i> แผนการสอน</button>
+      <button class="tablink" onclick="openTab(event, 'grading')"><i class="fas fa-percentage"></i> การวัดผล</button>
+      <button class="tablink" onclick="openTab(event, 'clo')"><i class="fas fa-graduation-cap"></i> CLO</button>
+      <button class="tablink" onclick="openTab(event, 'setup')"><i class="fas fa-tools"></i> เตรียมตัว</button>
+      <button class="tablink" onclick="openTab(event, 'resources')"><i class="fas fa-globe"></i> แหล่งข้อมูล</button>
+      <button class="tablink" onclick="openTab(event, 'success')"><i class="fas fa-trophy"></i> คำแนะนำ</button>
     </div>
 
-    <div class="container">
-
-        <div class="tabs">
-            <button class="tablink active" onclick="openTab(event, 'overview')"><i class="fas fa-book-open"></i>
-                ภาพรวม</button>
-            <button class="tablink" onclick="openTab(event, 'schedule')"><i class="fas fa-calendar-alt"></i>
-                แผนการสอน</button>
-            <button class="tablink" onclick="openTab(event, 'grading')"><i class="fas fa-percentage"></i>
-                การวัดผล</button>
-            <button class="tablink" onclick="openTab(event, 'clo')"><i class="fas fa-graduation-cap"></i> CLO</button>
-            <button class="tablink" onclick="openTab(event, 'setup')"><i class="fas fa-tools"></i> เตรียมตัว</button>
-            <button class="tablink" onclick="openTab(event, 'resources')"><i class="fas fa-globe"></i>
-                แหล่งข้อมูล</button>
-            <button class="tablink" onclick="openTab(event, 'success')"><i class="fas fa-trophy"></i> คำแนะนำ</button>
-        </div>
-
-        <div id="overview" class="tabcontent" style="display:block;">
-            <h2><i class="fas fa-book-open"></i> ภาพรวมรายวิชา ENGCE301</h2>
-
-            <p><strong>ENGCE301 - การออกแบบและพัฒนาซอฟต์แวร์</strong>
-                เป็นรายวิชาที่เน้นการเรียนรู้และฝึกปฏิบัติเพื่อเป็นวิศวกรซอฟต์แวร์มืออาชีพ
-                โดยครอบคลุมตั้งแต่หลักการพื้นฐานของวงจรการพัฒนาซอฟต์แวร์ (SDLC), การวิเคราะห์ความต้องการ, การออกแบบระบบ,
-                ไปจนถึงการพัฒนาแอปพลิเคชันแบบ Full-stack ที่ทันสมัย.</p>
-
-            <h3>🎯 สิ่งที่คุณจะได้เรียนรู้และลงมือทำ</h3>
-            <div class="overview-grid">
-                <div class="overview-card">
-                    <i class="icon fas fa-cogs"></i>
-                    <h3>Software Engineering</h3>
-                    <p>เข้าใจหลักการวิศวกรรมซอฟต์แวร์, กระบวนการ SDLC, Agile และ Scrum</p>
-                </div>
-                <div class="overview-card">
-                    <i class="icon fas fa-lightbulb"></i>
-                    <h3>Requirements & Design</h3>
-                    <p>วิเคราะห์ความต้องการ, ออกแบบ UI/UX, สถาปัตยกรรม และฐานข้อมูล</p>
-                </div>
-                <div class="overview-card">
-                    <i class="icon fas fa-laptop-code"></i>
-                    <h3>Full-Stack Development</h3>
-                    <p>สร้าง Frontend (React) และ Backend (Node.js/Express) พร้อมเชื่อมต่อ Database</p>
-                </div>
-                <div class="overview-card">
-                    <i class="icon fas fa-shield-alt"></i>
-                    <h3>Quality & Security</h3>
-                    <p>เรียนรู้การทดสอบ, Refactoring, และมาตรการความปลอดภัยเบื้องต้นของซอฟต์แวร์</p>
-                </div>
-            </div>
-
-            <h3>🚀 เทคโนโลยีที่ใช้ (Tech Stack)</h3>
-            <div class="tech-stack-badges">
-                <span class="tech-badge"><i class="fab fa-react"></i> React.js</span>
-                <span class="tech-badge"><i class="fab fa-node-js"></i> Node.js</span>
-                <span class="tech-badge"><i class="fab fa-js-square"></i> Express.js</span>
-                <span class="tech-badge"><i class="fas fa-database"></i> MongoDB</span>
-                <span class="tech-badge"><i class="fas fa-database"></i> SQLite</span>
-                <span class="tech-badge"><i class="fab fa-git-alt"></i> Git & GitHub</span>
-                <span class="tech-badge"><i class="fas fa-code"></i> VS Code</span>
-                <span class="tech-badge"><i class="fab fa-figma"></i> Figma</span>
-                <span class="tech-badge"><i class="fas fa-chart-line"></i> Agile (Scrum)</span>
-                <span class="tech-badge"><i class="fas fa-network-wired"></i> RESTful API</span>
-                <span class="tech-badge"><i class="fas fa-globe"></i> Deployment (Vercel/Render)</span>
-            </div>
-        </div>
-
-<div id="schedule" class="tabcontent">
+    <div id="overview" class="tabcontent" style="display:block;">
+      <h2><i class="fas fa-book-open"></i> ภาพรวมรายวิชา ENGCE301</h2>
+      
+      <p><strong>ENGCE301 - การออกแบบและพัฒนาซอฟต์แวร์</strong> เป็นรายวิชาที่เน้นการเรียนรู้และฝึกปฏิบัติเพื่อเป็นวิศวกรซอฟต์แวร์มืออาชีพ โดยครอบคลุมตั้งแต่หลักการพื้นฐานของวงจรการพัฒนาซอฟต์แวร์ (SDLC), การวิเคราะห์ความต้องการ, การออกแบบระบบ, ไปจนถึงการพัฒนาแอปพลิเคชันแบบ Full-stack ที่ทันสมัย.</p>
+    
+      <h3>🎯 สิ่งที่คุณจะได้เรียนรู้และลงมือทำ</h3>
+      <div class="overview-grid">
+          <div class="overview-card">
+              <i class="icon fas fa-cogs"></i>
+              <h3>Software Engineering</h3>
+              <p>เข้าใจหลักการวิศวกรรมซอฟต์แวร์, กระบวนการ SDLC, Agile และ Scrum</p>
+          </div>
+          <div class="overview-card">
+              <i class="icon fas fa-lightbulb"></i>
+              <h3>Requirements & Design</h3>
+              <p>วิเคราะห์ความต้องการ, ออกแบบ UI/UX, สถาปัตยกรรม และฐานข้อมูล</p>
+          </div>
+          <div class="overview-card">
+              <i class="icon fas fa-laptop-code"></i>
+              <h3>Full-Stack Development</h3>
+              <p>สร้าง Frontend (React) และ Backend (Node.js/Express) พร้อมเชื่อมต่อ Database</p>
+          </div>
+          <div class="overview-card">
+              <i class="icon fas fa-shield-alt"></i>
+              <h3>Quality & Security</h3>
+              <p>เรียนรู้การทดสอบ, Refactoring, และมาตรการความปลอดภัยเบื้องต้นของซอฟต์แวร์</p>
+          </div>
+      </div>
+    
+      <h3>🚀 เทคโนโลยีที่ใช้ (Tech Stack)</h3>
+      <div class="tech-stack-badges">
+          <span class="tech-badge"><i class="fab fa-react"></i> React.js</span>
+          <span class="tech-badge"><i class="fab fa-node-js"></i> Node.js</span>
+          <span class="tech-badge"><i class="fab fa-js-square"></i> Express.js</span>
+          <span class="tech-badge"><i class="fas fa-database"></i> MongoDB</span>
+          <span class="tech-badge"><i class="fas fa-database"></i> SQLite</span>
+          <span class="tech-badge"><i class="fab fa-git-alt"></i> Git & GitHub</span>
+          <span class="tech-badge"><i class="fas fa-code"></i> VS Code</span>
+          <span class="tech-badge"><i class="fab fa-figma"></i> Figma</span>
+          <span class="tech-badge"><i class="fas fa-chart-line"></i> Agile (Scrum)</span>
+          <span class="tech-badge"><i class="fas fa-network-wired"></i> RESTful API</span>
+          <span class="tech-badge"><i class="fas fa-globe"></i> Deployment (Vercel/Render)</span>
+      </div>
+    </div>
+    
+    <div id="schedule" class="tabcontent">
       <h2><i class="fas fa-calendar-check"></i> แผนการสอนตลอด 17 สัปดาห์</h2>
       
       <p>แผนการสอนนี้ประกอบด้วย <strong>ทฤษฎี 2 ชั่วโมง</strong> และ <strong>ปฏิบัติ 3 ชั่วโมง</strong> ต่อสัปดาห์ พร้อมพัฒนาโครงงานกลุ่ม (Term Project) เป็นเว็บแอปพลิเคชัน Full-stack ตลอดภาคการศึกษา</p>
@@ -867,15 +716,8 @@
                 <p class="activity"><b>กิจกรรม:</b></p>
                 <ul>
                     <li><strong>ทฤษฎี (2 ชม.):</strong> บรรยายแนวคิด SE, SDLC, Scrum roles</li>
-                    <li><strong>ปฏิบัติ (3 ชม.):</strong> Workshop ติดตั้ง Git/VSCode/Node.js, สร้าง Git repo, ฝึก Git init/add/commit</li>
+                    <li><strong>ปฏิบัติ (3 ชม.):</strong> Workshop ติดตั้ง Git/VSCode/Node.js, สร้าง Git repo, ฝึก Git init/add/commit, สร้างหน้า HTML แรก</li>
                 </ul>
-                
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="https://www.canva.com/..." target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="https://github.com/engce301/materials/tree/main/week01/lab" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 01</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 1, 4, 6</p>
             </div>
         </div>
@@ -901,13 +743,6 @@
                     <li><strong>ทฤษฎี (2 ชม.):</strong> ประเภทของความต้องการ, เทคนิคเก็บ requirement</li>
                     <li><strong>ปฏิบัติ (3 ชม.):</strong> Brainstorm requirement, Role-play, เริ่มร่าง SRS, สร้างหน้า Landing Page ด้วย HTML5</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 02</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 1, 2, 4, 6</p>
             </div>
         </div>
@@ -933,13 +768,6 @@
                     <li><strong>ทฤษฎี (2 ชม.):</strong> อธิบาย User Story (INVEST), Use Case vs User Story, แนะนำ CSS (box model)</li>
                     <li><strong>ปฏิบัติ (3 ชม.):</strong> แปลง SRS → Product Backlog (Trello/Jira), วาด Use Case Diagram, ต่อเติม Landing Page ด้วย CSS</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 03</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 2, 3, 4, 6</p>
             </div>
         </div>
@@ -963,15 +791,8 @@
                 <p class="activity"><b>กิจกรรม:</b></p>
                 <ul>
                     <li><strong>ทฤษฎี (2 ชม.):</strong> SOLID concept, UCD, responsive design principles</li>
-                    <li><strong>ปฏิบัติ (3 ชม.):</strong> ทำ Personas + User Journey Map, ปรับหน้า HTML/CSS (flexbox/grid)</li>
+                    <li><strong>ปฏิบัติ (3 ชม.):</strong> ทำ Personas + User Journey Map, ปรับหน้า HTML/CSS (flexbox/grid), เตรียมโครงหน้าฟอร์ม</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 04</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 1, 3, 4, 6</p>
             </div>
         </div>
@@ -997,13 +818,6 @@
                     <li><strong>ทฤษฎี (2 ชม.):</strong> หลักการ UI (CRAP), Usability heuristics, แนะนำ JS/DOM/Events</li>
                     <li><strong>ปฏิบัติ (3 ชม.):</strong> ออกแบบหน้าหลักใน Figma, เพิ่ม JavaScript บนฟอร์ม (ตรวจช่องว่าง, validate email)</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 05</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 3, 4, 6</p>
             </div>
         </div>
@@ -1027,15 +841,8 @@
                 <p class="activity"><b>กิจกรรม:</b></p>
                 <ul>
                     <li><strong>ทฤษฎี (2 ชม.):</strong> อธิบายสถาปัตยกรรมเว็บ, แนะนำ Node.js & Express</li>
-                    <li><strong>ปฏิบัติ (3 ชม.):</strong> สร้างโปรเจกต์ Node.js/Express, สร้าง route (GET/POST) อ่าน/เขียน `data.json`</li>
+                    <li><strong>ปฏิบัติ (3 ชม.):</strong> สร้างโปรเจกต์ Node.js/Express, สร้าง route (GET/POST) อ่าน/เขียน `data.json`, ทดสอบด้วย Postman</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 06</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 1, 3, 4</p>
             </div>
         </div>
@@ -1061,13 +868,6 @@
                     <li><strong>ทฤษฎี (2 ชม.):</strong> REST principles, ER modelling, เปรียบเทียบ JSON vs SQLite</li>
                     <li><strong>ปฏิบัติ (3 ชม.):</strong> ออกแบบ endpoints, วาด ER Diagram, สร้างฐานข้อมูล SQLite และเชื่อม Express (CRUD)</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 07</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 2, 3, 4, 5</p>
             </div>
         </div>
@@ -1092,12 +892,6 @@
                     <li><strong>ทฤษฎี (2 ชม.):</strong> สอบข้อเขียน (ครอบคลุมสัปดาห์ 1–7)</li>
                     <li><strong>ปฏิบัติ (3 ชม.):</strong> สอบปฏิบัติ (ออกแบบ Use Case, HTML/CSS/JS, API endpoints)</li>
                 </ul>
-
-                 <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Midterm Review Slides</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 1, 2, 3, 4, 6</p>
             </div>
         </div>
@@ -1123,13 +917,6 @@
                     <li><strong>ทฤษฎี (2 ชม.):</strong> Standard code style, linters, Git workflow, review code</li>
                     <li><strong>ปฏิบัติ (3 ชม.):</strong> ตั้งค่า branching, แบ่ง feature branch, ทำ PR + review, refactor HTML/CSS/JS</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 09</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 4, 5, 6</p>
             </div>
         </div>
@@ -1155,13 +942,6 @@
                     <li><strong>ทฤษฎี (2 ชม.):</strong> อธิบาย React ecosystem, component, props, state, lifecycle (useState/useEffect)</li>
                     <li><strong>ปฏิบัติ (3 ชม.):</strong> ตั้งค่า React app (Vite/CRA), แปลงหน้า UI เดิมเป็น React components, เชื่อม React กับ Express API</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 10</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 3, 4</p>
             </div>
         </div>
@@ -1185,15 +965,8 @@
                 <p class="activity"><b>กิจกรรม:</b></p>
                 <ul>
                     <li><strong>ทฤษฎี (2 ชม.):</strong> ทบทวน Express+SQLite, แนะนำ MongoDB และ ODM (Mongoose)</li>
-                    <li><strong>ปฏิบัติ (3 ชม.):</strong> เพิ่ม module ใหม่ในโปรเจกต์ที่ใช้ MongoDB, สร้าง model/schema, เชื่อม React → Express → MongoDB</li>
+                    <li><strong>ปฏิบัติ (3 ชม.):</strong> เพิ่ม module ใหม่ในโปรเจกต์ที่ใช้ MongoDB (เช่น user/log), สร้าง model/schema, เชื่อม React → Express → MongoDB</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 11</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 3, 4, 5</p>
             </div>
         </div>
@@ -1217,15 +990,8 @@
                 <p class="activity"><b>กิจกรรม:</b></p>
                 <ul>
                     <li><strong>ทฤษฎี (2 ชม.):</strong> อธิบาย CORS, JWT, OWASP Top 10 (intro)</li>
-                    <li><strong>ปฏิบัติ (3 ชม.):</strong> เชื่อมหน้า Login/Register, เพิ่ม middleware ตรวจ JWT, ทำ validation (client+server)</li>
+                    <li><strong>ปฏิบัติ (3 ชม.):</strong> เชื่อมหน้า Login/Register, เพิ่ม middleware ตรวจ JWT, ทำ validation (client+server), ทดสอบ flow เข้าระบบ</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 12</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 4, 5</p>
             </div>
         </div>
@@ -1249,15 +1015,8 @@
                 <p class="activity"><b>กิจกรรม:</b></p>
                 <ul>
                     <li><strong>ทฤษฎี (2 ชม.):</strong> Testing concepts, TDD vs BDD</li>
-                    <li><strong>ปฏิบัติ (3 ชม.):</strong> ตั้งค่า Jest & RTL, สร้าง Unit Test สำหรับ function/component, เขียน Integration Test (Supertest)</li>
+                    <li><strong>ปฏิบัติ (3 ชม.):</strong> ตั้งค่า Jest & React Testing Library, สร้าง Unit Test สำหรับ function/component, เขียน Integration Test (Supertest)</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 13</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 4, 5</p>
             </div>
         </div>
@@ -1283,13 +1042,6 @@
                     <li><strong>ทฤษฎี (2 ชม.):</strong> SQA processes, Technical Debt, ประเภท maintenance</li>
                     <li><strong>ปฏิบัติ (3 ชม.):</strong> รัน ESLint/Prettier, เลือกส่วนที่มี code smell มา refactor (React/Express), รัน test เพื่อยืนยัน</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 14</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 1, 5</p>
             </div>
         </div>
@@ -1315,13 +1067,6 @@
                     <li><strong>ทฤษฎี (2 ชม.):</strong> Agile PM concept, CI/CD pipeline, environment (dev/prod)</li>
                     <li><strong>ปฏิบัติ (3 ชม.):</strong> Sprint planning/Retros, ตั้งค่า script build/test, Deploy (Vercel/Render), ทดสอบระบบ deployed</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn btn-canva"><i class="fab fa-canva"></i> Lecture Slide</a>
-                    <a href="#" target="_blank" class="material-btn btn-github"><i class="fab fa-github"></i> LAB Sheet 15</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 1, 4, 5, 6</p>
             </div>
         </div>
@@ -1346,12 +1091,6 @@
                 <ul>
                     <li><strong>ปฏิบัติ (5 ชม.):</strong> แต่ละทีมทำ Final presentation & live demo, Q&A, Peer evaluation, Retrospective</li>
                 </ul>
-
-                <div class="material-links">
-                    <span class="material-label"><i class="fas fa-folder-open"></i> Materials:</span>
-                    <a href="#" target="_blank" class="material-btn"><i class="fas fa-list-alt"></i> Evaluation Form</a>
-                </div>
-
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 4, 5, 6</p>
             </div>
         </div>
@@ -1377,124 +1116,119 @@
                     <li><strong>ทฤษฎี (2 ชม.):</strong> สอบข้อเขียน (SE process, design, QA, PM)</li>
                     <li><strong>ปฏิบัติ (3 ชม.):</strong> สอบปฏิบัติแบบ Change Request (แก้/เพิ่ม feature + อธิบายผลกระทบ)</li>
                 </ul>
-                
                 <p style="text-align:right; font-size:0.85em; color:#777;">CLO: 1, 2, 3, 4, 5, 6</p>
             </div>
         </div>
         
-      </div> 
+      </div> </div>
+    
+    <div id="grading" class="tabcontent">
+      <h2><i class="fas fa-percentage"></i> การวัดผลและเกณฑ์การให้คะแนน</h2>
+      
+      <p>การประเมินผลจะเน้นที่การลงมือปฏิบัติจริง (Hands-on) และโครงงาน (Project-based) เพื่อวัดความสามารถในการสร้างซอฟต์แวร์จริง</p>
+      <div class="progress-section">
+          
+          <div class="progress-item">
+              <div class="progress-label">
+                  <span><i class="fas fa-tasks"></i> โครงงานกลุ่ม (Term Project)</span>
+                  <span class="percent">30%</span>
+              </div>
+              <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 30%; background-color: #dc3545;"></div>
+              </div>
+          </div>
+          
+          <div class="progress-item">
+              <div class="progress-label">
+                  <span><i class="fas fa-file-alt"></i> ใบงาน/แบบฝึกหัด/งานปฏิบัติ</span>
+                  <span class="percent">15%</span>
+              </div>
+              <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 15%; background-color: #007bff;"></div>
+              </div>
+          </div>
+          
+          <div class="progress-item">
+              <div class="progress-label">
+                  <span><i class="fas fa-pencil-alt"></i> แบบทดสอบสั้น/Quiz</span>
+                  <span class="percent">15%</span>
+              </div>
+              <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 15%; background-color: #007bff;"></div>
+              </div>
+          </div>
+
+          <div class="progress-item">
+              <div class="progress-label">
+                  <span><i class="fas fa-laptop-code"></i> สอบกลางภาค</span>
+                  <span class="percent">15%</span>
+              </div>
+              <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 15%; background-color: #ffc107;"></div>
+              </div>
+          </div>
+          
+          <div class="progress-item">
+              <div class="progress-label">
+                  <span><i class="fas fa-flag-checkered"></i> สอบปลายภาค</span>
+                  <span class="percent">15%</span>
+              </div>
+              <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 15%; background-color: #ffc107;"></div>
+              </div>
+          </div>
+          
+          <div class="progress-item">
+              <div class="progress-label">
+                  <span><i class="fas fa-hands-helping"></i> การมีส่วนร่วมในชั้นเรียน</span>
+                  <span class="percent">10%</span>
+              </div>
+              <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: 10%; background-color: #28a745;"></div>
+              </div>
+          </div>
+
+      </div>
     </div>
 
-        <div id="grading" class="tabcontent">
-            <h2><i class="fas fa-percentage"></i> การวัดผลและเกณฑ์การให้คะแนน</h2>
-
-            <p>การประเมินผลจะเน้นที่การลงมือปฏิบัติจริง (Hands-on) และโครงงาน (Project-based)
-                เพื่อวัดความสามารถในการสร้างซอฟต์แวร์จริง</p>
-            <div class="progress-section">
-
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span><i class="fas fa-tasks"></i> โครงงานกลุ่ม (Term Project)</span>
-                        <span class="percent">30%</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 30%; background-color: #dc3545;"></div>
-                    </div>
-                </div>
-
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span><i class="fas fa-file-alt"></i> ใบงาน/แบบฝึกหัด/งานปฏิบัติ</span>
-                        <span class="percent">15%</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 15%; background-color: #007bff;"></div>
-                    </div>
-                </div>
-
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span><i class="fas fa-pencil-alt"></i> แบบทดสอบสั้น/Quiz</span>
-                        <span class="percent">15%</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 15%; background-color: #007bff;"></div>
-                    </div>
-                </div>
-
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span><i class="fas fa-laptop-code"></i> สอบกลางภาค</span>
-                        <span class="percent">15%</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 15%; background-color: #ffc107;"></div>
-                    </div>
-                </div>
-
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span><i class="fas fa-flag-checkered"></i> สอบปลายภาค</span>
-                        <span class="percent">15%</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 15%; background-color: #ffc107;"></div>
-                    </div>
-                </div>
-
-                <div class="progress-item">
-                    <div class="progress-label">
-                        <span><i class="fas fa-hands-helping"></i> การมีส่วนร่วมในชั้นเรียน</span>
-                        <span class="percent">10%</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 10%; background-color: #28a745;"></div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div id="clo" class="tabcontent">
-            <h2><i class="fas fa-graduation-cap"></i> ผลการเรียนรู้ที่คาดหวัง (CLO)</h2>
-
-            <p>เมื่อสิ้นสุดรายวิชา นักศึกษาจะมีความสามารถดังนี้:</p>
-
-            <div class="clo-grid">
-                <div class="clo-card">
-                    <h3 class="title"><i class="fas fa-brain"></i> CLO1: ความรู้พื้นฐาน</h3>
-                    <p class="desc">อธิบายบทบาทของวิศวกรซอฟต์แวร์, กระบวนการพัฒนา, แบบจำลอง และสถาปัตยกรรมพื้นฐาน</p>
-                </div>
-                <div class="clo-card">
-                    <h3 class="title"><i class="fas fa-search"></i> CLO2: การวิเคราะห์</h3>
-                    <p class="desc">วิเคราะห์ปัญหาและความต้องการผู้ใช้ และจัดทำเอกสาร/แบบจำลองความต้องการของระบบ</p>
-                </div>
-                <div class="clo-card">
-                    <h3 class="title"><i class="fas fa-drafting-compass"></i> CLO3: การออกแบบ</h3>
-                    <p class="desc">ออกแบบสถาปัตยกรรม, โครงสร้างข้อมูล และ UI/UX
-                        ของเว็บแอปพลิเคชันให้สอดคล้องกับความต้องการ</p>
-                </div>
-                <div class="clo-card">
-                    <h3 class="title"><i class="fas fa-laptop-code"></i> CLO4: การพัฒนา</h3>
-                    <p class="desc">พัฒนาและทดสอบเว็บแอปพลิเคชันแบบ Full-stack (React, Node.js) ตามเกณฑ์คุณภาพ</p>
-                </div>
-                <div class="clo-card">
-                    <h3 class="title"><i class="fas fa-check-circle"></i> CLO5: การประเมินคุณภาพ</h3>
-                    <p class="desc">ประเมินและปรับปรุงคุณภาพซอฟต์แวร์ (testing, refactoring, security, maintenance)</p>
-                </div>
-                <div class="clo-card">
-                    <h3 class="title"><i class="fas fa-users"></i> CLO6: การทำงานเป็นทีม</h3>
-                    <p class="desc">ทำงานร่วมกับผู้อื่น, ใช้เครื่องมือ (Git), จัดการโครงการ (Agile)
-                        และสื่อสารเชิงเทคนิคอย่างมีจริยธรรม</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="setup" class="tabcontent">
-            <h2><i class="fas fa-tools"></i> การเตรียมตัวและสิ่งที่ต้องใช้</h2>
-
-            <h3>ซอฟต์แวร์ที่จำเป็น</h3>
-            <pre><code># Runtime / Environment
+    <div id="clo" class="tabcontent">
+      <h2><i class="fas fa-graduation-cap"></i> ผลการเรียนรู้ที่คาดหวัง (CLO)</h2>
+      
+      <p>เมื่อสิ้นสุดรายวิชา นักศึกษาจะมีความสามารถดังนี้:</p>
+      
+      <div class="clo-grid">
+          <div class="clo-card">
+              <h3 class="title"><i class="fas fa-brain"></i> CLO1: ความรู้พื้นฐาน</h3>
+              <p class="desc">อธิบายบทบาทของวิศวกรซอฟต์แวร์, กระบวนการพัฒนา, แบบจำลอง และสถาปัตยกรรมพื้นฐาน</p>
+          </div>
+          <div class="clo-card">
+              <h3 class="title"><i class="fas fa-search"></i> CLO2: การวิเคราะห์</h3>
+              <p class="desc">วิเคราะห์ปัญหาและความต้องการผู้ใช้ และจัดทำเอกสาร/แบบจำลองความต้องการของระบบ</p>
+          </div>
+          <div class="clo-card">
+              <h3 class="title"><i class="fas fa-drafting-compass"></i> CLO3: การออกแบบ</h3>
+              <p class="desc">ออกแบบสถาปัตยกรรม, โครงสร้างข้อมูล และ UI/UX ของเว็บแอปพลิเคชันให้สอดคล้องกับความต้องการ</p>
+          </div>
+          <div class="clo-card">
+              <h3 class="title"><i class="fas fa-laptop-code"></i> CLO4: การพัฒนา</h3>
+              <p class="desc">พัฒนาและทดสอบเว็บแอปพลิเคชันแบบ Full-stack (React, Node.js) ตามเกณฑ์คุณภาพ</p>
+          </div>
+          <div class="clo-card">
+              <h3 class="title"><i class="fas fa-check-circle"></i> CLO5: การประเมินคุณภาพ</h3>
+              <p class="desc">ประเมินและปรับปรุงคุณภาพซอฟต์แวร์ (testing, refactoring, security, maintenance)</p>
+          </div>
+          <div class="clo-card">
+              <h3 class="title"><i class="fas fa-users"></i> CLO6: การทำงานเป็นทีม</h3>
+              <p class="desc">ทำงานร่วมกับผู้อื่น, ใช้เครื่องมือ (Git), จัดการโครงการ (Agile) และสื่อสารเชิงเทคนิคอย่างมีจริยธรรม</p>
+          </div>
+      </div>
+    </div>
+    
+    <div id="setup" class="tabcontent">
+      <h2><i class="fas fa-tools"></i> การเตรียมตัวและสิ่งที่ต้องใช้</h2>
+      
+      <h3>ซอฟต์แวร์ที่จำเป็น</h3>
+      <pre><code># Runtime / Environment
 https://nodejs.org/ (LTS version)
 
 # Version Control
@@ -1512,9 +1246,9 @@ https://www.postman.com/downloads/
 
 # Design Tool (Optional but recommended)
 https://www.figma.com/</code></pre>
-
-            <h3>VS Code Extensions ที่แนะนำ</h3>
-            <pre><code>{
+    
+      <h3>VS Code Extensions ที่แนะนำ</h3>
+      <pre><code>{
   "recommendations": [
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
@@ -1524,128 +1258,122 @@ https://www.figma.com/</code></pre>
     "ms-vscode.vscode-typescript-next"
   ]
 }</code></pre>
-        </div>
-
-        <div id="resources" class="tabcontent">
-            <h2><i class="fas fa-globe"></i> แหล่งข้อมูล (Learning Resources)</h2>
-
-            <h3>Official Documentation (สำคัญที่สุด)</h3>
-            <ul class="styled">
-                <li><a href="https://developer.mozilla.org/ (MDN)" target="_blank">MDN Web Docs (สำหรับ HTML, CSS,
-                        JS)</a></li>
-                <li><a href="https://react.dev/" target="_blank">React Official Docs</a></li>
-                <li><a href="https://nodejs.org/docs/" target="_blank">Node.js Documentation</a></li>
-                <li><a href="https://expressjs.com/" target="_blank">Express.js Documentation</a></li>
-                <li><a href="https://www.sqlite.org/docs.html" target="_blank">SQLite Documentation</a></li>
-                <li><a href="https://www.mongodb.com/docs/" target="_blank">MongoDB Documentation</a></li>
-            </ul>
-
-            <h3>หนังสือแนะนำ</h3>
-            <ul class="styled">
-                <li>"Software Engineering" by Ian Somerville</li>
-                <li>"JavaScript: The Definitive Guide" by David Flanagan</li>
-            </ul>
-        </div>
-
-        <div id="success" class="tabcontent">
-            <h2><i class="fas fa-trophy"></i> คำแนะนำสู่ความสำเร็จ</h2>
-
-
-            [Image of successful team collaboration]
-
-            <p>โครงงานกลุ่ม (Term Project) ไม่ได้ออกแบบมาเพื่อประเมินทักษะทางเทคนิคของคุณเท่านั้น
-                แต่ยังเตรียมความพร้อมสำหรับความท้าทายและโอกาสในอาชีพวิศวกรซอฟต์แวร์อีกด้วย</p>
-
-            <h3>กุญแจสู่ความสำเร็จ</h3>
-            <ul class="styled success-list">
-                <li><b>Technical Excellence:</b> เริ่มต้นเร็ว, ทำตาม Best Practices, ทดสอบอย่างละเอียด
-                    และเขียนเอกสารที่ดี</li>
-                <li><b>Project Management:</b> วางแผนอย่างมีประสิทธิภาพ, จัดการเวลา, และสื่อสารอย่างสม่ำเสมอ (Agile)
-                </li>
-                <li><b>Professional Development:</b> สร้าง Portfolio, สร้างเครือข่าย, และเรียนรู้อย่างต่อเนื่อง</li>
-            </ul>
-
-            <hr style="margin: 30px 0; border: 1px solid #eee;">
-            <p style="text-align:center; font-style:italic; font-size:1.1em;">
-                <b>ขอให้โชคดี และจำไว้ว่า: เป้าหมายไม่ใช่แค่การทำงานให้เสร็จ
-                    แต่คือการเป็นวิศวกรซอฟต์แวร์ที่คุณอยากจะเป็น!</b> 🚀
-            </p>
-        </div>
-
-        <div class="footer">
-            <h3>🌟 พร้อมที่จะสร้างสิ่งที่น่าทึ่งแล้วหรือยัง?</h3>
-            <p><b>การเดินทางสู่การเป็นวิศวกรซอฟต์แวร์มืออาชีพเริ่มต้นที่นี่!</b></p>
-            <div class="social-links">
-                <a href="mailto:thanit@rmutl.ac.th"><i class="fas fa-envelope"></i> ติดต่อผู้สอน</a>
-                <a href="#" target="_blank"><i class="fab fa-discord"></i> เข้าร่วม Discord</a>
-            </div>
-            <p class="copyright">
-                หลักสูตรวิศวกรรมคอมพิวเตอร์ | คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเทคโนโลยีราชมงคลล้านนา<br>
-                <i>Last Updated: Nov 2025 | © 2025 ENGCE301 Course Team.</i>
-            </p>
-        </div>
     </div>
+    
+    <div id="resources" class="tabcontent">
+      <h2><i class="fas fa-globe"></i> แหล่งข้อมูล (Learning Resources)</h2>
+      
+      <h3>Official Documentation (สำคัญที่สุด)</h3>
+      <ul class="styled">
+          <li><a href="https://developer.mozilla.org/ (MDN)" target="_blank">MDN Web Docs (สำหรับ HTML, CSS, JS)</a></li>
+          <li><a href="https://react.dev/" target="_blank">React Official Docs</a></li>
+          <li><a href="https://nodejs.org/docs/" target="_blank">Node.js Documentation</a></li>
+          <li><a href="https://expressjs.com/" target="_blank">Express.js Documentation</a></li>
+          <li><a href="https://www.sqlite.org/docs.html" target="_blank">SQLite Documentation</a></li>
+          <li><a href="https://www.mongodb.com/docs/" target="_blank">MongoDB Documentation</a></li>
+      </ul>
+    
+      <h3>หนังสือแนะนำ</h3>
+      <ul class="styled">
+          <li>"Software Engineering" by Ian Somerville</li>
+          <li>"JavaScript: The Definitive Guide" by David Flanagan</li>
+      </ul>
+    </div>
+    
+    <div id="success" class="tabcontent">
+      <h2><i class="fas fa-trophy"></i> คำแนะนำสู่ความสำเร็จ</h2>
+      
 
-    <script>
-        // Function to switch tabs
-        function openTab(evt, tabName) {
-            let i, tabcontent, tablinks;
+[Image of successful team collaboration]
 
-            // Get all elements with class="tabcontent" and hide them
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
+      <p>โครงงานกลุ่ม (Term Project) ไม่ได้ออกแบบมาเพื่อประเมินทักษะทางเทคนิคของคุณเท่านั้น แต่ยังเตรียมความพร้อมสำหรับความท้าทายและโอกาสในอาชีพวิศวกรซอฟต์แวร์อีกด้วย</p>
+    
+      <h3>กุญแจสู่ความสำเร็จ</h3>
+      <ul class="styled success-list">
+          <li><b>Technical Excellence:</b> เริ่มต้นเร็ว, ทำตาม Best Practices, ทดสอบอย่างละเอียด และเขียนเอกสารที่ดี</li>
+          <li><b>Project Management:</b> วางแผนอย่างมีประสิทธิภาพ, จัดการเวลา, และสื่อสารอย่างสม่ำเสมอ (Agile)</li>
+          <li><b>Professional Development:</b> สร้าง Portfolio, สร้างเครือข่าย, และเรียนรู้อย่างต่อเนื่อง</li>
+      </ul>
+    
+      <hr style="margin: 30px 0; border: 1px solid #eee;">
+      <p style="text-align:center; font-style:italic; font-size:1.1em;">
+      <b>ขอให้โชคดี และจำไว้ว่า: เป้าหมายไม่ใช่แค่การทำงานให้เสร็จ แต่คือการเป็นวิศวกรซอฟต์แวร์ที่คุณอยากจะเป็น!</b> 🚀
+      </p>
+    </div>
+    
+    <div class="footer">
+      <h3>🌟 พร้อมที่จะสร้างสิ่งที่น่าทึ่งแล้วหรือยัง?</h3>
+      <p><b>การเดินทางสู่การเป็นวิศวกรซอฟต์แวร์มืออาชีพเริ่มต้นที่นี่!</b></p>
+      <div class="social-links">
+        <a href="mailto:thanit@rmutl.ac.th"><i class="fas fa-envelope"></i> ติดต่อผู้สอน</a>
+        <a href="#" target="_blank"><i class="fab fa-discord"></i> เข้าร่วม Discord</a>
+      </div>
+      <p class="copyright">
+        หลักสูตรวิศวกรรมคอมพิวเตอร์ | คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเทคโนโลยีราชมงคลล้านนา<br>
+        <i>Last Updated: Nov 2025 | © 2025 ENGCE301 Course Team.</i>
+      </p>
+    </div>
+</div>
 
-            // Get all elements with class="tablink" and remove the class "active"
-            tablinks = document.getElementsByClassName("tablink");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-
-            // Show the current tab, and add an "active" class to the button that opened the tab
-            document.getElementById(tabName).style.display = "block";
-            if (evt) { // Check if evt is null (for default load)
-                evt.currentTarget.className += " active";
-            }
+<script>
+    // Function to switch tabs
+    function openTab(evt, tabName) {
+        let i, tabcontent, tablinks;
+        
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
         }
-
-        // Function to toggle accordion (for schedule)
-        function toggleWeekContent(element) {
-            var content = element.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-                element.classList.remove("active");
-            } else {
-                content.style.display = "block";
-                element.classList.add("active");
-            }
+        
+        // Get all elements with class="tablink" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
         }
+        
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(tabName).style.display = "block";
+        if (evt) { // Check if evt is null (for default load)
+            evt.currentTarget.className += " active";
+        }
+    }
 
-        // Set the first tab as active on page load
-        document.addEventListener("DOMContentLoaded", function () {
-            // Trigger a click on the first tab link to open it by default
-            document.querySelector('.tablink').click();
+    // Function to toggle accordion (for schedule)
+    function toggleWeekContent(element) {
+        var content = element.nextElementSibling;
+        if (content.style.display === "block") {
+            content.style.display = "none";
+            element.classList.remove("active");
+        } else {
+            content.style.display = "block";
+            element.classList.add("active");
+        }
+    }
 
-            // Add click listener for the hero button
-            document.querySelector('.cta-button').addEventListener('click', function (e) {
-                e.preventDefault(); // Stop anchor jump
+    // Set the first tab as active on page load
+    document.addEventListener("DOMContentLoaded", function() {
+        // Trigger a click on the first tab link to open it by default
+        document.querySelector('.tablink').click();
 
-                // Manually click the tablink that opens 'overview'
-                const overviewTab = document.querySelector('.tablink[onclick*="overview"]');
-                if (overviewTab) {
-                    overviewTab.click();
-                }
-
-                // Smooth scroll to the tabs section (optional)
-                const tabsElement = document.querySelector('.tabs');
-                if (tabsElement) {
-                    tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
+        // Add click listener for the hero button
+        document.querySelector('.cta-button').addEventListener('click', function(e) {
+            e.preventDefault(); // Stop anchor jump
+            
+            // Manually click the tablink that opens 'overview'
+            const overviewTab = document.querySelector('.tablink[onclick*="overview"]');
+            if (overviewTab) {
+                overviewTab.click();
+            }
+            
+            // Smooth scroll to the tabs section (optional)
+            const tabsElement = document.querySelector('.tabs');
+            if (tabsElement) {
+                tabsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         });
-    </script>
+    });
+</script>
 
 </body>
-
 </html>

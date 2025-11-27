@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ENGCE301 Week 2 – Requirements Engineering + Semantic HTML</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body-dark: #020617;
+            --bg-slide-dark: radial-gradient(circle at top right, #1e293b 0%, #020617 60%, #000000 100%);
+            --bg-body-light: #e5e7eb;
+            --bg-slide-light: radial-gradient(circle at top left, #ffffff 0%, #e5e7eb 40%, #cbd5f5 100%);
+            --text-main-dark: #e5e7eb;
+            --text-muted-dark: #9ca3af;
+            --accent-dark: #38bdf8;
+            --accent-soft-dark: rgba(56, 189, 248, 0.18);
+            --border-soft-dark: rgba(148, 163, 184, 0.4);
+
+            --text-main-light: #0f172a;
+            --text-muted-light: #4b5563;
+            --accent-light: #0ea5e9;
+            --accent-soft-light: rgba(59, 130, 246, 0.1);
+            --border-soft-light: rgba(148, 163, 184, 0.4);
+
+            --slide-radius: 26px;
+            --slide-shadow-dark: 0 24px 70px rgba(15, 23, 42, 0.9);
+            --slide-shadow-light: 0 24px 70px rgba(15, 23, 42, 0.18);
+
+            --slide-font-scale: 1; /* ใช้ปรับฟอนต์ (+/-) */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Prompt", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg-body-dark);
+            color: var(--text-main-dark);
+            height: 100vh;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+        }
+
+        body[data-theme="light"] {
+            background: var(--bg-body-light);
+            color: var(--text-main-light);
+        }
+
+        .deck-root {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100vh;
+        }
+
+        /* Top bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 4px 10px 0;
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 16px;
+            background: radial-gradient(circle at 30% 0, #38bdf8, #4f46e5 45%, #a855f7 85%);
+            box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7), 0 14px 30px rgba(15, 23, 42, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e5e7eb;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+        }
+
+        body[data-theme="light"] .logo-badge {
+            box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.5),
+                        0 14px 30px rgba(15, 23, 42, 0.3);
+        }
+
+        .course-title-main {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .course-title-sub {
+            font-size: 0.86rem;
+            opacity: 0.78;
+        }
+
+        .top-right-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pill-info {
+            padding: 4px 10px;
+            border-radius: 1000px;
+            font-size: 0.78rem;
+            border: 1px solid var(--border-soft-dark);
+            color: var(--text-muted-dark);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        body[data-theme="light"] .pill-info {
+            border-color: var(--border-soft-light);
+            color: var(--text-muted-light);
+        }
+
+        .pill-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+        }
+
+        .control-btn {
+            border-radius: 999px;
+            border: 1px solid var(--border-soft-dark);
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text-main-dark);
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            transition: all 0.18s ease-out;
+        }
+
+        body[data-theme="light"] .control-btn {
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--text-main-light);
+            border-color: var(--border-soft-light);
+        }
+
+        .control-btn span.icon {
+            font-size: 1rem;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.4);
+        }
+
+        body[data-theme="light"] .control-btn:hover {
+            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+        }
+
+        /* Main slide area */
+        .stage-wrapper {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .slide-shell {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            border-radius: var(--slide-radius);
+            background: var(--bg-slide-dark);
+            box-shadow: var(--slide-shadow-dark);
+            overflow: hidden;
+            padding: 22px 26px 18px;
+            display: flex;
+        }
+
+        body[data-theme="light"] .slide-shell {
+            background: var(--bg-slide-light);
+            box-shadow: var(--slide-shadow-light);
+        }
+
+        /* subtle gradient edges */
+        .slide-shell::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            opacity: 0.12;
+            background:
+                radial-gradient(circle at 0 0, #38bdf8 0, transparent 40%),
+                radial-gradient(circle at 100% 100%, #a855f7 0, transparent 45%);
+            pointer-events: none;
+        }
+
+        .slide-shell-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: row;
+            gap: 18px;
+            width: 100%;
+        }
+
+        /* left: slide content; right: mini-outline (optional) */
+        .slide-main {
+            flex: 1;
+            min-width: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .slide-sidebar {
+            width: 220px;
+            min-width: 180px;
+            padding-left: 14px;
+            border-left: 1px dashed rgba(148, 163, 184, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.7rem;
+            color: rgba(148, 163, 184, 0.9);
+        }
+
+        body[data-theme="light"] .slide-sidebar {
+            color: #6b7280;
+            border-left-color: rgba(156, 163, 175, 0.9);
+        }
+
+        .sidebar-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            opacity: 0.85;
+        }
+
+        .sidebar-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .sidebar-step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.65;
+        }
+
+        .sidebar-step-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.8);
+        }
+
+        .sidebar-step.active {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .sidebar-step.active .sidebar-step-dot {
+            background: #38bdf8;
+            box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.35);
+        }
+
+        .sidebar-legend {
+            margin-top: auto;
+            padding-top: 4px;
+            border-top: 1px dashed rgba(148, 163, 184, 0.45);
+            font-size: 0.68rem;
+        }
+
+        .sidebar-legend span.key {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sidebar-key-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #22c55e;
+        }
+
+        /* slide core */
+        .slides {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            padding: 4px 4px 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(10px) scale(0.99);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+            font-size: calc(1rem * var(--slide-font-scale));
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0) scale(1);
+        }
+
+        .slide-header {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .slide-kicker {
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            opacity: 0.75;
+        }
+
+        .slide-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slide-tag-chip {
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.6em;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(148, 163, 184, 0.8);
+            color: #e5e7eb;
+        }
+
+        body[data-theme="light"] .slide-tag-chip {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(156, 163, 175, 0.9);
+            color: #0f172a;
+        }
+
+        .slide-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .slide-lead {
+            font-size: 0.92em;
+            opacity: 0.9;
+        }
+
+        .slide-grid-two {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: 14px;
+        }
+
+        .card {
+            border-radius: 18px;
+            padding: 10px 14px;
+            background: rgba(15, 23, 42, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.65);
+            box-shadow: 0 14px 40px rgba(15, 23, 42, 0.8);
+        }
+
+        body[data-theme="light"] .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-color: rgba(148, 163, 184, 0.6);
+            box-shadow: 0 10px 26px rgba(148, 163, 184, 0.3);
+        }
+
+        .card-label {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            opacity: 0.7;
+        }
+
+        .card-title {
+            margin-top: 4px;
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+
+        .card p {
+            margin: 4px 0;
+            font-size: 0.86em;
+            opacity: 0.9;
+        }
+
+        ul, ol {
+            margin: 4px 0 4px 20px;
+            padding: 0;
+            font-size: 0.86em;
+        }
+
+        li + li {
+            margin-top: 2px;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .badge {
+            border-radius: 999px;
+            padding: 3px 8px;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            background: rgba(15, 23, 42, 0.76);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            color: #e5e7eb;
+        }
+
+        body[data-theme="light"] .badge {
+            background: rgba(255, 255, 255, 0.98);
+            color: #0f172a;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75em;
+            background: var(--accent-soft-dark);
+            color: var(--accent-dark);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+        }
+
+        body[data-theme="light"] .pill {
+            background: var(--accent-soft-light);
+            color: var(--accent-light);
+            border-color: rgba(59, 130, 246, 0.55);
+        }
+
+        .pill strong {
+            font-weight: 600;
+        }
+
+        .quote {
+            font-size: 0.86em;
+            font-style: italic;
+            opacity: 0.9;
+            border-left: 3px solid rgba(148, 163, 184, 0.8);
+            padding-left: 10px;
+        }
+
+        .quote-footer {
+            margin-top: 2px;
+            font-size: 0.75em;
+            opacity: 0.7;
+        }
+
+        .diagram-box {
+            border-radius: 18px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px dashed rgba(148, 163, 184, 0.7);
+            padding: 8px 10px;
+            font-size: 0.78em;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        body[data-theme="light"] .diagram-box {
+            background: rgba(255, 255, 255, 0.96);
+            border-color: rgba(148, 163, 184, 0.9);
+        }
+
+        .diagram-box img {
+            max-width: 100%;
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+        }
+
+        .diagram-caption {
+            font-size: 0.75em;
+            opacity: 0.82;
+        }
+
+        .highlight-num {
+            font-size: 2.2em;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .highlight-label {
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            opacity: 0.8;
+        }
+
+        .grid-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .stat-card {
+            border-radius: 16px;
+            padding: 8px 10px;
+            background: rgba(15, 23, 42, 0.86);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            font-size: 0.78em;
+        }
+
+        body[data-theme="light"] .stat-card {
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .stat-card strong {
+            font-size: 1.3em;
+        }
+
+        .two-col-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .check-list li::marker {
+            content: "▹ ";
+        }
+
+        .x-list li::marker {
+            content: "✗ ";
+        }
+
+        .code-block {
+            font-family: "Inter", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.8em;
+            padding: 6px 8px;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            overflow-x: auto;
+        }
+
+        body[data-theme="light"] .code-block {
+            background: rgba(15, 23, 42, 0.95);
+            color: #e5e7eb;
+        }
+
+        .alert {
+            border-radius: 14px;
+            padding: 7px 9px;
+            font-size: 0.8em;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            background: rgba(248, 250, 252, 0.06);
+            border: 1px solid rgba(148, 163, 184, 0.7);
+        }
+
+        body[data-theme="light"] .alert {
+            background: rgba(255, 255, 255, 0.82);
+        }
+
+        .alert-icon {
+            font-size: 1.1em;
+        }
+
+        /* bottom nav bar */
+        .bottom-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 4px 4px 2px;
+            font-size: 0.8rem;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slide-counter {
+            font-variant-numeric: tabular-nums;
+            opacity: 0.8;
+        }
+
+        .progress-bar {
+            position: relative;
+            width: 150px;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(30, 64, 175, 0.4);
+            overflow: hidden;
+        }
+
+        body[data-theme="light"] .progress-bar {
+            background: rgba(148, 163, 184, 0.45);
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            width: 0;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #22c55e, #38bdf8, #a855f7);
+            transition: width 0.2s ease-out;
+        }
+
+        .nav-btn {
+            border-radius: 999px;
+            padding: 5px 10px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            background: rgba(15, 23, 42, 0.9);
+            color: #e5e7eb;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            transition: all 0.16s ease-out;
+        }
+
+        body[data-theme="light"] .nav-btn {
+            background: rgba(255, 255, 255, 0.96);
+            color: #0f172a;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.6);
+        }
+
+        body[data-theme="light"] .nav-btn:hover {
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.22);
+        }
+
+        .nav-btn-icon {
+            font-size: 1.0rem;
+        }
+
+        .nav-tip {
+            opacity: 0.68;
+            font-size: 0.7rem;
+        }
+
+        /* responsive */
+        @media (max-width: 1024px) {
+            .slide-shell-inner {
+                flex-direction: column;
+            }
+            .slide-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .deck-root {
+                padding: 8px;
+            }
+            .slide-shell {
+                padding: 16px 14px 12px;
+            }
+            .slide-title {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+<div class="deck-root">
+    <!-- Top Bar -->
+    <header class="top-bar">
+        <div class="logo-title">
+            <div class="logo-badge">
+                ENG<br>301
+            </div>
+            <div>
+                <div class="course-title-main">Software Design & Development</div>
+                <div class="course-title-sub">Week 2 – Requirements Engineering + HTML Structure & Semantic HTML</div>
+            </div>
+        </div>
+        <div class="top-right-controls">
+            <div class="pill-info">
+                <span class="pill-dot"></span>
+                Live Teaching Mode
+            </div>
+            <button class="control-btn" id="btn-font-dec" type="button">
+                <span class="icon">A-</span><span>Font</span>
+            </button>
+            <button class="control-btn" id="btn-font-inc" type="button">
+                <span class="icon">A+</span>
+            </button>
+            <button class="control-btn" id="btn-theme" type="button">
+                <span class="icon">🌗</span><span>Theme</span>
+            </button>
+            <button class="control-btn" id="btn-fullscreen" type="button">
+                <span class="icon">⛶</span><span>Full</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Stage -->
+    <main class="stage-wrapper">
+        <section class="slide-shell" id="slide-shell">
+            <div class="slide-shell-inner">
+                <div class="slide-main">
+                    <div class="slides" id="slides">
+
+                        <!-- Slide 1: Title -->
+                        <section class="slide active" data-section="intro">
+                            <div class="slide-header">
+                                <div class="slide-kicker">ENGCE301 • Week 2</div>
+                            </div>
+                            <div class="slide-title">
+                                Requirements Engineering
+                                <span class="slide-tag-chip">+ Semantic HTML</span>
+                            </div>
+                            <div class="slide-body">
+                                <p class="slide-lead">
+                                    จาก Week 1 ที่เราเริ่มต้นบทบาทวิศวกรซอฟต์แวร์ &amp; SDLC
+                                    วันนี้เราจะโฟกัสที่
+                                    <strong>“กำหนดให้ชัดว่าต้องสร้างอะไร”</strong>
+                                    และเชื่อมต่อกับ
+                                    <strong>โครงสร้างหน้าเว็บ Landing Page ด้วย Semantic HTML5</strong>
+                                    เพื่อเริ่มโปรเจกต์กลุ่มอย่างเป็นระบบ
+                                </p>
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">เป้าหมายสัปดาห์นี้</div>
+                                        <div class="card-title">Learning Outcomes (LO)</div>
+                                        <ul>
+                                            <li>ระบุ <strong>Stakeholder</strong> และ <strong>Requirements พื้นฐาน</strong> ของระบบได้</li>
+                                            <li>ร่างโครงเอกสาร <strong>Software Requirements Specification (SRS)</strong> ฉบับแรกได้</li>
+                                            <li>ออกแบบหน้า <strong>HTML Landing Page</strong> โดยใช้ Semantic Tags ให้สอดคล้องกับ Requirement</li>
+                                        </ul>
+                                        <div class="badge-row">
+                                            <span class="badge">CLO1</span>
+                                            <span class="badge">CLO2</span>
+                                            <span class="badge">CLO4</span>
+                                            <span class="badge">CLO6</span>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">เชื่อมโยงกับ Term Project</div>
+                                        <p>
+                                            Requirements ที่นิยามในสัปดาห์นี้ จะเป็นฐาน
+                                            <strong>Product Backlog</strong> &amp; ดีไซน์ของ Term Project
+                                            ตลอดทั้งเทอม (React + Node/Express + DB)
+                                        </p>
+                                        <div class="alert">
+                                            <div class="alert-icon">💡</div>
+                                            <div>
+                                                <strong>Mindset:</strong> วันนี้เราจะคิดในมุม
+                                                <strong>System Analyst + UX</strong> ไม่ใช่แค่ Programmer
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 2: Weekly CLO focus -->
+                        <section class="slide" data-section="clo">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Course Learning Outcomes</div>
+                            </div>
+                            <div class="slide-title">
+                                CLO Focus – Week 2
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">CLO จากรายวิชา</div>
+                                        <p><strong>CLO1 – กระบวนการซอฟต์แวร์</strong><br>
+                                            เข้าใจภาพรวมกระบวนการพัฒนาซอฟต์แวร์และบทบาทของ Requirements
+                                        </p>
+                                        <p><strong>CLO2 – วิเคราะห์ความต้องการ</strong><br>
+                                            วิเคราะห์ปัญหาและความต้องการของผู้ใช้ จัดทำเอกสาร/แบบจำลองความต้องการได้
+                                        </p>
+                                        <p><strong>CLO4 – พัฒนาและทดสอบซอฟต์แวร์</strong><br>
+                                            ใช้ผลจาก Requirement ไปสู่การพัฒนา Frontend (HTML) เบื้องต้น
+                                        </p>
+                                        <p><strong>CLO6 – ทำงานเป็นทีม</strong><br>
+                                            ทำงานกลุ่ม กำหนดความต้องการระบบร่วมกัน และสื่อสารให้ทีมเข้าใจตรงกัน
+                                        </p>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">Mapping → เนื้อหา Week 2</div>
+                                        <ul class="check-list">
+                                            <li>CLO1 → อธิบายบทบาท <strong>Requirements Engineering</strong> ภายใน SDLC</li>
+                                            <li>CLO2 → ระบุ <strong>FR/NFR</strong>, Stakeholders และโครง SRS</li>
+                                            <li>CLO4 → แปลง Requirement → <strong>โครง HTML Semantic</strong> ของ Landing Page</li>
+                                            <li>CLO6 → ทำ <strong>Brainstorm + Interview Role-play</strong> ในกลุ่ม</li>
+                                        </ul>
+                                        <div class="alert">
+                                            <div class="alert-icon">✅</div>
+                                            <div>ให้คอยเชื่อมโยงว่า “สไลด์นี้/กิจกรรมนี้” ช่วยให้นักศึกษาบรรลุ CLO ข้อใด</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 3: Review Week 1 – Big Picture -->
+                        <section class="slide" data-section="review">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Review • Week 1</div>
+                            </div>
+                            <div class="slide-title">
+                                ทบทวน Week 1 – จาก SDLC สู่ Term Project
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">เราเรียนอะไรมาแล้ว?</div>
+                                        <ul class="check-list">
+                                            <li>บทบาท/หน้าที่ของ <strong>วิศวกรซอฟต์แวร์</strong></li>
+                                            <li>ภาพรวม <strong>SDLC: Waterfall vs Agile (Scrum / Kanban)</strong></li>
+                                            <li>เครื่องมือพื้นฐาน: <strong>Git, VSCode, Node.js, Browser DevTools</strong></li>
+                                            <li>เริ่มต้น <strong>Term Project Repository</strong> และหน้า HTML แรกในกลุ่ม</li>
+                                        </ul>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">คำถามเช็คความเข้าใจ</div>
+                                        <ol>
+                                            <li>ในมุมมองของคุณ <strong>ข้อดีของ Agile</strong> เมื่อเทียบกับ Waterfall คืออะไร?</li>
+                                            <li>Term Project กลุ่มของคุณ เลือกใช้ Git workflow แบบไหนในตอนนี้?</li>
+                                            <li>ถ้าลูกค้าเปลี่ยน Requirement ตลอดเวลา โมเดลใดน่าจะเหมาะกว่า และทำไม?</li>
+                                        </ol>
+                                        <div class="pill">
+                                            <span>💬</span>
+                                            <strong>กิจกรรมเปิดคาบ:</strong> ให้แต่ละกลุ่มแชร์ 1 ปัญหาที่เจอในการตั้งค่า Environment
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 4: Review Week 1 – SDLC visual -->
+                        <section class="slide" data-section="review">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Review • Week 1</div>
+                            </div>
+                            <div class="slide-title">
+                                SDLC &amp; ตำแหน่งของ Requirements
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div>
+                                        <p class="slide-lead">
+                                            ใน <strong>ทุกโมเดลของ SDLC</strong> ไม่ว่าจะเป็น Waterfall หรือ Agile:
+                                            ขั้นตอนแรก ๆ จะเกี่ยวข้องกับ
+                                            <strong>การนิยาม Requirements</strong> เสมอ
+                                        </p>
+                                        <ul class="check-list">
+                                            <li>กำหนด <strong>เป้าหมายของระบบ</strong></li>
+                                            <li>ระบุ <strong>ผู้เกี่ยวข้อง (Stakeholders)</strong></li>
+                                            <li>นิยามว่า <strong>ระบบต้องทำอะไร</strong> และ <strong>ต้องเป็นอย่างไร</strong></li>
+                                        </ul>
+                                        <div class="alert">
+                                            <div class="alert-icon">⚠️</div>
+                                            <div>
+                                                ถ้า Requirements ผิด → <strong>Design/Code/Test ถูกแค่ไหนก็ไม่ช่วย</strong><br>
+                                                วันนี้เราจึงโฟกัสที่การ “ตัดสินใจให้ตรงตั้งแต่ต้นน้ำ”
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="diagram-box">
+                                        <div><strong>ASCII SDLC แสดงตำแหน่ง Requirements</strong></div>
+                                        <pre class="code-block">
+Requirement
+   │
+   ▼
+ Design
+   │
+   ▼
+Implementation
+   │
+   ▼
+ Testing
+   │
+   ▼
+Deployment
+   │
+   ▼
+Maintenance
+                                        </pre>
+                                        <div class="diagram-caption">
+                                            ลองถามตัวเอง: ถ้าจุดบนสุด (Requirement) เปลี่ยน ระบบด้านล่างจะกระทบอะไรบ้าง?
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 5: Today agenda -->
+                        <section class="slide" data-section="agenda">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Today’s Roadmap</div>
+                            </div>
+                            <div class="slide-title">
+                                โครงเรื่องสัปดาห์ที่ 2
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">Part 1 – Requirements Engineering</div>
+                                        <ol>
+                                            <li>ทำไม Requirements จึงสำคัญ? (CHAOS Report, Fred Brooks)</li>
+                                            <li>ประเภทของ Requirements: FR / NFR / Domain</li>
+                                            <li>การระบุ Stakeholders และ Scope</li>
+                                            <li>เทคนิคการเก็บ Requirements (Interviews, Survey, Observation, Prototype)</li>
+                                            <li>โครงสร้างเอกสาร SRS ตาม IEEE</li>
+                                        </ol>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">Part 2 – HTML Structure &amp; Semantic HTML</div>
+                                        <ol>
+                                            <li>ทำไมต้องใช้ Semantic HTML5 (SEO, Accessibility, Maintainability)</li>
+                                            <li>แท็กสำคัญ: <code>&lt;header&gt; &lt;nav&gt; &lt;main&gt; &lt;section&gt; &lt;article&gt; &lt;aside&gt; &lt;footer&gt;</code></li>
+                                            <li>ออกแบบโครงหน้า Landing Page จาก Requirement</li>
+                                            <li>เตรียมต่อยอดสัปดาห์หน้า → CSS Layout &amp; User Stories</li>
+                                        </ol>
+                                        <div class="pill">
+                                            <span>🧩</span>
+                                            เป้าหมายคือ “เชื่อม Requirements → HTML Layout ของระบบจริง”
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 6: Why Requirements matter (CHAOS) -->
+                        <section class="slide" data-section="req-intro">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Requirements Engineering</div>
+                            </div>
+                            <div class="slide-title">
+                                ทำไม Requirements ถึงโหดที่สุดในโปรเจกต์?
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div>
+                                        <p class="slide-lead">
+                                            จากรายงาน <strong>Standish Group’s CHAOS Report</strong>:
+                                            โปรเจกต์ซอฟต์แวร์จำนวนมากล้มเหลวหรือเกินงบ/เวลา
+                                            โดยสาเหตุสำคัญเกี่ยวข้องกับ “Requirements”
+                                        </p>
+                                        <div class="grid-stats">
+                                            <div class="stat-card">
+                                                <strong>31.1%</strong><br>
+                                                โปรเจกต์ล้มเหลว ยกเลิกก่อนเสร็จ
+                                            </div>
+                                            <div class="stat-card">
+                                                <strong>52.7%</strong><br>
+                                                เกินงบประมาณและล่าช้า
+                                            </div>
+                                            <div class="stat-card">
+                                                <strong>16.2%</strong><br>
+                                                สำเร็จตามแผน
+                                            </div>
+                                        </div>
+                                        <ul>
+                                            <li><strong>Incomplete Requirements</strong> ~ 13.1%</li>
+                                            <li><strong>Lack of User Involvement</strong> ~ 12.4%</li>
+                                            <li><strong>Unrealistic Expectations</strong> ~ 9–10%</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <div class="quote">
+                                            “The hardest single part of building a software system
+                                            is deciding precisely what to build.”
+                                            <div class="quote-footer">— Fred Brooks, The Mythical Man-Month</div>
+                                        </div>
+                                        <div class="alert" style="margin-top:8px;">
+                                            <div class="alert-icon">🎯</div>
+                                            <div>
+                                                สัปดาห์นี้เราฝึก “ตัดสินใจให้ชัด” ว่าจะสร้างอะไร:
+                                                <br>→ ในระดับเอกสาร (SRS) และ
+                                                <br>→ ในระดับ UI (HTML structure)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 7: Definition of RE -->
+                        <section class="slide" data-section="req-intro">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Requirements Engineering</div>
+                            </div>
+                            <div class="slide-title">
+                                นิยาม Requirements Engineering (RE)
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">Definition</div>
+                                        <p>
+                                            <strong>Requirements Engineering (RE)</strong> คือกระบวนการแบบเป็นระบบในการ:
+                                        </p>
+                                        <ol>
+                                            <li><strong>Elicitation</strong> – ค้นหา/เก็บข้อมูลความต้องการ</li>
+                                            <li><strong>Analysis</strong> – วิเคราะห์ความเป็นไปได้/ความขัดแย้ง</li>
+                                            <li><strong>Specification</strong> – เขียนเป็นเอกสารอย่างชัดเจน</li>
+                                            <li><strong>Validation</strong> – ตรวจสอบกับ Stakeholders ว่าตรงจริงหรือไม่</li>
+                                            <li><strong>Management</strong> – จัดการการเปลี่ยนแปลงตลอดโปรเจกต์</li>
+                                        </ol>
+                                    </div>
+                                    <div class="diagram-box">
+                                        <div><strong>Diagram 1 – Requirements Engineering Process</strong></div>
+                                        <!-- TODO: แทนที่ src ด้วยรูปที่ export จาก diagram1_requirements_process.drawio -->
+                                        <img src="diagram1_requirements_process.png" alt="Requirements Engineering Process Flow">
+                                        <div class="diagram-caption">
+                                            ใช้ diagram นี้อธิบาย flow: Elicitation → Analysis → Specification → Validation → Management
+                                            พร้อมยกตัวอย่างจาก Term Project ของนักศึกษา
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 8: Types of Requirements -->
+                        <section class="slide" data-section="req-types">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Requirements Types</div>
+                            </div>
+                            <div class="slide-title">
+                                Functional vs Non-Functional vs Domain
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div>
+                                        <h3 style="font-size:0.95em;margin:4px 0;">Functional Requirements (FR)</h3>
+                                        <p>สิ่งที่ <strong>ระบบต้องทำ</strong> — ฟังก์ชัน/พฤติกรรมของระบบ</p>
+                                        <ul class="check-list">
+                                            <li>ระบบต้องให้ผู้ใช้ <strong>Login</strong> ด้วยอีเมลและรหัสผ่าน</li>
+                                            <li>ระบบต้องแสดงรายการสินค้าในหน้าหลัก</li>
+                                            <li>ระบบต้องส่งอีเมลแจ้งเตือนเมื่อมีคำสั่งซื้อใหม่</li>
+                                        </ul>
+                                        <div class="code-block">
+ระบบต้อง [verb] + [object] + [เงื่อนไขเวลา/สถานการณ์]
+
+✅ ระบบต้องส่งอีเมลยืนยันภายใน 5 นาทีหลังผู้ใช้สมัครสมาชิก
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 style="font-size:0.95em;margin:4px 0;">Non-Functional Requirements (NFR)</h3>
+                                        <p>สิ่งที่ระบบ <strong>ต้องเป็น/ต้องมีคุณภาพอย่างไร</strong></p>
+                                        <div class="two-col-list">
+                                            <ul>
+                                                <li><strong>Performance:</strong> หน้าเว็บโหลดภายใน 2 วินาที</li>
+                                                <li><strong>Security:</strong> เก็บรหัสผ่านแบบ hash (bcrypt)</li>
+                                                <li><strong>Usability:</strong> ทำธุรกรรมได้ใน ≤ 3 คลิก</li>
+                                            </ul>
+                                            <ul>
+                                                <li><strong>Reliability:</strong> Uptime ≥ 99.9%</li>
+                                                <li><strong>Maintainability:</strong> Unit test ≥ 80%</li>
+                                                <li><strong>Portability:</strong> รองรับ Chrome/Firefox/Safari/Edge</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card" style="margin-top:6px;">
+                                    <div class="card-label">Domain Requirements</div>
+                                    <p>
+                                        ข้อกำหนดเฉพาะโดเมน เช่น ระบบการเงินต้องผ่าน <strong>PCI-DSS</strong>,
+                                        ระบบการแพทย์ต้องปฏิบัติตามมาตรฐานความปลอดภัยข้อมูล เป็นต้น
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 9: FR vs NFR comparison table -->
+                        <section class="slide" data-section="req-types">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Requirements Types</div>
+                            </div>
+                            <div class="slide-title">
+                                เปรียบเทียบ FR vs NFR
+                            </div>
+                            <div class="slide-body">
+                                <div class="card">
+                                    <div class="slide-grid-two">
+                                        <div>
+                                            <h3 style="font-size:0.95em;margin:4px 0;">Functional</h3>
+                                            <ul class="check-list">
+                                                <li>ตอบคำถามว่า <strong>“ระบบต้องทำอะไร?”</strong></li>
+                                                <li>ตรวจสอบได้แบบ ทำได้/ไม่ได้ (Binary)</li>
+                                                <li>มักเขียนในรูป Use Cases, User Stories</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h3 style="font-size:0.95em;margin:4px 0;">Non-Functional</h3>
+                                            <ul class="check-list">
+                                                <li>ตอบคำถามว่า <strong>“ระบบต้องทำได้ดีแค่ไหน?”</strong></li>
+                                                <li>วัดผลเป็นตัวเลข เช่น Response time, Throughput</li>
+                                                <li>มักปรากฏใน SLA, Quality Attributes</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="alert" style="margin-top:10px;">
+                                    <div class="alert-icon">🧠</div>
+                                    <div>
+                                        <strong>Mini Exercise:</strong> เลือกแอปที่ใช้บ่อย 1 แอป
+                                        ให้เขียน FR 2 ข้อ และ NFR 2 ข้อ
+                                        → แชร์ตัวอย่างในชั้นเรียนอย่างรวดเร็ว
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 10: Stakeholders concept -->
+                        <section class="slide" data-section="stakeholders">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Stakeholders</div>
+                            </div>
+                            <div class="slide-title">
+                                Stakeholder คือใครในระบบของเรา?
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div>
+                                        <p class="slide-lead">
+                                            <strong>Stakeholder</strong> = ทุกคน/ทุกหน่วยงานที่มีผลกระทบต่อระบบ
+                                            หรือได้รับผลกระทบจากระบบ
+                                        </p>
+                                        <ul>
+                                            <li><strong>Primary:</strong> ผู้ใช้ปลายทาง, ลูกค้า, ผู้จ่ายเงิน</li>
+                                            <li><strong>Secondary:</strong> Developer, Tester, Project Manager, Admin</li>
+                                            <li><strong>Indirect:</strong> หน่วยงานกำกับดูแล, คู่แข่ง, สังคม</li>
+                                        </ul>
+                                        <div class="pill">
+                                            <span>🧭</span>
+                                            คำถาม Guiding: “ใครได้ประโยชน์? ใครเสียประโยชน์? ใครมีอำนาจอนุมัติ?”
+                                        </div>
+                                    </div>
+                                    <div class="diagram-box">
+                                        <div><strong>Diagram 2 – Stakeholder Onion Model</strong></div>
+                                        <!-- TODO: แทนที่ src ด้วยรูปที่ export จาก diagram2_stakeholder_onion.drawio -->
+                                        <img src="diagram2_stakeholder_onion.png" alt="Stakeholder Onion Diagram">
+                                        <div class="diagram-caption">
+                                            ใช้ Onion Diagram แบ่งวงใน–วงนอก เพื่อช่วยให้นักศึกษาระบุ Stakeholder
+                                            ของ Term Project ได้ครบถ้วน
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 11: Elicitation Techniques overview -->
+                        <section class="slide" data-section="elicitation">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Elicitation</div>
+                            </div>
+                            <div class="slide-title">
+                                เทคนิคการเก็บ Requirements
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">Core Techniques</div>
+                                        <ul>
+                                            <li><strong>Interviews:</strong> สัมภาษณ์เชิงลึกกับผู้ใช้/ลูกค้า</li>
+                                            <li><strong>Questionnaires:</strong> แบบสอบถามสำหรับกลุ่มใหญ่</li>
+                                            <li><strong>Observation:</strong> สังเกตการทำงานจริงในสถานที่จริง</li>
+                                            <li><strong>Prototyping:</strong> ทำต้นแบบ UI ให้ผู้ใช้ลอง</li>
+                                            <li><strong>Brainstorming:</strong> ระดมสมองในทีม</li>
+                                            <li><strong>Use Case Workshop:</strong> เขียน Scenario ร่วมกับ Stakeholder</li>
+                                        </ul>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">Best Practices</div>
+                                        <ul class="check-list">
+                                            <li>เตรียมคำถามแบบ <strong>Open-ended</strong> (“เล่าให้ฟังหน่อยว่า…”)</li>
+                                            <li>เลี่ยงคำถามชี้นำ (“คุณอยากได้ปุ่มสีแดงใช่ไหม?”)</li>
+                                            <li>ขออนุญาตบันทึกเสียง/วิดีโอก่อนทุกครั้ง</li>
+                                            <li>สรุปสิ่งที่เข้าใจ แล้วให้ผู้ใช้ยืนยันซ้ำ (Validation)</li>
+                                        </ul>
+                                        <div class="alert">
+                                            <div class="alert-icon">🎭</div>
+                                            <div>
+                                                <strong>กิจกรรมในคาบ:</strong> Role-play สัมภาษณ์ลูกค้า 5–10 นาที/กลุ่ม
+                                                เพื่อเก็บ Requirement ของ Term Project
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 12: SRS intro -->
+                        <section class="slide" data-section="srs">
+                            <div class="slide-header">
+                                <div class="slide-kicker">SRS</div>
+                            </div>
+                            <div class="slide-title">
+                                Software Requirements Specification (SRS)
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">SRS คืออะไร?</div>
+                                        <p>
+                                            <strong>SRS</strong> = เอกสารที่บันทึก
+                                            <strong>ทุกสิ่งที่ระบบต้องทำและต้องเป็น</strong> อย่างชัดเจน
+                                        </p>
+                                        <ul>
+                                            <li>เป็น <strong>สัญญา</strong> ระหว่างลูกค้า ↔ ทีมพัฒนา</li>
+                                            <li>เป็น <strong>ฐานในการออกแบบ, ทดสอบ, ประเมินความสำเร็จ</strong></li>
+                                            <li>ในวิชานี้: กลุ่มจะมี <strong>SRS ฉบับย่อ</strong> สำหรับ Term Project</li>
+                                        </ul>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">คุณสมบัติของ SRS ที่ดี</div>
+                                        <ul class="check-list">
+                                            <li><strong>Correct:</strong> ตรงกับความต้องการจริงของผู้ใช้</li>
+                                            <li><strong>Unambiguous:</strong> ไม่คลุมเครือ อ่านแล้วเข้าใจได้แบบเดียว</li>
+                                            <li><strong>Complete:</strong> ครอบคลุมทุกกรณีสำคัญ</li>
+                                            <li><strong>Consistent:</strong> ไม่ขัดแย้งกันเอง</li>
+                                            <li><strong>Ranked:</strong> ระบุ Priority (Must/Should/Could)</li>
+                                            <li><strong>Verifiable:</strong> ตรวจสอบ/ทดสอบได้</li>
+                                            <li><strong>Traceable:</strong> เชื่อมโยงกับ Test Case &amp; Implementation ได้</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 13: SRS structure (IEEE) -->
+                        <section class="slide" data-section="srs">
+                            <div class="slide-header">
+                                <div class="slide-kicker">SRS</div>
+                            </div>
+                            <div class="slide-title">
+                                โครงสร้าง SRS ตาม IEEE 830 (ฉบับย่อ)
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div>
+                                        <h3 style="font-size:0.95em;margin:4px 0;">1. Introduction</h3>
+                                        <ul>
+                                            <li>1.1 Purpose</li>
+                                            <li>1.2 Scope</li>
+                                            <li>1.3 Definitions, Acronyms, Abbreviations</li>
+                                            <li>1.4 References</li>
+                                            <li>1.5 Overview</li>
+                                        </ul>
+                                        <h3 style="font-size:0.95em;margin:4px 0;">2. Overall Description</h3>
+                                        <ul>
+                                            <li>2.1 Product Perspective</li>
+                                            <li>2.2 Product Functions (ภาพรวม)</li>
+                                            <li>2.3 User Characteristics</li>
+                                            <li>2.4 Constraints</li>
+                                            <li>2.5 Assumptions &amp; Dependencies</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h3 style="font-size:0.95em;margin:4px 0;">3. Specific Requirements</h3>
+                                        <ul>
+                                            <li>3.1 Functional Requirements (แยกตาม Feature)</li>
+                                            <li>3.2 Non-Functional Requirements</li>
+                                        </ul>
+                                        <h3 style="font-size:0.95em;margin:4px 0;">4. Appendices</h3>
+                                        <ul>
+                                            <li>Use Case Diagram / Activity Diagram</li>
+                                            <li>Wireframes / Mockups</li>
+                                            <li>Data Dictionary</li>
+                                        </ul>
+                                        <div class="alert">
+                                            <div class="alert-icon">📝</div>
+                                            <div>
+                                                ในวิชานี้ เราจะใช้ <strong>Template SRS แบบย่อ</strong> ที่ตัดเหลือเฉพาะส่วนสำคัญ
+                                                ให้เหมาะกับ Term Project ขนาดเล็ก–กลาง
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 14: Case Study -->
+                        <section class="slide" data-section="case">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Case Study</div>
+                            </div>
+                            <div class="slide-title">
+                                Requirements ในระบบจริง – ตัวอย่าง Spotify / Grab
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">Spotify (Music Streaming)</div>
+                                        <ul>
+                                            <li><strong>FR:</strong> ค้นหาเพลงตามชื่อ/ศิลปิน, สร้าง Playlist, เล่นแบบ Offline</li>
+                                            <li><strong>NFR:</strong> เพลงต้องเริ่มภายใน ~500ms หลังจากกดเล่น</li>
+                                            <li><strong>Stakeholders:</strong> ผู้ฟัง, ศิลปิน, ค่ายเพลง, ผู้ลงโฆษณา</li>
+                                        </ul>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">Grab Food (Delivery)</div>
+                                        <ul>
+                                            <li><strong>FR:</strong> เลือกร้านอาหาร, สั่งอาหาร, ติดตาม Rider แบบ Real-time</li>
+                                            <li><strong>Conflict:</strong> ลูกค้าอยากค่าส่งถูก / Rider อยากได้ค่าตอบแทนสูง / ร้านอยากได้ค่า Commission ต่ำ</li>
+                                            <li><strong>Solution:</strong> ใช้ Algorithm ช่วย Balance ความต้องการแต่ละฝ่าย</li>
+                                        </ul>
+                                        <div class="alert">
+                                            <div class="alert-icon">🧩</div>
+                                            <div>
+                                                ให้แต่ละกลุ่มลอง Mapping Term Project ของตัวเอง:
+                                                มี Stakeholders กี่กลุ่ม? FR / NFR ตัวอย่างคืออะไร?
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 15: Transition to HTML -->
+                        <section class="slide" data-section="semantic">
+                            <div class="slide-header">
+                                <div class="slide-kicker">From Requirements → UI</div>
+                            </div>
+                            <div class="slide-title">
+                                จาก Requirements สู่โครงร่าง HTML
+                            </div>
+                            <div class="slide-body">
+                                <p class="slide-lead">
+                                    เมื่อเราเริ่มเข้าใจว่า <strong>ผู้ใช้คือใคร</strong> และ <strong>ต้องการอะไร</strong>
+                                    ขั้นต่อไปคือการออกแบบ “หน้าตา” ระบบ — เริ่มจาก
+                                    <strong>หน้า Landing Page</strong> ด้วย HTML แบบมีโครงสร้างชัดเจน
+                                </p>
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">เชื่อมโยง Requirement → Layout</div>
+                                        <ul>
+                                            <li>Stakeholder หลักคือใคร? → เนื้อหาบนหน้า Landing ต้องตอบคำถามเขา</li>
+                                            <li>FR/NFR สำคัญ → องค์ประกอบบนหน้า เช่น ปุ่ม Register, Section แนะนำฟีเจอร์</li>
+                                            <li>Domain/Constraint → ข้อมูลที่ต้องแสดง (เช่น ข้อกำกับ, Policy)</li>
+                                        </ul>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">Lab เป้าหมาย</div>
+                                        <ul class="check-list">
+                                            <li>นักศึกษาสร้างหน้า Landing Page ของระบบกลุ่ม ด้วย <strong>HTML5 Semantic Tags</strong></li>
+                                            <li>เนื้อหาบนหน้าต้องอ้างอิงจาก Requirement ที่กลุ่มระบุจริง</li>
+                                            <li>โค้ดของแต่ละกลุ่มจะถูก Push ขึ้น Git และใช้ต่อในสัปดาห์หน้า (CSS Layout)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 16: Why Semantic HTML -->
+                        <section class="slide" data-section="semantic">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Semantic HTML</div>
+                            </div>
+                            <div class="slide-title">
+                                ทำไมต้อง Semantic HTML?
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div>
+                                        <p class="slide-lead">
+                                            <strong>Semantic</strong> = แท็กที่สื่อ “ความหมาย” ของเนื้อหา
+                                            ไม่ใช่แค่กำหนดหน้าตา
+                                        </p>
+                                        <ul class="check-list">
+                                            <li><strong>Accessibility:</strong> Screen Reader อ่านโครงสร้างเว็บได้ถูกต้อง</li>
+                                            <li><strong>SEO:</strong> Search Engine เข้าใจโครงสร้างและคำสำคัญได้ดีขึ้น</li>
+                                            <li><strong>Maintainability:</strong> นักพัฒนาคนอื่นเปิดโค้ดแล้วเข้าใจได้ง่าย</li>
+                                            <li><strong>Standard:</strong> สอดคล้องมาตรฐาน W3C / Best Practice</li>
+                                        </ul>
+                                    </div>
+                                    <div class="diagram-box">
+                                        <div><strong>Diagram 3 – HTML5 Semantic Structure</strong></div>
+                                        <!-- TODO: แทนที่ src ด้วยรูปที่ export จาก diagram3_html5_semantic.drawio -->
+                                        <img src="diagram3_html5_semantic.png" alt="Semantic HTML Layout">
+                                        <div class="diagram-caption">
+                                            ใช้ภาพนี้อธิบาย mapping ระหว่างส่วนต่าง ๆ ของหน้าเว็บ
+                                            กับแท็ก: header, nav, main, section, article, aside, footer
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 17: Semantic tags details -->
+                        <section class="slide" data-section="semantic">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Semantic HTML</div>
+                            </div>
+                            <div class="slide-title">
+                                แท็กสำคัญใน HTML5 Semantic
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">&lt;header&gt; / &lt;nav&gt; / &lt;main&gt;</div>
+                                        <ul>
+                                            <li><strong>&lt;header&gt;</strong> – ส่วนหัวของหน้า/section (โลโก้, title, hero)</li>
+                                            <li><strong>&lt;nav&gt;</strong> – ส่วนเมนูนำทาง (main navigation)</li>
+                                            <li><strong>&lt;main&gt;</strong> – เนื้อหาหลักของหน้าหนึ่ง ๆ (มีเพียง 1 ต่อหน้า)</li>
+                                        </ul>
+                                        <div class="code-block">
+<header>
+  <h1>My App</h1>
+  <nav>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+  </nav>
+</header>
+<main>
+  <!-- main content -->
+</main>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">&lt;section&gt; / &lt;article&gt; / &lt;aside&gt; / &lt;footer&gt;</div>
+                                        <ul>
+                                            <li><strong>&lt;section&gt;</strong> – กลุ่มเนื้อหาที่มีหัวข้อเดียวกัน</li>
+                                            <li><strong>&lt;article&gt;</strong> – เนื้อหาที่แยกไปอ่านเดี่ยว ๆ ได้ (post, card)</li>
+                                            <li><strong>&lt;aside&gt;</strong> – เนื้อหาข้างเคียง เช่น sidebar, related links</li>
+                                            <li><strong>&lt;footer&gt;</strong> – ส่วนท้ายของหน้า/section</li>
+                                        </ul>
+                                        <div class="alert">
+                                            <div class="alert-icon">⚖️</div>
+                                            <div>
+                                                ใช้ <strong>&lt;div&gt;</strong> เมื่อมันไม่มี semantics พิเศษ
+                                                แต่ถ้ามี “บทบาทชัดเจน” ให้เลือกใช้แท็ก semantic แทน
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 18: Non-semantic vs semantic example -->
+                        <section class="slide" data-section="semantic">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Semantic HTML</div>
+                            </div>
+                            <div class="slide-title">
+                                เปรียบเทียบ Non-Semantic vs Semantic
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div>
+                                        <h3 style="font-size:0.95em;margin:4px 0;">โค้ดแบบเดิม (Non-semantic)</h3>
+                                        <div class="code-block">
+<div id="header">...</div>
+<div id="nav">...</div>
+<div id="content">...</div>
+<div id="sidebar">...</div>
+<div id="footer">...</div>
+                                        </div>
+                                        <p>โค้ดทำงานได้ แต่ Browser / Screen Reader ไม่เข้าใจความหมาย</p>
+                                    </div>
+                                    <div>
+                                        <h3 style="font-size:0.95em;margin:4px 0;">โค้ดแบบ Semantic</h3>
+                                        <div class="code-block">
+<header>...</header>
+<nav>...</nav>
+<main>
+  <article>...</article>
+</main>
+<aside>...</aside>
+<footer>...</footer>
+                                        </div>
+                                        <p>
+                                            โค้ดสื่อความหมายได้ทันทีว่าบล็อกไหนคือหัว, เนื้อหา, sidebar, footer
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="alert" style="margin-top:10px;">
+                                    <div class="alert-icon">🔁</div>
+                                    <div>
+                                        <strong>Lab Hint:</strong> ให้ Refactor หน้า HTML แรกของกลุ่ม
+                                        ให้เป็น Semantic HTML ตามแนวทางนี้
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 19: Lab overview -->
+                        <section class="slide" data-section="lab">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Lab • Week 2</div>
+                            </div>
+                            <div class="slide-title">
+                                Lab: Requirements + Landing Page (Semantic HTML)
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">ส่วน Requirements (กระดาษ/ไฟล์)</div>
+                                        <ol>
+                                            <li>ระบุ <strong>Stakeholders</strong> ของกลุ่ม (Onion Diagram ช่วยได้)</li>
+                                            <li>เขียน FR/NFR หลัก 5–10 ข้อ ของระบบ</li>
+                                            <li>ร่าง <strong>SRS ย่อ</strong> ตาม Template ที่ให้ (1–2 หน้า)</li>
+                                        </ol>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">ส่วน HTML (โค้ด)</div>
+                                        <ol>
+                                            <li>ออกแบบโครงหน้า <strong>Landing Page</strong> ในกระดาษ (กล่อง/section)</li>
+                                            <li>เขียน HTML ด้วย Semantic Tags ให้ครบองค์ประกอบหลัก</li>
+                                            <li>Push ขึ้น GitHub ให้เรียบร้อย (ใช้ Repo เดิมจาก Week 1)</li>
+                                        </ol>
+                                        <div class="pill">
+                                            <span>📌</span>
+                                            โครงนี้จะถูกใช้ต่อใน Week 3–4 (CSS Layout + Responsive + User Story)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 20: Quick recap & key takeaways -->
+                        <section class="slide" data-section="summary">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Key Takeaways</div>
+                            </div>
+                            <div class="slide-title">
+                                สรุปสัปดาห์ที่ 2
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">Requirements</div>
+                                        <ul class="check-list">
+                                            <li>RE = Elicitation + Analysis + Specification + Validation + Management</li>
+                                            <li>FR = “ระบบต้องทำอะไร” / NFR = “ระบบต้องทำได้ดีแค่ไหน”</li>
+                                            <li>Stakeholder มีหลายกลุ่ม → ต้องระบุให้ครบ</li>
+                                            <li>SRS ที่ดีต้องถูกต้อง ไม่คลุมเครือ และตรวจสอบได้</li>
+                                        </ul>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">Semantic HTML</div>
+                                        <ul class="check-list">
+                                            <li>Semantic Tag ช่วยเรื่อง Accessibility, SEO, Maintainability</li>
+                                            <li>อย่าใช้ &lt;div&gt; ทุกอย่าง ถ้าแท็ก Semantic ใช้ได้</li>
+                                            <li>Landing Page ต้องสะท้อน Requirements จริงของระบบ</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="alert" style="margin-top:10px;">
+                                    <div class="alert-icon">🧪</div>
+                                    <div>
+                                        หลังจบคาบ ให้นักศึกษากลับไป <strong>อ่าน/แก้ SRS ย่อ + HTML Landing Page</strong>
+                                        แล้วเตรียมใช้ใน Week 3 (User Stories + CSS Layout)
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 21: Bridge to next week -->
+                        <section class="slide" data-section="next">
+                            <div class="slide-header">
+                                <div class="slide-kicker">Next Week Preview</div>
+                            </div>
+                            <div class="slide-title">
+                                Week 3 – Agile Requirements &amp; HTML/CSS Layout
+                            </div>
+                            <div class="slide-body">
+                                <div class="slide-grid-two">
+                                    <div class="card">
+                                        <div class="card-label">หัวข้อทฤษฎีสัปดาห์หน้า</div>
+                                        <ul>
+                                            <li><strong>Agile Requirements:</strong> User Stories &amp; Acceptance Criteria</li>
+                                            <li><strong>Use Case Diagram &amp; Scenario</strong> – เชื่อม Requirements → Diagram</li>
+                                            <li><strong>Basic CSS Layout</strong> – เริ่มจัดหน้าเว็บให้สวยและเป็นระบบ</li>
+                                        </ul>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-label">เตรียมตัว</div>
+                                        <ul class="check-list">
+                                            <li>กลุ่มต้องมี Draft SRS + รายการ FR/NFR ที่ชัดเจน</li>
+                                            <li>Landing Page HTML ควรพร้อมสำหรับเติม CSS</li>
+                                            <li>คิดคร่าว ๆ ว่าหน้าเว็บจะมี <strong>User Flow</strong> อย่างไร</li>
+                                        </ul>
+                                        <div class="pill">
+                                            <span>🚀</span>
+                                            Term Project จะเริ่ม “ขยับได้จริง” ตั้งแต่ Week 3 เป็นต้นไป
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                </div>
+
+                <!-- Sidebar (section outline) -->
+                <aside class="slide-sidebar">
+                    <div class="sidebar-label">Week 2 Flow</div>
+                    <div class="sidebar-timeline" id="sidebar-timeline">
+                        <div class="sidebar-step" data-section-link="intro">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Intro &amp; CLO</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="review">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Review Week 1</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="agenda">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Agenda</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="req-intro">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Requirements Basics</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="req-types">
+                            <div class="sidebar-step-dot"></div>
+                            <div>FR / NFR</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="stakeholders">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Stakeholders</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="elicitation">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Elicitation</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="srs">
+                            <div class="sidebar-step-dot"></div>
+                            <div>SRS</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="case">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Case Study</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="semantic">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Semantic HTML</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="lab">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Lab Overview</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="summary">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Summary</div>
+                        </div>
+                        <div class="sidebar-step" data-section-link="next">
+                            <div class="sidebar-step-dot"></div>
+                            <div>Next Week</div>
+                        </div>
+                    </div>
+                    <div class="sidebar-legend">
+                        <span class="key">
+                            <span class="sidebar-key-dot"></span>
+                            <span>Current section</span>
+                        </span>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <!-- Bottom controls -->
+        <footer class="bottom-bar">
+            <div class="nav-left">
+                <button class="nav-btn" id="btn-prev" type="button">
+                    <span class="nav-btn-icon">◀</span><span>Prev</span>
+                </button>
+                <button class="nav-btn" id="btn-next" type="button">
+                    <span>Next</span><span class="nav-btn-icon">▶</span>
+                </button>
+            </div>
+            <div class="nav-center">
+                <div class="progress-bar">
+                    <div class="progress-bar-inner" id="progress-bar-inner"></div>
+                </div>
+                <div class="slide-counter" id="slide-counter">1 / 21</div>
+            </div>
+            <div class="nav-right">
+                <div class="nav-tip">
+                    ⌨ ใช้ปุ่มลูกศร ◀ ▶ เพื่อเลื่อนสไลด์
+                </div>
+            </div>
+        </footer>
+    </main>
+</div>
+
+<script>
+(function() {
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const counterEl = document.getElementById('slide-counter');
+    const progressInner = document.getElementById('progress-bar-inner');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnFontInc = document.getElementById('btn-font-inc');
+    const btnFontDec = document.getElementById('btn-font-dec');
+    const btnTheme = document.getElementById('btn-theme');
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+    const body = document.body;
+    const sidebarSteps = Array.from(document.querySelectorAll('.sidebar-step'));
+
+    let currentIndex = 0;
+    let fontScale = 1;
+
+    function showSlide(index) {
+        if (!slides.length) return;
+        if (index < 0) index = 0;
+        if (index > slides.length - 1) index = slides.length - 1;
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+        });
+        currentIndex = index;
+        updateCounter();
+        updateProgress();
+        updateSidebar();
+    }
+
+    function updateCounter() {
+        counterEl.textContent = (currentIndex + 1) + ' / ' + slides.length;
+    }
+
+    function updateProgress() {
+        const ratio = (currentIndex + 1) / slides.length;
+        progressInner.style.width = (ratio * 100).toFixed(1) + '%';
+    }
+
+    function updateSidebar() {
+        const activeSlide = slides[currentIndex];
+        const section = activeSlide.getAttribute('data-section');
+        sidebarSteps.forEach(step => {
+            const link = step.getAttribute('data-section-link');
+            step.classList.toggle('active', link === section);
+        });
+    }
+
+    function changeFont(delta) {
+        fontScale += delta;
+        if (fontScale < 0.7) fontScale = 0.7;
+        if (fontScale > 1.4) fontScale = 1.4;
+        document.documentElement.style.setProperty('--slide-font-scale', fontScale.toFixed(2));
+    }
+
+    function toggleTheme() {
+        const current = body.getAttribute('data-theme') || 'dark';
+        const next = current === 'dark' ? 'light' : 'dark';
+        body.setAttribute('data-theme', next);
+        try {
+            localStorage.setItem('engce301-week2-theme', next);
+        } catch (e) {}
+    }
+
+    function restoreTheme() {
+        try {
+            const saved = localStorage.getItem('engce301-week2-theme');
+            if (saved === 'light' || saved === 'dark') {
+                body.setAttribute('data-theme', saved);
+            }
+        } catch (e) {}
+    }
+
+    function toggleFullscreen() {
+        const doc = document;
+        const docEl = document.documentElement;
+
+        if (!doc.fullscreenElement && !doc.webkitFullscreenElement) {
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            }
+        } else {
+            if (doc.exitFullscreen) {
+                doc.exitFullscreen();
+            } else if (doc.webkitExitFullscreen) {
+                doc.webkitExitFullscreen();
+            }
+        }
+    }
+
+    // Event bindings
+    btnPrev.addEventListener('click', () => {
+        showSlide(currentIndex - 1);
+    });
+    btnNext.addEventListener('click', () => {
+        showSlide(currentIndex + 1);
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+            e.preventDefault();
+            showSlide(currentIndex + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            e.preventDefault();
+            showSlide(currentIndex - 1);
+        }
+    });
+
+    btnFontInc.addEventListener('click', () => changeFont(0.06));
+    btnFontDec.addEventListener('click', () => changeFont(-0.06));
+
+    btnTheme.addEventListener('click', toggleTheme);
+    btnFullscreen.addEventListener('click', toggleFullscreen);
+
+    sidebarSteps.forEach(step => {
+        step.addEventListener('click', () => {
+            const section = step.getAttribute('data-section-link');
+            const idx = slides.findIndex(s => s.getAttribute('data-section') === section);
+            if (idx >= 0) showSlide(idx);
+        });
+    });
+
+    restoreTheme();
+    showSlide(0);
+})();
+</script>
+</body>
+</html>
