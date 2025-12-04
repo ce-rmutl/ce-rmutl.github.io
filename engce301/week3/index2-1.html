@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3: Agile Requirements, Use Cases & CSS Layout | ENGCE301</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&family=Prompt:wght@300;400;600&family=Fira+Code:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/dracula.min.css"
+        id="theme">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --bg-color: #282a36;
+            --fg-color: #f8f8f2;
+            --accent-color: #50fa7b; /* Green */
+            --accent-pink: #ff79c6;
+            --accent-purple: #bd93f9;
+            --accent-yellow: #f1fa8c;
+            --accent-cyan: #8be9fd;
+            --heading-font: 'Kanit', sans-serif;
+            --body-font: 'Prompt', sans-serif;
+            --code-font: 'Fira Code', monospace;
+            --slide-font-scale: 1;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at top, #1e1f29 0%, #000 60%);
+            color: var(--fg-color);
+            font-family: var(--body-font);
+        }
+
+        .reveal {
+            font-family: var(--body-font);
+            color: var(--fg-color);
+        }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+            font-family: var(--heading-font);
+            letter-spacing: 0.03em;
+            text-transform: none;
+        }
+
+        .reveal code, .reveal pre {
+            font-family: var(--code-font);
+        }
+
+        .reveal strong {
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .reveal .slides {
+            text-align: left;
+            font-size: calc(28px * var(--slide-font-scale));
+        }
+
+        /* Custom Components */
+        .glass-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 10px 0;
+            backdrop-filter: blur(5px);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .glass-box:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-purple);
+        }
+
+        .concept-card {
+            background: #44475a;
+            border-left: 4px solid var(--accent-pink);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 10px;
+        }
+
+        /* Box Model Visualization */
+        .box-model-viz {
+            display: flex; justify-content: center; align-items: center;
+            background: #f1fa8c; color: #282a36; padding: 20px; border: 2px dashed #444;
+            position: relative; margin: 20px auto; width: 80%;
+        }
+        .box-model-viz::before { content: "Margin"; position: absolute; top: 2px; left: 5px; font-size: 0.7em; }
+        
+        .box-border {
+            background: #ffb86c; padding: 20px; border: 4px solid #000; width: 100%; display: flex; justify-content: center; position: relative;
+        }
+        .box-border::before { content: "Border"; position: absolute; top: 2px; left: 5px; font-size: 0.7em; }
+
+        .box-padding {
+            background: #8be9fd; padding: 20px; width: 100%; display: flex; justify-content: center; position: relative;
+        }
+        .box-padding::before { content: "Padding"; position: absolute; top: 2px; left: 5px; font-size: 0.7em; color: #282a36; }
+
+        .box-content {
+            background: #ff79c6; color: #fff; padding: 20px; width: 100%; text-align: center; font-weight: bold;
+        }
+
+        /* Controls */
+        #custom-controls {
+            position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px;
+        }
+        .control-btn {
+            background: var(--accent-purple); color: #fff; border: none; border-radius: 50%;
+            width: 40px; height: 40px; cursor: pointer; font-family: var(--heading-font);
+            font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .control-btn:hover { transform: scale(1.1); background: var(--accent-pink); }
+
+        /* Typography Utilities */
+        .text-gradient {
+            background: linear-gradient(to right, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        ul.checklist li { list-style-type: none; }
+        ul.checklist li::before { content: "✅"; margin-right: 10px; }
+
+        /* Quiz Styles */
+        .quiz-option {
+            background: #44475a; padding: 12px; margin: 8px 0; border-radius: 8px; cursor: pointer;
+            transition: 0.2s; border: 1px solid transparent;
+        }
+        .quiz-option:hover { background: #6272a4; }
+        .quiz-option.correct { background: var(--accent-color); color: #282a36; font-weight: bold; }
+        .quiz-option.incorrect { background: #ff5555; color: white; }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="custom-controls">
+        <button class="control-btn" onclick="adjustFontSize(-1)">A-</button>
+        <button class="control-btn" onclick="adjustFontSize(1)">A+</button>
+        <button class="control-btn" onclick="toggleFullScreen()">⛶</button>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <section data-background-gradient="linear-gradient(to bottom right, #1e1f29, #2d1b2e)">
+                <h3 class="text-pink-400">ENGCE301 Software Design & Development</h3>
+                <h1>Agile Requirements <br>& HTML/CSS Layout</h1>
+                <h4 class="text-purple-300 mt-4">Week 3: User Stories, Use Cases, and Box Model</h4>
+                <hr class="w-1/3 mx-auto my-6 border-gray-500">
+                <p class="text-sm opacity-80">
+                    สำหรับนักศึกษาวิศวกรรมคอมพิวเตอร์ ชั้นปีที่ 3<br>
+                    ภาคการศึกษาที่ 2/2568
+                </p>
+            </section>
+
+            <section>
+                <h3>🗺️ Roadmap: Week 3</h3>
+                <div class="flex flex-col gap-3 text-sm">
+                    <div class="glass-box opacity-50">Week 2: Requirements Engineering (Traditional)</div>
+                    <div class="glass-box border-l-4 border-green-400 bg-green-900/20">
+                        <strong class="text-xl">📍 Week 3: Agile & Implementation (Today)</strong>
+                        <ul class="ml-6 mt-2 text-gray-300 list-disc">
+                            <li> Agile Requirements: User Stories</li>
+                            <li> Use Case Modeling & Scenarios</li>
+                            <li> HTML/CSS Layout Fundamentals</li>
+                            <li> Workshop: Git, Trello, Diagrams.net</li>
+                        </ul>
+                    </div>
+                    <div class="glass-box opacity-50 text-xs">
+                        Next Week: Software Design Principles (SOLID) & Responsive Design
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h3>🎯 Learning Objectives (CLOs)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="glass-box fragment">
+                        <h4 class="text-cyan-300">Analysis & Design</h4>
+                        <ul class="list-disc ml-4 space-y-2">
+                            <li> เขียน User Story ตามหลัก INVEST พร้อม Acceptance Criteria</li>
+                            <li> อธิบายความแตกต่างและเลือกใช้ Use Case vs User Story</li>
+                            <li> ออกแบบ Use Case Diagram และเขียน Scenario (Main/Alternative Flow)</li>
+                        </ul>
+                    </div>
+                    <div class="glass-box fragment">
+                        <h4 class="text-pink-300">Implementation</h4>
+                        <ul class="list-disc ml-4 space-y-2">
+                            <li> เข้าใจและประยุกต์ใช้ CSS Box Model</li>
+                            <li> สร้าง Layout พื้นฐานด้วย CSS, Typography และ Color Palette</li>
+                            <li> ใช้เครื่องมือ Trello, draw.io และ Git ได้อย่างถูกต้อง</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-4 text-xs text-center text-gray-400">
+                    Related to CLO2, CLO3
+                </div>
+            </section>
+
+            <section>
+                <section>
+                    <h1 class="text-gradient">1. Agile Requirements</h1>
+                    <h3 class="text-white">User Stories & Acceptance Criteria</h3>
+                    <p class="text-gray-400"> "ในโลกใหม่ ความต้องการเปลี่ยนเร็ว เอกสารหนาเตอะอาจไม่ใช่คำตอบ"</p>
+                </section>
+
+                <section>
+                    <h3>Why User Stories?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="concept-card fragment">
+                            <h5>🗣️ ส่งเสริมการสื่อสาร</h5>
+                            <p> เป็นจุดเริ่มต้นของการสนทนา (Conversation) ไม่ใช่แค่เอกสารส่งงาน</p>
+                        </div>
+                        <div class="concept-card fragment">
+                            <h5>👤 มุ่งเน้นผู้ใช้ (User-Centric)</h5>
+                            <p> เน้น "คุณค่า" (Value) ที่ผู้ใช้ได้รับ ไม่ใช่แค่รายการฟีเจอร์ทางเทคนิค</p>
+                        </div>
+                        <div class="concept-card fragment">
+                            <h5>🧩 ยืดหยุ่น & เล็ก (Flexible)</h5>
+                            <p> ปรับเปลี่ยนได้ง่าย และ เขียนด้วยภาษาคนธรรมดา</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>📝 User Story Template</h3>
+                    <div class="glass-box bg-gray-700/50 p-6 rounded-xl text-center shadow-2xl">
+                        <p class="text-gray-400 text-sm mb-2 uppercase tracking-widest">Standard Format</p>
+                        <div class="text-2xl font-bold leading-relaxed">
+                            "As a <span class="text-pink-400">[ type of user ]</span>,<br>
+                            I want <span class="text-cyan-400">[ an action ]</span><br>
+                            so that <span class="text-green-400">[ a benefit / value ]</span>"
+                        </div>
+                    </div>
+                    
+                    <div class="fragment mt-4">
+                        <h5 class="text-yellow-300">Example: E-Learning System</h5>
+                        <p class="text-sm italic">
+                            "As a <strong>student</strong>, I want to <strong>bookmark video lectures</strong> so that I can <strong>easily return to important topics</strong> for exam preparation."
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>💎 INVEST Criteria</h3>
+                    <p class="text-sm mb-4"> หลักการตรวจสอบ User Story ที่ดี (Bill Wake)</p>
+                    <div class="grid grid-cols-3 gap-3 text-center text-xs">
+                        <div class="glass-box border-pink-500 fragment">
+                            <h4 class="text-2xl text-pink-400">I</h4>
+                            <strong>Independent</strong><br> เป็นอิสระจากกัน
+                        </div>
+                        <div class="glass-box border-pink-500 fragment">
+                            <h4 class="text-2xl text-pink-400">N</h4>
+                            <strong>Negotiable</strong><br> ต่อรอง/ปรับเปลี่ยนได้
+                        </div>
+                        <div class="glass-box border-pink-500 fragment">
+                            <h4 class="text-2xl text-pink-400">V</h4>
+                            <strong>Valuable</strong><br> มีคุณค่าต่อผู้ใช้
+                        </div>
+                        <div class="glass-box border-purple-500 fragment">
+                            <h4 class="text-2xl text-purple-400">E</h4>
+                            <strong>Estimable</strong><br> ประเมินขนาดงานได้
+                        </div>
+                        <div class="glass-box border-purple-500 fragment">
+                            <h4 class="text-2xl text-purple-400">S</h4>
+                            <strong>Small</strong><br> เล็กพอทำเสร็จใน 1 Sprint
+                        </div>
+                        <div class="glass-box border-purple-500 fragment">
+                            <h4 class="text-2xl text-purple-400">T</h4>
+                            <strong>Testable</strong><br> ทดสอบผลลัพธ์ได้
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>✅ Acceptance Criteria</h3>
+                    <p class="text-sm"> เงื่อนไขที่บอกว่า Story นี้ "เสร็จสมบูรณ์" (Definition of Done)</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div class="glass-box fragment">
+                            <h5 class="text-cyan-300">Format 1: Checklist</h5>
+                            <p class="text-xs text-gray-400 mb-2">User Story: Submit Assignment</p>
+                            <ul class="checklist text-xs space-y-2">
+                                <li> Upload file (PDF, DOCX) up to 10MB</li>
+                                <li> Show confirmation message</li>
+                                <li> Cannot submit after deadline</li>
+                                <li> Professor gets email notification</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="glass-box fragment">
+                            <h5 class="text-green-300">Format 2: Given-When-Then</h5>
+                            <div class="bg-gray-800 p-3 rounded text-xs font-mono">
+                                <span class="text-purple-400">Given</span> I am a logged-in student<br>
+                                <span class="text-purple-400">And</span> selected valid PDF < 10MB<br>
+                                <span class="text-yellow-400">When</span> I click 'Submit'<br>
+                                <span class="text-green-400">Then</span> file is uploaded<br>
+                                <span class="text-green-400">And</span> success message appears
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Workshop Preview: Conversion</h3>
+                    <div class="text-sm">
+                        <p class="text-red-300 mb-2">❌ Traditional Req:</p>
+                        <blockquote class="border-l-4 border-red-500 pl-3 italic text-gray-400">
+                            "The system shall provide a search function... by name, category, price... paginated format."
+                        </blockquote>
+                        
+                        <div class="flex justify-center my-2">⬇️ Convert to Agile ⬇️</div>
+
+                        <p class="text-green-300 mb-2">✅ User Stories:</p>
+                        <ul class="space-y-2 text-xs">
+                            <li class="bg-gray-700 p-2 rounded">1. As a customer, I want to <strong>search by name</strong> so that I can find item quickly.</li>
+                            <li class="bg-gray-700 p-2 rounded">2. As a customer, I want to <strong>filter by category</strong> so that I browse specific types.</li>
+                            <li class="bg-gray-700 p-2 rounded">3. As a customer, I want to <strong>set price range</strong> so that I fit my budget.</li>
+                        </ul>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1 class="text-gradient">2. Use Case Modeling</h1>
+                    <h3 class="text-white">Diagrams & Scenarios</h3>
+                    <p class="text-gray-400 text-sm"> เทคนิคอธิบายการทำงานโดยเน้นปฏิสัมพันธ์ (Interaction)</p>
+                </section>
+
+                <section>
+                    <h3>Use Case Components</h3>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="fragment">
+                            <img src="https://www.uml-diagrams.org/examples/use-case-example-airport-check-in-600.png" alt="Use Case Diagram Example" class="rounded-lg shadow-lg bg-white p-2" style="max-height: 300px; margin: 0 auto;">
+                            <p class="text-xs text-center text-gray-400 mt-2">
+
+[Image of UML Use Case Diagram example]
+</p>
+                        </div>
+                        <div class="flex flex-col justify-center space-y-3">
+                            <div class="glass-box">
+                                <strong class="text-pink-400">Actor</strong>
+                                <p class="text-xs">ผู้ใช้หรือระบบภายนอก (Stick Figure)</p>
+                            </div>
+                            <div class="glass-box">
+                                <strong class="text-cyan-400">Use Case</strong>
+                                <p class="text-xs">ฟังก์ชันของระบบ (Oval)</p>
+                            </div>
+                            <div class="glass-box">
+                                <strong class="text-yellow-400">Relationships</strong>
+                                <p class="text-xs">&lt;&lt;include&gt;&gt; (เรียกใช้เสมอ)<br>&lt;&lt;extend&gt;&gt; (ส่วนขยาย/ทางเลือก)</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>🆚 Comparison: User Story vs Use Case</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-600 text-yellow-300">
+                                    <th class="p-2">ลักษณะ</th>
+                                    <th class="p-2">Use Case</th>
+                                    <th class="p-2">User Story</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-gray-700">
+                                    <td class="p-2 font-bold">Detail Level</td>
+                                    <td class="p-2">ละเอียด มีขั้นตอน (Steps)</td>
+                                    <td class="p-2">กระชับ เน้นคุณค่า (Value)</td>
+                                </tr>
+                                <tr class="border-b border-gray-700">
+                                    <td class="p-2 font-bold">Goal</td>
+                                    <td class="p-2">ภาพรวมระบบ / สถาปัตยกรรม</td>
+                                    <td class="p-2">Planning / Sprint Development</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-bold">Best for</td>
+                                    <td class="p-2 text-red-300">Complex System, Waterfall</td>
+                                    <td class="p-2 text-green-300">Agile, Startup, Scrum</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-4 text-xs text-center text-gray-400 bg-gray-800 p-2 rounded">
+                        สรุป: ใช้คู่กันได้! Use Case สำหรับภาพรวม, User Story สำหรับหยิบมาทำใน Sprint
+                    </p>
+                </section>
+
+                <section>
+                    <h3>📜 Use Case Scenario</h3>
+                    <p class="text-sm text-gray-400 mb-2"> การอธิบายขั้นตอน Main Flow และ Alternative Flows</p>
+                    
+                    <div class="h-[400px] overflow-y-auto glass-box text-xs p-4 font-mono">
+                        <strong class="text-xl text-yellow-300">Use Case: Submit Assignment</strong><br><br>
+                        <span class="text-pink-400">Preconditions:</span> Student logged in, Deadline OK<br>
+                        <hr class="border-gray-600 my-2">
+                        <span class="text-cyan-400">Main Flow:</span><br>
+                        1. Student navigates to assignment page.<br>
+                        2. System displays list.<br>
+                        3. Student clicks 'Choose File'.<br>
+                        4. System validates file (type, size).<br>
+                        5. Student clicks 'Submit'.<br>
+                        6. System saves & sends email.<br>
+                        <hr class="border-gray-600 my-2">
+                        <span class="text-orange-400">Alternative Flows:</span><br>
+                        - 4a. Invalid File Type: Show error "PDF only", return to step 3.<br>
+                        - 4b. File Too Large: Show error ">10MB", return to step 3.
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1 class="text-gradient">3. CSS Layout Fundamentals</h1>
+                    <h3 class="text-white">Box Model & Typography</h3>
+                    <p class="text-gray-400"> "Box Model คือหัวใจของการจัดหน้าเว็บ"</p>
+                </section>
+
+                <section>
+                    <h3>📦 The CSS Box Model</h3>
+                    <p class="text-sm"> ทุก Element บนหน้าเว็บคือ "กล่อง" สี่เหลี่ยม</p>
+                    
+                    <div class="box-model-viz fragment">
+                        <div class="box-border">
+                            <div class="box-padding">
+                                <div class="box-content">
+                                    CONTENT<br>
+                                    (Width x Height)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 text-xs text-center mt-2">
+                        <div class="fragment text-yellow-300">Margin: ระยะห่างด้านนอก</div>
+                        <div class="fragment text-orange-400">Border: เส้นขอบ</div>
+                        <div class="fragment text-cyan-300">Padding: ระยะห่างด้านใน</div>
+                        <div class="fragment text-pink-300">Content: เนื้อหาจริง</div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>🎨 CSS Selectors</h3>
+                    <p class="text-sm mb-4"> วิธีเลือก Element เพื่อตกแต่ง</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="glass-box fragment">
+                            <code class="text-pink-400">p { ... }</code>
+                            <p class="text-xs mt-1">Element Selector<br>เลือก &lt;p&gt; ทั้งหมด</p>
+                        </div>
+                        <div class="glass-box fragment">
+                            <code class="text-cyan-400">.classname { ... }</code>
+                            <p class="text-xs mt-1">Class Selector<br>เลือก element ที่มี class นั้น (ใช้ซ้ำได้)</p>
+                        </div>
+                        <div class="glass-box fragment">
+                            <code class="text-yellow-400">#header { ... }</code>
+                            <p class="text-xs mt-1">ID Selector<br>เลือกเฉพาะเจาะจง (ห้ามซ้ำในหน้า)</p>
+                        </div>
+                        <div class="glass-box fragment">
+                            <code class="text-green-400">div > p { ... }</code>
+                            <p class="text-xs mt-1">Child Selector<br>เลือก &lt;p&gt; ที่เป็นลูกโดยตรงของ div</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>✍️ Typography & Color</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="fragment">
+                            <h5 class="text-pink-300">Typography</h5>
+                            <ul class="text-xs space-y-2">
+                                <li style="font-family: sans-serif">Sans-serif: สะอาด ทันสมัย (Web)</li>
+                                <li style="font-family: serif">Serif: ทางการ (Document)</li>
+                                <li style="font-family: monospace">Monospace: Code, Numbers</li>
+                            </ul>
+                            <pre class="mt-2"><code class="css text-xs">body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6; /* อ่านง่าย */
+}</code></pre>
+                        </div>
+                        
+                        <div class="fragment">
+                            <h5 class="text-cyan-300">Color Palette</h5>
+                            <div class="flex gap-2 mt-2">
+                                <div class="w-10 h-10 bg-[#2E5090] rounded" title="Primary"></div>
+                                <div class="w-10 h-10 bg-[#4472C4] rounded" title="Secondary"></div>
+                                <div class="w-10 h-10 bg-[#70AD47] rounded" title="Success"></div>
+                                <div class="w-10 h-10 bg-[#C0504D] rounded" title="Danger"></div>
+                            </div>
+                            <p class="text-xs mt-2 text-gray-400">
+                                ควรมี Primary, Secondary, Neutral และ Accent Color
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>📐 Basic Layout Example</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-xs">
+                            <pre><code class="html" data-trim data-line-numbers>
+<div class="container">
+  <header>...</header>
+  <main class="content">...</main>
+  <footer>...</footer>
+</div>
+                            </code></pre>
+                        </div>
+                        <div class="text-xs">
+                            <pre><code class="css" data-trim data-line-numbers>
+/* CSS */
+.container {
+  max-width: 1200px;
+  margin: 0 auto; /* กึ่งกลาง */
+  padding: 20px;
+}
+.content {
+  background: #f4f4f4;
+  padding: 30px;
+}
+                            </code></pre>
+                        </div>
+                    </div>
+                    <div class="mt-4 mx-auto w-3/4 border border-white p-2 text-center text-xs">
+                        <div class="bg-blue-800 text-white p-2 mb-2">Header</div>
+                        <div class="bg-gray-200 text-black p-8 mb-2">Main Content (margin: 0 auto)</div>
+                        <div class="bg-gray-800 text-white p-2">Footer</div>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h1 class="text-gradient">4. Lab Activities</h1>
+                    <h3 class="text-white">Hands-on Workshop (3 Hours)</h3>
+                    <p class="text-gray-400"> "แปลงทฤษฎีสู่การปฏิบัติ"</p>
+                </section>
+
+                <section>
+                    <h3>🛠️ Activity 1: Product Backlog (45 min)</h3>
+                    <div class="glass-box text-sm">
+                        <ul class="list-disc ml-5 space-y-2">
+                            <li><strong>Input:</strong> SRS from Week 2.</li>
+                            <li><strong>Action:</strong> 
+                                <ol class="list-decimal ml-5 mt-1 text-gray-300">
+                                    <li>แปลง Requirement เป็น <strong>User Stories (INVEST)</strong></li>
+                                    <li>เขียน <strong>Acceptance Criteria</strong></li>
+                                    <li>สร้าง Board บน <strong>Trello / Jira</strong></li>
+                                </ol>
+                            </li>
+                            <li><strong>Output:</strong> 10-15 User Stories พร้อม Priority</li>
+                        </ul>
+                    </div>
+                    <img src="https://wac-cdn.atlassian.com/dam/jcr:164e249e-f0b4-4c4f-801c-623e10eb9678/Trello-Board-Agile-Scrum.png" alt="Trello Board" class="h-32 mx-auto mt-2 rounded opacity-80">
+                </section>
+
+                <section>
+                    <h3>🛠️ Activity 2 & 3: Use Cases (75 min)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="glass-box">
+                            <h5 class="text-cyan-300">Act 2: Diagram</h5>
+                            <p class="text-xs mb-2">Tool: <strong>diagrams.net (draw.io)</strong></p>
+                            <ul class="list-disc ml-4 text-xs">
+                                <li>ระบุ Actors & Use Cases ครบถ้วน</li>
+                                <li>ใช้เส้น Relationship ถูกต้อง</li>
+                                <li>Export เป็น PNG/PDF</li>
+                            </ul>
+                        </div>
+                        <div class="glass-box">
+                            <h5 class="text-pink-300">Act 3: Scenario</h5>
+                            <p class="text-xs mb-2">Format: Word / Google Docs</p>
+                            <ul class="list-disc ml-4 text-xs">
+                                <li>เลือก 2-3 Use Cases หลัก</li>
+                                <li>เขียน Main Flow (5-10 steps)</li>
+                                <li>เขียน Alternative Flows (Error cases)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>🛠️ Activity 4: Landing Page CSS (60 min)</h3>
+                    <div class="glass-box text-sm">
+                        <strong class="text-yellow-300">Objective:</strong> ปรับปรุงเว็บจากสัปดาห์ที่แล้วให้สวยงาม
+                        <hr class="border-gray-600 my-2">
+                        <ul class="checklist ml-5 space-y-1">
+                            <li> สร้าง `styles.css` และเชื่อมต่อ</li>
+                            <li> กำหนด <strong>Color Palette</strong> (3-4 สี)</li>
+                            <li> ใช้ <strong>Box Model</strong> (Margin/Padding) จัดระยะ</li>
+                            <li> สร้าง <strong>Navigation Bar</strong> ให้สวยงาม</li>
+                            <li> <strong>Commit & Push</strong> to Git Repository</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>📤 Submission Requirements</h3>
+                    <div class="bg-gray-800 p-5 rounded-lg border border-gray-600 text-sm">
+                        <p class="mb-2"> ส่งผ่าน LMS ภายใน 1 สัปดาห์</p>
+                        <ol class="list-decimal ml-5 space-y-2">
+                            <li>🔗 <strong>Link Trello/Jira Board</strong> (Public Access)</li>
+                            <li>📄 <strong>Use Case Diagram</strong> (PNG/PDF)</li>
+                            <li>📝 <strong>Use Case Scenarios</strong> (Document)</li>
+                            <li>💻 <strong>Git Repository Link</strong> (with CSS commits)</li>
+                        </ol>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <h2>🧠 Quick Check</h2>
+                    <p class="text-gray-400">ทดสอบความเข้าใจประจำสัปดาห์</p>
+                </section>
+
+                <section>
+                    <h3>Q1: INVEST ตัว "S" หมายถึงอะไร?</h3>
+                    <div class="quiz-option" onclick="markQuiz(this, false)">A. Secure (ปลอดภัย)</div>
+                    <div class="quiz-option" onclick="markQuiz(this, false)">B. Specific (เฉพาะเจาะจง)</div>
+                    <div class="quiz-option" onclick="markQuiz(this, true)">C. Small (เล็กพอทำเสร็จใน 1 Sprint)</div>
+                    <p class="fragment text-xs text-green-400 mt-2"> Small: User Story ควรเล็กพอที่จะทำเสร็จได้รวดเร็ว</p>
+                </section>
+
+                <section>
+                    <h3>Q2: Box Model ส่วนใดอยู่ "นอกสุด"?</h3>
+                    <div class="quiz-option" onclick="markQuiz(this, false)">A. Border</div>
+                    <div class="quiz-option" onclick="markQuiz(this, false)">B. Padding</div>
+                    <div class="quiz-option" onclick="markQuiz(this, true)">C. Margin</div>
+                    <div class="quiz-option" onclick="markQuiz(this, false)">D. Content</div>
+                    <p class="fragment text-xs text-green-400 mt-2"> Margin คือระยะห่างระหว่าง Element กับ Element อื่น (พื้นที่ว่างด้านนอก)</p>
+                </section>
+
+                <section>
+                    <h3>🚀 Next Week (Week 4)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="glass-box bg-purple-900/30">
+                            <h4 class="text-purple-300">Software Design</h4>
+                            <ul class="text-xs list-disc ml-4 mt-2">
+                                <li> SOLID Principles</li>
+                                <li> User-Centred Design (Personas)</li>
+                            </ul>
+                        </div>
+                        <div class="glass-box bg-pink-900/30">
+                            <h4 class="text-pink-300">Modern Web</h4>
+                            <ul class="text-xs list-disc ml-4 mt-2">
+                                <li> Responsive Design</li>
+                                <li> Flexbox & Grid Layout</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="text-xs text-center mt-4 text-gray-400"> *เตรียม Term Project ให้พร้อมสำหรับการปรับเป็น Responsive</p>
+                </section>
+
+                <section data-background-color="#191a21">
+                    <h2>Q & A</h2>
+                    <hr class="w-1/3 mx-auto my-6">
+                    <p class="text-sm">
+                        "User Stories are not requirements; they are discussions about requirements."
+                    </p>
+                    <div class="mt-8 text-xs opacity-50">
+                        Slide created for ENGCE301 Week 3
+                    </div>
+                </section>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+
+    <script>
+        // Initialize Reveal.js
+        Reveal.initialize({
+            hash: true,
+            center: true,
+            slideNumber: 'c/t',
+            controls: true,
+            progress: true,
+            plugins: [RevealHighlight],
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            pdfSeparateFragments: false
+        });
+
+        // Font Size Control
+        const fontScales = [0.9, 1.0, 1.2];
+        let currentScaleIndex = 1;
+
+        function applyFontScale() {
+            document.documentElement.style.setProperty('--slide-font-scale', fontScales[currentScaleIndex]);
+        }
+
+        function adjustFontSize(dir) {
+            const newIndex = Math.min(fontScales.length - 1, Math.max(0, currentScaleIndex + dir));
+            if (newIndex === currentScaleIndex) return;
+            currentScaleIndex = newIndex;
+            applyFontScale();
+        }
+
+        applyFontScale();
+
+        // Quiz Logic
+        function markQuiz(el, isCorrect) {
+            const container = el.parentElement;
+            const options = container.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+                opt.style.opacity = '0.6'; 
+            });
+            el.style.opacity = '1';
+            
+            if (isCorrect) {
+                el.classList.add('correct');
+            } else {
+                el.classList.add('incorrect');
+            }
+        }
+
+        // Fullscreen Logic
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
