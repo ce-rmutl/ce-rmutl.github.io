@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGCE301 Week 4 Quiz (Fixed Version)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298); /* Fallback bg */
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .option-btn {
+            transition: all 0.2s;
+            border: 2px solid #e2e8f0;
+        }
+        .option-btn:hover:not(:disabled) {
+            background-color: #ebf8ff;
+            border-color: #4299e1;
+            transform: translateY(-2px);
+        }
+        .option-btn.selected {
+            background-color: #3182ce;
+            color: white;
+            border-color: #2c5282;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        /* Override Tailwind for specific quiz states */
+        .correct-answer { background-color: #c6f6d5 !important; border-color: #48bb78 !important; color: #22543d !important; }
+        .wrong-answer { background-color: #fed7d7 !important; border-color: #f56565 !important; color: #742a2a !important; }
+        
+        /* Spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div id="app-container" class="glass-panel w-full max-w-4xl p-6 md:p-10 min-h-[600px] relative overflow-hidden flex flex-col">
+        
+        <div id="login-screen" class="flex flex-col items-center justify-center flex-grow space-y-6 animate-fade-in">
+            <div class="text-center mb-4">
+                <div class="inline-block p-4 rounded-full bg-blue-100 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800">Quiz: Software Design & UX</h1>
+                <p class="text-gray-600 mt-2 text-lg">ENGCE301 Week 4 | Responsive & SOLID Principles</p>
+            </div>
+
+            <div class="w-full max-w-md bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">ชื่อ-นามสกุล</label>
+                    <input class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition" id="student-name" type="text" placeholder="กรอกชื่อของคุณ">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">รหัสนักศึกษา</label>
+                    <input class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition" id="student-id" type="text" placeholder="กรอกรหัสนักศึกษา">
+                </div>
+                
+                <button id="start-btn" onclick="startQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 text-lg flex justify-center items-center gap-2">
+                    เริ่มทำแบบทดสอบ 🚀
+                </button>
+            </div>
+        </div>
+
+        <div id="quiz-screen" class="hidden flex flex-col h-full">
+            <div class="flex justify-between items-end border-b pb-4 mb-6">
+                <div>
+                    <p class="text-xs text-gray-500 uppercase tracking-wider font-bold">Player</p>
+                    <p id="player-display" class="font-bold text-gray-800 text-lg">-</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-sm text-gray-500">Question</span>
+                    <p class="text-2xl font-bold text-blue-600">
+                        <span id="q-current">1</span><span class="text-base text-gray-400">/20</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="w-full bg-gray-100 rounded-full h-3 mb-8 overflow-hidden">
+                <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+            </div>
+
+            <div class="flex-grow flex flex-col justify-center">
+                <h2 id="question-text" class="text-xl md:text-2xl font-bold text-gray-800 mb-8 leading-relaxed">
+                    Loading Question...
+                </h2>
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    </div>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button id="next-btn" onclick="nextQuestion()" disabled class="px-8 py-3 bg-gray-200 text-gray-400 font-bold rounded-lg cursor-not-allowed transition-colors">
+                    ถัดไป &rarr;
+                </button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="hidden flex flex-col items-center justify-center h-full w-full">
+            
+            <div id="capture-area" class="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 w-full max-w-2xl text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">ผลการทดสอบ Quiz 1 (Week 4)</h2>
+                <div class="border-b border-gray-200 w-1/2 mx-auto mb-6"></div>
+                
+                <div class="mb-6">
+                    <h3 id="res-name" class="text-xl font-bold text-gray-700">Name</h3>
+                    <p id="res-id" class="text-gray-500">ID</p>
+                </div>
+
+                <div class="flex justify-center mb-6">
+                    <div id="score-ring" class="relative w-48 h-48 rounded-full border-[10px] border-gray-100 flex items-center justify-center">
+                        <div class="text-center">
+                            <span id="final-score" class="text-6xl font-extrabold text-gray-800 block">0</span>
+                            <span class="text-gray-400 text-lg font-medium">คะแนนรวม</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p id="assessment-msg" class="text-lg font-bold text-blue-600 mb-4">-</p>
+                <p class="text-xs text-gray-400">ENGCE301: Software Design & Development</p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 w-full max-w-2xl no-print">
+                <button onclick="toggleAnswerKey()" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg shadow transition">
+                    📖 ดูเฉลย
+                </button>
+                <button onclick="resetQuiz()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg shadow transition">
+                    🔄 สอบใหม่
+                </button>
+                <button onclick="downloadScore()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow transition">
+                    📸 บันทึกภาพ
+                </button>
+            </div>
+
+            <div id="answer-key-box" class="hidden w-full max-w-3xl mt-8 bg-white p-6 rounded-xl shadow-inner border border-gray-200 max-h-[400px] overflow-y-auto">
+                <h3 class="font-bold text-lg mb-4 sticky top-0 bg-white pb-2 border-b">เฉลยละเอียด</h3>
+                <div id="answer-list" class="space-y-6 text-left"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const questionsDB = [
+            { q: "S ใน SOLID (Single Responsibility) หมายถึงอะไร?", o: ["คลาสต้องมีฟังก์ชันเยอะๆ", "คลาสควรมีหน้าที่เดียว เหตุผลเดียวที่จะเปลี่ยน", "คลาสลูกต้องแทนคลาสแม่ได้", "ต้องแยก Interface ให้เล็ก"], a: 1, ref: "Ref: Software Design Principles (SRP)" },
+            { q: "ประโยชน์ของ Open/Closed Principle (OCP) คือ?", o: ["ทำให้โค้ดสั้นลง", "แก้โค้ดเดิมได้ง่าย", "ขยายฟีเจอร์ใหม่โดยไม่ต้องแก้โค้ดเดิม", "ไม่ต้องมี Interface"], a: 2, ref: "Ref: SOLID (OCP)" },
+            { q: "Code Smell 'Magic Numbers' คืออะไร?", o: ["ฟังก์ชันยาวเกินไป", "ตัวแปรชื่อยาว", "ใช้ตัวเลขปริศนาในโค้ดโดยไม่อธิบาย", "โค้ดที่ไม่มีคนใช้"], a: 2, ref: "Ref: Code Smells" },
+            { q: "วิธีแก้ 'Long Method' ที่ดีที่สุดคือ?", o: ["ลบโค้ดทิ้ง", "รวมหลายฟังก์ชันเข้าด้วยกัน", "แยกเป็นฟังก์ชันย่อย (Extract Method)", "เขียน comment เยอะๆ"], a: 2, ref: "Ref: Refactoring" },
+            { q: "หัวใจสำคัญของ User-Centred Design (UCD) คือ?", o: ["เทคโนโลยีต้องล้ำหน้า", "เน้นผู้ใช้เป็นศูนย์กลางตลอดกระบวนการ", "เน้นประหยัดงบประมาณ", "เน้นความสวยงามที่สุด"], a: 1, ref: "Ref: UCD Principles" },
+            { q: "Persona คืออะไร?", o: ["ผู้ใช้งานจริง", "ตัวแทนผู้ใช้สมมติที่สร้างจากข้อมูลจริง", "ชื่อเล่นทีมพัฒนา", "ลูกค้า VIP"], a: 1, ref: "Ref: Personas" },
+            { q: "ใน User Journey Map, 'Touchpoint' หมายถึง?", o: ["จุดที่ผู้ใช้เจ็บปวด", "จุดที่ผู้ใช้สัมผัส/ติดต่อกับระบบ", "เป้าหมายสูงสุด", "ความรู้สึกผู้ใช้"], a: 1, ref: "Ref: Journey Map" },
+            { q: "การออกแบบ Responsive ควรเริ่มจากอุปกรณ์ใด? (ตาม Best Practice)", o: ["Desktop", "Tablet", "Mobile", "TV"], a: 2, ref: "Ref: Mobile-First Approach" },
+            { q: "หน่วย CSS ที่นิยมใช้ทำ Fluid Grid คือ?", o: ["px", "% (Percentage)", "pt", "cm"], a: 1, ref: "Ref: Responsive Design" },
+            { q: "Flexbox เหมาะกับงานประเภทใดมากที่สุด?", o: ["จัด Layout ทั้งหน้าเว็บ", "จัดวาง Component มิติเดียว (1D)", "จัดหน้าหนังสือพิมพ์", "ทำ Animation"], a: 1, ref: "Ref: Flexbox vs Grid" },
+            { q: "CSS Grid เหมาะกับงานประเภทใด?", o: ["จัดวางปุ่มใน Navbar", "จัด Layout โครงสร้างใหญ่ 2 มิติ (2D)", "จัดข้อความในพารากราฟ", "ทำเมนู Dropdown"], a: 1, ref: "Ref: Flexbox vs Grid" },
+            { q: "Breakpoints สำหรับ Desktop (Large) มักเริ่มที่ความกว้างเท่าไหร่?", o: ["576px", "768px", "992px หรือ 1200px", "4000px"], a: 2, ref: "Ref: Media Queries" },
+            { q: "ถ้าคลาสลูกทำงานแทนคลาสแม่ไม่ได้ แสดงว่าผิดหลักข้อใด?", o: ["SRP", "OCP", "Liskov Substitution (LSP)", "DIP"], a: 2, ref: "Ref: SOLID (LSP)" },
+            { q: "High Cohesion หมายความว่าอย่างไร?", o: ["โมดูลพึ่งพากันสูง", "ฟังก์ชันในโมดูลเดียวกันเกี่ยวข้องกันสูง", "โค้ดซ้ำซ้อนเยอะ", "คลาสใหญ่มาก"], a: 1, ref: "Ref: Coupling & Cohesion" },
+            { q: "Low Coupling หมายความว่าอย่างไร?", o: ["โมดูลพึ่งพากันต่ำ (แยกกันอยู่ได้)", "โมดูลผูกติดกันแน่น", "ใช้ตัวแปร Global เยอะ", "ไม่มีการส่งค่าหากัน"], a: 0, ref: "Ref: Coupling & Cohesion" },
+            { q: "คำสั่ง CSS ใดทำให้ Flex items ขึ้นบรรทัดใหม่ได้?", o: ["flex-direction: column", "flex-wrap: wrap", "display: block", "overflow: hidden"], a: 1, ref: "Ref: Flexbox Properties" },
+            { q: "Grid Template Areas ใช้เพื่ออะไร?", o: ["กำหนดสีพื้นหลัง", "ตั้งชื่อพื้นที่เพื่อจัดวาง Layout", "กำหนดขนาดตัวอักษร", "สร้าง Animation"], a: 1, ref: "Ref: CSS Grid" },
+            { q: "ขั้นตอนแรกของกระบวนการ UCD คือ?", o: ["ออกแบบ", "ประเมินผล", "เข้าใจบริบทผู้ใช้", "เขียนโค้ด"], a: 2, ref: "Ref: UCD Process" },
+            { q: "Pain Point ใน User Journey Map คือ?", o: ["สิ่งที่ผู้ใช้ชอบ", "ปัญหาหรืออุปสรรคที่ผู้ใช้เจอ", "จุดสิ้นสุดการใช้งาน", "ระยะเวลาที่ใช้"], a: 1, ref: "Ref: Journey Map Elements" },
+            { q: "หลักการ 'Dependency Inversion' แนะนำให้พึ่งพาอะไร?", o: ["Concrete Class", "Database", "Abstraction (Interface)", "User Interface"], a: 2, ref: "Ref: SOLID (DIP)" }
+        ];
+
+        // --- STATE ---
+        let quizState = {
+            questions: [],
+            currentIdx: 0,
+            score: 0,
+            userAnswers: [], // { qIdx: number, selectedOpt: number }
+            studentName: "",
+            studentId: ""
+        };
+
+        // --- DOM ELEMENTS ---
+        const els = {
+            login: document.getElementById('login-screen'),
+            quiz: document.getElementById('quiz-screen'),
+            result: document.getElementById('result-screen'),
+            nameInput: document.getElementById('student-name'),
+            idInput: document.getElementById('student-id'),
+            playerDisplay: document.getElementById('player-display'),
+            qCurrent: document.getElementById('q-current'),
+            progressBar: document.getElementById('progress-bar'),
+            qText: document.getElementById('question-text'),
+            optContainer: document.getElementById('options-container'),
+            nextBtn: document.getElementById('next-btn'),
+            resName: document.getElementById('res-name'),
+            resId: document.getElementById('res-id'),
+            finalScore: document.getElementById('final-score'),
+            scoreRing: document.getElementById('score-ring'),
+            assessMsg: document.getElementById('assessment-msg'),
+            ansBox: document.getElementById('answer-key-box'),
+            ansList: document.getElementById('answer-list')
+        };
+
+        // --- CORE FUNCTIONS ---
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            const name = els.nameInput.value.trim();
+            const id = els.idInput.value.trim();
+
+            if (!name || !id) {
+                alert("กรุณากรอกชื่อและรหัสนักศึกษาให้ครบถ้วนก่อนเริ่มครับ");
+                return;
+            }
+
+            // Init State
+            quizState.studentName = name;
+            quizState.studentId = id;
+            quizState.score = 0;
+            quizState.currentIdx = 0;
+            quizState.userAnswers = [];
+
+            // Prepare Questions (Shuffle Order + Shuffle Options)
+            quizState.questions = questionsDB.map((q, index) => {
+                // Create option objects to track original index
+                let opts = q.o.map((txt, idx) => ({ txt, originalIdx: idx }));
+                // Shuffle options
+                opts = shuffle(opts);
+                return { ...q, shuffledOpts: opts };
+            });
+            // Shuffle Question Order
+            quizState.questions = shuffle(quizState.questions);
+
+            // UI Switch
+            els.login.classList.add('hidden');
+            els.quiz.classList.remove('hidden');
+            els.playerDisplay.textContent = `${name} (${id})`;
+            
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = quizState.questions[quizState.currentIdx];
+            
+            // Update Text
+            els.qCurrent.textContent = quizState.currentIdx + 1;
+            els.qText.textContent = `${quizState.currentIdx + 1}. ${q.q}`;
+            
+            // Update Progress
+            const pct = ((quizState.currentIdx) / quizState.questions.length) * 100;
+            els.progressBar.style.width = `${pct}%`;
+
+            // Clear & Render Options
+            els.optContainer.innerHTML = '';
+            els.nextBtn.disabled = true;
+            els.nextBtn.className = "px-8 py-3 bg-gray-200 text-gray-400 font-bold rounded-lg cursor-not-allowed transition-colors";
+            els.nextBtn.innerHTML = "ถัดไป &rarr;";
+
+            q.shuffledOpts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full p-4 text-left rounded-xl bg-white text-gray-700 font-semibold shadow-sm hover:shadow-md";
+                btn.innerHTML = `<span class="inline-block w-8 h-8 bg-gray-100 rounded-full text-center leading-8 mr-3 text-sm font-bold text-gray-500">${String.fromCharCode(65+idx)}</span> ${opt.txt}`;
+                
+                btn.onclick = () => selectOption(idx, opt.originalIdx, btn);
+                els.optContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(displayIdx, originalIdx, btnElement) {
+            // Remove active style from all
+            Array.from(els.optContainer.children).forEach(b => b.classList.remove('selected', 'border-blue-500', 'ring-2', 'ring-blue-200'));
+            
+            // Add style to selected
+            btnElement.classList.add('selected', 'border-blue-500', 'ring-2', 'ring-blue-200');
+
+            // Enable Next
+            els.nextBtn.disabled = false;
+            els.nextBtn.className = "px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg transform hover:-translate-y-0.5 transition-all";
+            
+            // Save temporary answer
+            quizState.tempAnswer = originalIdx;
+        }
+
+        function nextQuestion() {
+            // Check correctness
+            const currentQ = quizState.questions[quizState.currentIdx];
+            const isCorrect = quizState.tempAnswer === currentQ.a;
+            
+            if (isCorrect) quizState.score++;
+            
+            // Save Record
+            quizState.userAnswers.push({
+                question: currentQ.q,
+                userChoiceIdx: quizState.tempAnswer,
+                correctChoiceIdx: currentQ.a,
+                options: currentQ.o,
+                ref: currentQ.ref,
+                isCorrect: isCorrect
+            });
+
+            // Advance
+            quizState.currentIdx++;
+
+            if (quizState.currentIdx < quizState.questions.length) {
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            els.quiz.classList.add('hidden');
+            els.result.classList.remove('hidden');
+
+            // Fill Info
+            els.resName.textContent = quizState.studentName;
+            els.resId.textContent = quizState.studentId;
+            
+            // Animate Score
+            let currentScore = 0;
+            const targetScore = quizState.score;
+            els.finalScore.textContent = "0";
+            
+            const interval = setInterval(() => {
+                if (currentScore >= targetScore) {
+                    clearInterval(interval);
+                    // Determine Color
+                    const pct = (targetScore / quizState.questions.length) * 100;
+                    let colorClass = "border-red-500 text-red-600";
+                    let msg = "พยายามอีกนิดนะครับ! ✌️";
+                    
+                    if (pct >= 80) {
+                        colorClass = "border-green-500 text-green-600";
+                        msg = "ยอดเยี่ยมมาก! 🌟";
+                    } else if (pct >= 60) {
+                        colorClass = "border-blue-500 text-blue-600";
+                        msg = "ทำได้ดี ผ่านเกณฑ์! 👍";
+                    }
+                    
+                    els.scoreRing.className = `relative w-48 h-48 rounded-full border-[10px] flex items-center justify-center transition-colors duration-500 ${colorClass}`;
+                    els.assessMsg.textContent = msg;
+                    els.assessMsg.className = `text-lg font-bold mb-4 ${colorClass.split(' ')[1]}`;
+                } else {
+                    currentScore++;
+                    els.finalScore.textContent = currentScore;
+                }
+            }, 50);
+
+            generateAnswerKeyHTML();
+        }
+
+        function generateAnswerKeyHTML() {
+            els.ansList.innerHTML = quizState.userAnswers.map((ans, idx) => {
+                const statusColor = ans.isCorrect ? "bg-green-50 border-green-500" : "bg-red-50 border-red-500";
+                const icon = ans.isCorrect ? "✅" : "❌";
+                
+                // User Answer String
+                const userAnsStr = ans.options[ans.userChoiceIdx];
+                // Correct Answer String
+                const correctAnsStr = ans.options[ans.correctChoiceIdx];
+
+                return `
+                    <div class="p-4 rounded-lg border-l-4 ${statusColor} mb-4 text-sm">
+                        <p class="font-bold text-gray-800 mb-2">${idx+1}. ${ans.question}</p>
+                        <div class="ml-2 space-y-1">
+                            <p class="${ans.isCorrect ? 'text-green-700 font-semibold' : 'text-red-600'}">
+                                ตอบ: ${userAnsStr} ${icon}
+                            </p>
+                            ${!ans.isCorrect ? `<p class="text-green-700 font-semibold">เฉลย: ${correctAnsStr}</p>` : ''}
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2 text-right">${ans.ref}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleAnswerKey() {
+            els.ansBox.classList.toggle('hidden');
+            if(!els.ansBox.classList.contains('hidden')){
+                els.ansBox.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function resetQuiz() {
+            // Reset UI
+            els.result.classList.add('hidden');
+            els.ansBox.classList.add('hidden');
+            els.login.classList.remove('hidden');
+            
+            // Clear Inputs
+            els.nameInput.value = "";
+            els.idInput.value = "";
+        }
+
+        function downloadScore() {
+            const captureElement = document.getElementById('capture-area');
+            
+            // Temporarily hide the answer key if it's open (optional, keeps image clean)
+            // els.ansBox.classList.add('hidden');
+
+            html2canvas(captureElement, {
+                scale: 2, 
+                backgroundColor: "#ffffff",
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `ENGCE301_Week4_${quizState.studentId}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            }).catch(err => {
+                alert("บันทึกภาพไม่สำเร็จ: " + err);
+            });
+        }
+    </script>
+</body>
+</html>
