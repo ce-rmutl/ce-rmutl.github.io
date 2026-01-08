@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGCE301 Week 7: Backend & API Design</title>
+    <style>
+        :root {
+            /* Light Theme */
+            --bg-color: #f0f2f5;
+            --slide-bg: #ffffff;
+            --text-color: #333333;
+            --accent-color: #2563eb; /* Royal Blue */
+            --secondary-color: #64748b;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --font-main: 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', 'Courier New', monospace;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-color: #0f172a;
+            --slide-bg: #1e293b;
+            --text-color: #f1f5f9;
+            --accent-color: #38bdf8; /* Sky Blue */
+            --secondary-color: #94a3b8;
+            --code-bg: #0f172a;
+            --code-text: #e2e8f0;
+            --border-color: #334155;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Sarabun:wght@300;400;600;800&display=swap');
+
+        * { box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden; /* Prevent scrolling, slides handles it */
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Controls & UI --- */
+        .toolbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 1rem;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-ui {
+            background: var(--slide-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-main);
+            font-weight: 600;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-ui:hover { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: var(--accent-color);
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        .status-bar {
+            position: fixed;
+            bottom: 5px;
+            right: 10px;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            z-index: 999;
+            opacity: 0.7;
+        }
+
+        /* --- Slide Container --- */
+        #slide-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1280px; /* FHD aspect ratio friendly */
+            height: 85vh; /* Keep aspect ratio */
+            background-color: var(--slide-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 3rem;
+            flex-direction: column;
+            position: absolute;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            overflow-y: auto; /* Allow internal scrolling if content overflows */
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Typography & Elements --- */
+        h1, h2, h3 { margin-top: 0; color: var(--accent-color); }
+        h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.2; }
+        h2 { font-size: 2.5rem; border-bottom: 3px solid var(--accent-color); padding-bottom: 0.5rem; display: inline-block; margin-bottom: 1.5rem; }
+        h3 { font-size: 1.8rem; color: var(--text-color); margin-bottom: 1rem; }
+        p, li { font-size: 1.4rem; line-height: 1.6; color: var(--text-color); margin-bottom: 1rem; }
+        
+        ul { padding-left: 2rem; }
+        li::marker { color: var(--accent-color); font-weight: bold; }
+
+        .highlight { color: var(--accent-color); font-weight: bold; }
+        .text-small { font-size: 1rem; color: var(--secondary-color); }
+        
+        /* --- Code Blocks --- */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: var(--font-code);
+            font-size: 1.1rem;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        code { font-family: var(--font-code); background: rgba(37, 99, 235, 0.1); padding: 2px 6px; border-radius: 4px; color: var(--accent-color); }
+        pre code { background: none; color: inherit; padding: 0; }
+
+        /* --- Components --- */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            height: 100%;
+            align-items: center;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: white;
+            background: var(--secondary-color);
+            margin-right: 0.5rem;
+        }
+        .bg-green { background: var(--success); }
+        .bg-red { background: var(--danger); }
+        .bg-blue { background: var(--accent-color); }
+        .bg-yellow { background: var(--warning); color: #000; }
+
+        /* --- Infographics / Diagrams (CSS Only) --- */
+        .diagram-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 300px;
+            background: rgba(0,0,0,0.02);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .box {
+            padding: 1rem 2rem;
+            background: var(--slide-bg);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .arrow-right::after {
+            content: "→";
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--secondary-color);
+        }
+
+        /* ER Diagram Simulation */
+        .entity {
+            border: 2px solid var(--text-color);
+            border-radius: 4px;
+            width: 150px;
+            background: var(--slide-bg);
+            overflow: hidden;
+        }
+        .entity-header { background: var(--text-color); color: var(--bg-color); padding: 5px; text-align: center; font-weight: bold; }
+        .entity-body { padding: 10px; font-size: 0.9rem; }
+        .relationship-line { height: 2px; background: var(--text-color); width: 50px; position: relative; }
+        .diamond { width: 30px; height: 30px; background: var(--slide-bg); border: 2px solid var(--text-color); transform: rotate(45deg); display: flex; align-items: center; justify-content: center; margin: 0 10px; }
+
+        /* Architecture Layer */
+        .layer-stack { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        .layer { width: 300px; padding: 15px; text-align: center; border: 2px solid var(--accent-color); border-radius: 8px; font-weight: bold; background: rgba(37, 99, 235, 0.1); }
+        
+        /* Table Styles */
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { border: 1px solid var(--border-color); padding: 12px; text-align: left; font-size: 1.2rem; }
+        th { background-color: rgba(37, 99, 235, 0.1); color: var(--accent-color); }
+
+        /* Navigation Buttons */
+        .nav-btn {
+            position: fixed;
+            bottom: 2rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.5;
+            transition: opacity 0.3s, transform 0.2s;
+        }
+        .nav-btn:hover { opacity: 1; transform: scale(1.1); }
+        .prev-btn { left: 2rem; }
+        .next-btn { right: 2rem; }
+
+        /* --- Simulator --- */
+        .simulator {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            font-family: var(--font-code);
+        }
+        .sim-header { background: #e2e8f0; padding: 10px; display: flex; gap: 10px; color: #333; }
+        .sim-body { padding: 20px; background: var(--slide-bg); }
+        .sim-response { background: #1e293b; color: #10b981; padding: 10px; margin-top: 10px; display: none; border-radius: 4px; white-space: pre; }
+
+    </style>
+</head>
+<body>
+
+    <div class="toolbar">
+        <button class="btn-ui" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌗 Theme</button>
+        <button class="btn-ui" onclick="adjustFontSize(-2)">A-</button>
+        <button class="btn-ui" onclick="adjustFontSize(2)">A+</button>
+        <button class="btn-ui" onclick="toggleFullScreen()" title="Full Screen">🔲 Full</button>
+    </div>
+
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="status-bar" id="statusBar">ENGCE301 | Week 7 | Slide 1/55</div>
+
+    <button class="nav-btn prev-btn" onclick="prevSlide()">❮</button>
+    <button class="nav-btn next-btn" onclick="nextSlide()">❯</button>
+
+    <div id="slide-container">
+
+        <div class="slide active">
+            <div style="text-align: center; margin-top: 5vh;">
+                <div style="font-size: 5rem; margin-bottom: 1rem;">📚</div>
+                <h3 style="letter-spacing: 2px; color: var(--secondary-color);">ENGCE301: Software Design and Development</h3>
+                <h1 style="font-size: 4rem; margin: 1rem 0;">Backend & API Design <br>+ SQLite Integration</h1>
+                <p style="font-size: 1.8rem; color: var(--secondary-color);">Week 7</p>
+                <div style="margin-top: 3rem; padding: 1rem; border: 1px dashed var(--accent-color); display: inline-block; border-radius: 8px;">
+                    <span class="badge bg-blue">REST API</span>
+                    <span class="badge bg-green">SQLite</span>
+                    <span class="badge bg-red">Database Design</span>
+                    <span class="badge bg-yellow">Node.js</span>
+                </div>
+                <p style="margin-top: 2rem;">คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเทคโนโลยีราชมงคลล้านนา</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🗺️ Course Journey</h2>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 3rem;">
+                <div class="box" style="opacity: 0.5;">Wk 1-5<br>Front-end & UX/UI</div>
+                <div class="arrow-right"></div>
+                <div class="box" style="opacity: 0.5;">Wk 6<br>Intro Node/Express</div>
+                <div class="arrow-right"></div>
+                <div class="box" style="transform: scale(1.2); border-width: 4px; background: rgba(37,99,235,0.1);">
+                    <span style="display:block; font-size:2rem;">📍</span>
+                    <strong>Week 7</strong><br>DB & API Design
+                </div>
+                <div class="arrow-right"></div>
+                <div class="box" style="opacity: 0.5; border-style: dashed;">Wk 8<br>Midterm Exam</div>
+                <div class="arrow-right"></div>
+                <div class="box" style="opacity: 0.5;">Wk 9+<br>React & Fullstack</div>
+            </div>
+            <p style="margin-top: 3rem; text-align: center;">
+                "เรากำลังเปลี่ยนจาก <strong>Static File (JSON)</strong> สู่ <strong>Real Database System</strong>"
+            </p>
+        </div>
+
+        <div class="slide">
+            <h2>🎯 วัตถุประสงค์การเรียนรู้ (Learning Objectives)</h2>
+            <div class="two-col">
+                <div>
+                    <h3>📌 Knowledge (ความรู้)</h3>
+                    <ul>
+                        <li>อธิบายหลักการออกแบบ <strong>RESTful API</strong> ได้อย่างถูกต้อง</li>
+                        <li>เข้าใจโครงสร้าง <strong>ER Diagram</strong> และการแปลงเป็น Table</li>
+                        <li>เข้าใจความแตกต่างระหว่าง JSON File กับ RDBMS</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>🔨 Skills (ทักษะ)</h3>
+                    <ul>
+                        <li>ออกแบบ API Endpoints ตามมาตรฐาน</li>
+                        <li>สร้างและเชื่อมต่อ <strong>SQLite Database</strong> กับ Express</li>
+                        <li>เขียน SQL Queries พื้นฐาน (CRUD)</li>
+                        <li>จัดโครงสร้างโค้ดแบบ <strong>Layered Architecture</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="margin-top: 2rem; padding: 1rem; background: rgba(245, 158, 11, 0.1); border-left: 5px solid var(--warning);">
+                <strong>CLO ที่เกี่ยวข้อง:</strong> CLO2 (Requirements), CLO3 (Design), CLO4 (Implementation), CLO5 (Quality)
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>⏪ ทบทวน Week 6</h2>
+            <p>เราได้สร้าง Server ด้วย Node.js + Express แต่ข้อมูลถูกเก็บในไฟล์ text ธรรมดา</p>
+            <div class="two-col">
+                <div class="card">
+                    <h3>Week 6: JSON File</h3>
+                    <pre>
+[
+  { "id": 1, "name": "Somchai" },
+  { "id": 2, "name": "Somsri" }
+]
+                    </pre>
+                    <p class="text-small">❌ อ่าน/เขียนช้าเมื่อข้อมูลเยอะ<br>❌ ค้นหาข้อมูลยาก (Query ยาก)<br>❌ ไม่มี Relationships</p>
+                </div>
+                <div class="card" style="border: 2px solid var(--success);">
+                    <h3>Week 7: Database (SQLite)</h3>
+                    <div style="text-align:center; padding: 2rem; font-size: 3rem;">💾 🗄️</div>
+                    <p class="text-small">✅ มีโครงสร้างชัดเจน (Schema)<br>✅ ใช้ SQL Query ได้ซับซ้อน<br>✅ รองรับ Relationships</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: var(--accent-color);">7.1 RESTful API Design</h1>
+                <p>หัวใจสำคัญของการสื่อสารระหว่าง Frontend และ Backend</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🌐 REST คืออะไร?</h2>
+            <p><strong>RE</strong>presentational <strong>S</strong>tate <strong>T</strong>ransfer</p>
+            <blockquote>
+                "ไม่ใช่ Protocol แต่เป็น <strong>Architectural Style</strong> (รูปแบบสถาปัตยกรรม) สำหรับออกแบบ Web Service"
+            </blockquote>
+            
+            <h3>6 Guiding Principles (หัวใจสำคัญ):</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                <div class="card">1. Client-Server <br><small>แยกส่วนกันชัดเจน</small></div>
+                <div class="card">2. Stateless <br><small>ไม่จดจำสถานะที่ Server</small></div>
+                <div class="card">3. Cacheable <br><small>ลดโหลด Server</small></div>
+                <div class="card">4. Uniform Interface <br><small>รูปแบบมาตรฐาน</small></div>
+                <div class="card">5. Layered System <br><small>มีชั้นกลางได้ (Proxy)</small></div>
+                <div class="card">6. Code on Demand <br><small>(Optional)</small></div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📦 Everything is a "Resource"</h2>
+            <p>ใน REST เรามองทุกอย่างเป็น <strong>Resource</strong> (ทรัพยากร) ไม่ใช่ Action</p>
+            
+            <table style="margin-top: 2rem;">
+                <tr>
+                    <th>❌ Bad (Action-based)</th>
+                    <th>✅ Good (Resource-based)</th>
+                    <th>เหตุผล</th>
+                </tr>
+                <tr>
+                    <td>/getUsers</td>
+                    <td><span class="badge bg-blue">GET</span> /users</td>
+                    <td>ใช้ HTTP Method บอกการกระทำ</td>
+                </tr>
+                <tr>
+                    <td>/createProduct</td>
+                    <td><span class="badge bg-green">POST</span> /products</td>
+                    <td>ใช้ Plural Noun (พหูพจน์)</td>
+                </tr>
+                <tr>
+                    <td>/delete_order?id=5</td>
+                    <td><span class="badge bg-red">DELETE</span> /orders/5</td>
+                    <td>ใช้ Path Variable ระบุ ID</td>
+                </tr>
+            </table>
+            <p style="margin-top: 1rem;" class="highlight">💡 เคล็ดลับ: ใช้คำนาม (Noun) เสมอ ห้ามใช้คำกริยา (Verb) ใน URL</p>
+        </div>
+
+        <div class="slide">
+            <h2>verbs: การกระทำผ่าน HTTP Methods</h2>
+            <p>เมื่อ Resource คือ "คำนาม", HTTP Method คือ "คำกริยา"</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 3fr; gap: 1rem; align-items: center;">
+                <div style="text-align: right;"><span class="badge bg-blue" style="font-size: 1.5rem;">GET</span></div>
+                <div><strong>Read:</strong> ดึงข้อมูล (ห้ามแก้ไขข้อมูลบน Server)</div>
+
+                <div style="text-align: right;"><span class="badge bg-green" style="font-size: 1.5rem;">POST</span></div>
+                <div><strong>Create:</strong> สร้างข้อมูลใหม่</div>
+
+                <div style="text-align: right;"><span class="badge bg-yellow" style="font-size: 1.5rem;">PUT</span></div>
+                <div><strong>Update (Replace):</strong> แทนที่ข้อมูลทั้งหมด</div>
+
+                <div style="text-align: right;"><span class="badge" style="background:purple; font-size: 1.5rem;">PATCH</span></div>
+                <div><strong>Update (Partial):</strong> แก้ไขบางส่วน</div>
+
+                <div style="text-align: right;"><span class="badge bg-red" style="font-size: 1.5rem;">DELETE</span></div>
+                <div><strong>Delete:</strong> ลบข้อมูล</div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🚦 HTTP Status Codes: ภาษาของผลลัพธ์</h2>
+            <div class="two-col">
+                <div>
+                    <h3>กลุ่มหลัก (Categories)</h3>
+                    <ul>
+                        <li><strong style="color:var(--success)">2xx Success:</strong> สำเร็จ</li>
+                        <li><strong style="color:var(--accent-color)">3xx Redirection:</strong> ย้ายที่</li>
+                        <li><strong style="color:var(--warning)">4xx Client Error:</strong> เราผิด (ส่งข้อมูลผิด/ไม่มีสิทธิ์)</li>
+                        <li><strong style="color:var(--danger)">5xx Server Error:</strong> เขาผิด (Server ล่ม/Code บั๊ก)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Codes ที่ต้องจำ</h3>
+                    <ul>
+                        <li><code>200 OK</code>: ปกติ</li>
+                        <li><code>201 Created</code>: สร้างเสร็จแล้ว (ใช้กับ POST)</li>
+                        <li><code>400 Bad Request</code>: ส่ง Parameter ไม่ครบ/ผิด</li>
+                        <li><code>401 Unauthorized</code>: ยังไม่ Login</li>
+                        <li><code>403 Forbidden</code>: Login แล้วแต่ไม่มีสิทธิ์</li>
+                        <li><code>404 Not Found</code>: ไม่เจอข้อมูล</li>
+                        <li><code>500 Internal Server Error</code>: Database พัง/Code Error</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🕹️ Simulator: REST API Request</h2>
+            <p>ลองกดปุ่มเพื่อดูว่า Server ตอบกลับอย่างไร</p>
+            
+            <div class="simulator">
+                <div class="sim-header">
+                    <select id="simMethod" class="btn-ui" style="padding: 2px;">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                    <input type="text" id="simUrl" value="https://api.engce301.com/users/101" style="flex:1; padding: 5px;" readonly>
+                    <button class="btn-ui bg-blue" onclick="simulateApi()">Send Request</button>
+                </div>
+                <div class="sim-body">
+                    <div id="simLoading" style="display:none; color: var(--secondary-color);">Connecting to database...</div>
+                    <pre id="simResponse" class="sim-response"></pre>
+                </div>
+            </div>
+            
+            <script>
+                function simulateApi() {
+                    const method = document.getElementById('simMethod').value;
+                    const responseBox = document.getElementById('simResponse');
+                    const loading = document.getElementById('simLoading');
+                    
+                    responseBox.style.display = 'none';
+                    loading.style.display = 'block';
+
+                    setTimeout(() => {
+                        loading.style.display = 'none';
+                        responseBox.style.display = 'block';
+                        
+                        let status = 200;
+                        let text = "";
+                        let color = "var(--success)";
+
+                        if (method === 'GET') {
+                            status = 200;
+                            text = JSON.stringify({ id: 101, name: "Student A", gpa: 3.5 }, null, 2);
+                        } else if (method === 'POST') {
+                            status = 201;
+                            text = JSON.stringify({ message: "User created successfully", new_id: 102 }, null, 2);
+                        } else if (method === 'DELETE') {
+                            status = 204;
+                            text = "(No Content)";
+                            color = "var(--secondary-color)";
+                        }
+
+                        responseBox.style.color = color;
+                        responseBox.innerHTML = `HTTP/1.1 ${status} \nDate: ${new Date().toUTCString()} \nContent-Type: application/json\n\n${text}`;
+                    }, 800);
+                }
+            </script>
+        </div>
+
+        <div class="slide">
+            <h2>🔍 Query Parameters & Filtering</h2>
+            <p>เมื่อเราต้องการค้นหา กรอง หรือเรียงลำดับข้อมูล จะไม่เปลี่ยน URL Path แต่ใช้ <code>?key=value</code></p>
+            
+            <div class="card">
+                <h3>Filtering (การกรอง)</h3>
+                <code>GET /products?category=electronics&price_max=5000</code>
+            </div>
+
+            <div class="card">
+                <h3>Sorting (การเรียงลำดับ)</h3>
+                <code>GET /products?sort=price_asc</code> <br>
+                <code>GET /users?sort=-created_at</code> (เรียงจากใหม่ไปเก่า)
+            </div>
+
+            <div class="card">
+                <h3>Pagination (แบ่งหน้า)</h3>
+                <code>GET /products?page=2&limit=20</code>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: var(--warning);">7.2 Data Modelling & ER Diagram</h1>
+                <p>Blueprint ของข้อมูลก่อนลงมือสร้างจริง</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📊 ER Diagram (Entity-Relationship)</h2>
+            <p>เครื่องมือวาดภาพโครงสร้างฐานข้อมูล ประกอบด้วย 3 ส่วนหลัก:</p>
+            
+            <div style="display: flex; justify-content: space-around; margin-top: 3rem;">
+                <div style="text-align: center;">
+                    <div style="border: 2px solid var(--accent-color); padding: 1rem 2rem; display: inline-block;">Student</div>
+                    <p><strong>Entity (ตาราง)</strong><br>วัตถุที่เราสนใจ</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="border: 2px solid var(--accent-color); border-radius: 50%; padding: 1rem 2rem; display: inline-block;">GPA</div>
+                    <p><strong>Attribute (คอลัมน์)</strong><br>คุณสมบัติของ Entity</p>
+                </div>
+
+                <div style="text-align: center;">
+                    <div style="border: 2px solid var(--accent-color); transform: rotate(45deg); width: 60px; height: 60px; display: inline-flex; align-items: center; justify-content: center; margin: 10px;">
+                        <span style="transform: rotate(-45deg);">Has</span>
+                    </div>
+                    <p style="margin-top: 10px;"><strong>Relationship</strong><br>ความสัมพันธ์</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🔗 Cardinality: ความสัมพันธ์เชิงปริมาณ</h2>
+            <p>Entity สองตัวมีความสัมพันธ์กันอย่างไร?</p>
+
+            <ul style="font-size: 1.2rem;">
+                <li>
+                    <strong>1:1 (One-to-One):</strong> 
+                    User 1 คน มี Profile ได้ 1 อัน 
+                    <br><span class="text-small">User --- Profile</span>
+                </li>
+                <hr>
+                <li>
+                    <strong>1:N (One-to-Many):</strong> ⭐ <em>(เจอบ่อยที่สุด)</em>
+                    Customer 1 คน มี Orders ได้หลายใบ
+                    <br><span class="text-small">Customer ---< Orders</span>
+                </li>
+                <hr>
+                <li>
+                    <strong>N:M (Many-to-Many):</strong> 
+                    Student หลายคน เรียน Course ได้หลายวิชา
+                    <br><span class="text-small">Student >---< Course</span>
+                    <br><span class="highlight">⚠️ ต้องสร้างตารางกลาง (Junction Table) เสมอ!</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h2>🛒 ตัวอย่าง ER Diagram: E-Commerce</h2>
+            <div style="display: flex; justify-content: center; align-items: center; height: 60%; gap: 10px; margin-top: 2rem;">
+                
+                <div class="entity">
+                    <div class="entity-header">Customer</div>
+                    <div class="entity-body">id (PK)<br>name<br>email</div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div style="font-size: 0.8rem;">1</div>
+                    <div class="relationship-line" style="width: 50px;"></div>
+                    <div class="diamond">Place</div>
+                    <div class="relationship-line" style="width: 50px;"></div>
+                    <div style="font-size: 0.8rem;">N</div>
+                </div>
+
+                <div class="entity">
+                    <div class="entity-header">Order</div>
+                    <div class="entity-body">id (PK)<br>customer_id (FK)<br>total<br>date</div>
+                </div>
+
+                 <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div style="font-size: 0.8rem;">1</div>
+                    <div class="relationship-line" style="width: 50px;"></div>
+                    <div class="diamond">Has</div>
+                    <div class="relationship-line" style="width: 50px;"></div>
+                    <div style="font-size: 0.8rem;">N</div>
+                </div>
+
+                <div class="entity">
+                    <div class="entity-header">OrderItem</div>
+                    <div class="entity-body">id (PK)<br>order_id (FK)<br>product_id (FK)<br>qty</div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 1rem;">สังเกต <strong>FK (Foreign Key)</strong> จะอยู่ที่ฝั่ง <strong>N (Many)</strong> เสมอ</p>
+        </div>
+
+        <div class="slide">
+            <h2>📝 จากภาพสู่ Code (SQL)</h2>
+            <div class="two-col">
+                <div>
+                    <h3>Rule of Thumb</h3>
+                    <ol>
+                        <li>1 Entity = 1 Table</li>
+                        <li>Attribute = Column</li>
+                        <li>ขีดเส้นใต้ = Primary Key (PK)</li>
+                        <li>ความสัมพันธ์ 1:N = เอา PK ฝั่ง 1 ไปเป็น Foreign Key ฝั่ง N</li>
+                    </ol>
+                </div>
+                <div>
+                    <pre><code class="language-sql">
+CREATE TABLE orders (
+  id INTEGER PRIMARY KEY,
+  order_date TEXT,
+  total REAL,
+  customer_id INTEGER, -- FK มาแล้ว!
+  FOREIGN KEY(customer_id) 
+    REFERENCES customers(id)
+);
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: var(--success);">7.3 SQLite Integration</h1>
+                <p>Database ที่เหมาะที่สุดสำหรับการเริ่มต้นและ Mobile App</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>💾 SQLite คืออะไร?</h2>
+            <blockquote>
+                "Small, Fast, Self-contained, High-reliability, Full-featured, SQL database engine"
+            </blockquote>
+            <div class="two-col" style="margin-top: 2rem;">
+                <div class="card">
+                    <h3>🚀 ข้อดี</h3>
+                    <ul>
+                        <li><strong>Serverless:</strong> ไม่ต้องรัน service แยก (ไม่ต้องลง MySQL/Postgres)</li>
+                        <li><strong>Zero Configuration:</strong> แค่มีไฟล์ <code>.db</code> ก็ใช้ได้เลย</li>
+                        <li><strong>Cross-platform:</strong> ใช้ได้ทุก OS</li>
+                        <li><strong>Standard SQL:</strong> ใช้ภาษา SQL มาตรฐาน</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-color: var(--warning);">
+                    <h3>⚠️ ข้อควรระวัง</h3>
+                    <ul>
+                        <li>ไม่เหมาะกับ High Concurrency (เขียนพร้อมกันหลายพันคน)</li>
+                        <li>ใช้กับ Production ขนาดใหญ่มากไม่ได้ (แต่เหมาะกับ Term Project!)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🛠️ การติดตั้งและเชื่อมต่อ (Setup)</h2>
+            <p>1. Install Package</p>
+            <pre>npm install sqlite3</pre>
+            
+            <p>2. Create Connection (database.js)</p>
+            <pre>
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('./my-database.db', (err) => {
+    if (err) console.error(err.message);
+    else console.log('✅ Connected to SQLite database.');
+});
+
+module.exports = db;
+            </pre>
+        </div>
+
+        <div class="slide">
+            <h2>CRUD: Create (สร้างข้อมูล)</h2>
+            <p>ใช้คำสั่ง <code>INSERT INTO</code></p>
+            <pre>
+const sql = `INSERT INTO users (name, email) VALUES (?, ?)`;
+const params = ['Somchai', 'somchai@email.com'];
+
+db.run(sql, params, function(err) {
+    if (err) return console.error(err.message);
+    
+    // this.lastID คือ ID ของแถวที่เพิ่งสร้าง
+    console.log(`User added with ID: ${this.lastID}`);
+});
+            </pre>
+            <div class="card bg-red" style="color: white; margin-top: 1rem;">
+                <strong>⚠️ WARNING: SQL Injection</strong><br>
+                ห้ามใช้ String Concatenation เช่น <code>"VALUES (" + name + ")"</code><br>
+                ต้องใช้ <strong>Placeholder (?)</strong> เสมอ!
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>CRUD: Read (อ่านข้อมูล)</h2>
+            <p>ใน <code>sqlite3</code> driver มี 2 เมธอดหลัก:</p>
+            
+            <div class="two-col">
+                <div class="card">
+                    <h3>db.all() - ดึงทั้งหมด</h3>
+                    <pre>
+db.all("SELECT * FROM users", [], (err, rows) => {
+    // rows เป็น Array []
+    rows.forEach(row => {
+        console.log(row.name);
+    });
+});
+                    </pre>
+                </div>
+                <div class="card">
+                    <h3>db.get() - ดึงแถวเดียว</h3>
+                    <pre>
+db.get("SELECT * FROM users WHERE id = ?", [1], (err, row) => {
+    // row เป็น Object {}
+    console.log(row.name);
+});
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>CRUD: Update & Delete</h2>
+            
+            <h3>Update (แก้ไข)</h3>
+            <pre>
+const sql = "UPDATE users SET name = ? WHERE id = ?";
+db.run(sql, ["Somsri", 1], function(err) {
+    console.log(`Updated ${this.changes} rows`);
+});
+            </pre>
+
+            <h3>Delete (ลบ)</h3>
+            <pre>
+const sql = "DELETE FROM users WHERE id = ?";
+db.run(sql, [1], function(err) {
+    console.log(`Deleted ${this.changes} rows`);
+});
+            </pre>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: purple;">7.4 Layered Architecture</h1>
+                <p>จัดระเบียบโค้ดให้รองรับการขยายตัว (Scalability)</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🍝 Spaghetti Code vs Layered Code</h2>
+            <p>ปัญหาของการเขียนทุกอย่างใน <code>server.js</code> คือแก้ไขยาก ทดสอบยาก</p>
+            
+            <div class="diagram-container" style="height: 400px; flex-direction: column; background: none;">
+                <div class="layer-stack">
+                    <div class="layer" style="background: #e0f2fe; border-color: #0ea5e9;">
+                        1. Router (รับแขก)
+                        <div class="text-small">รับ HTTP Request / ส่ง Response</div>
+                    </div>
+                    <div style="font-size: 2rem;">⬇️</div>
+                    <div class="layer" style="background: #f0fdf4; border-color: #22c55e;">
+                        2. Controller (ผู้จัดการ)
+                        <div class="text-small">ตรวจสอบข้อมูล / ตัดสินใจ</div>
+                    </div>
+                    <div style="font-size: 2rem;">⬇️</div>
+                    <div class="layer" style="background: #fef3c7; border-color: #f59e0b;">
+                        3. Service (พนักงานปฏิบัติการ)
+                        <div class="text-small">Business Logic / คำนวณ</div>
+                    </div>
+                    <div style="font-size: 2rem;">⬇️</div>
+                    <div class="layer" style="background: #f1f5f9; border-color: #64748b;">
+                        4. Database (คลังสินค้า)
+                        <div class="text-small">SQL Query / Data Access</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📂 Project Structure (Folder)</h2>
+            <pre>
+project-root/
+├── database/
+│   ├── connection.js    # เชื่อมต่อ DB
+│   └── users.db.js      # SQL Queries (Layer 4)
+├── services/
+│   └── user.service.js  # Business Logic (Layer 3)
+├── controllers/
+│   └── user.controller.js # Req/Res Handling (Layer 2)
+├── routes/
+│   └── users.route.js   # URL Mapping (Layer 1)
+├── server.js            # Entry Point
+└── package.json
+            </pre>
+            <p>การแยกไฟล์แบบนี้เรียกว่า <strong>Separation of Concerns</strong></p>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1>💻 Workshop Time</h1>
+                <p>สร้าง Backend API + SQLite สำหรับ Term Project</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📝 ขั้นตอนการทำ Workshop (3 ชั่วโมง)</h2>
+            <ol>
+                <li>
+                    <strong>Design Database:</strong> วาด ER Diagram ของโปรเจคกลุ่มตัวเอง
+                    <ul><li>Identitiy Entities (Users, Products, etc.)</li><li>Define Relationships (1:N, N:M)</li></ul>
+                </li>
+                <li>
+                    <strong>Init Project:</strong> ติดตั้ง <code>sqlite3</code> และสร้าง Connection
+                </li>
+                <li>
+                    <strong>Create Tables:</strong> เขียน Script สร้างตาราง (Schema)
+                </li>
+                <li>
+                    <strong>Develop API:</strong> สร้าง CRUD Endpoints โดยใช้ Layered Architecture
+                </li>
+                <li>
+                    <strong>Test:</strong> ทดสอบด้วย Postman
+                </li>
+            </ol>
+        </div>
+
+        <div class="slide">
+            <h2>🏠 การบ้าน (ส่งก่อนสอบ Midterm)</h2>
+            <div class="card">
+                <h3>ภารกิจพิชิต 10 คะแนน</h3>
+                <ul>
+                    <li>✅ <strong>Advanced Queries (3 คะแนน):</strong> ต้องมี JOIN, GROUP BY หรือการค้นหาที่ซับซ้อน</li>
+                    <li>✅ <strong>Transactions (3 คะแนน):</strong> ใช้ <code>BEGIN TRANSACTION</code> สำหรับการทำงานที่เกี่ยวข้องกันหลายตาราง (เช่น สร้าง Order + ตัด Stock)</li>
+                    <li>✅ <strong>Authentication (4 คะแนน):</strong> ทำระบบ Register/Login และ Hash Password ด้วย <code>bcrypt</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📝 เตรียมตัวสอบ Midterm (สัปดาห์หน้า)</h2>
+            <div class="two-col">
+                <div>
+                    <h3>ข้อสอบทฤษฎี (2 ชม.)</h3>
+                    <ul>
+                        <li>SDLC (Waterfall vs Agile)</li>
+                        <li>Requirement Engineering</li>
+                        <li>REST Principles</li>
+                        <li>ER Diagram Design</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>ข้อสอบปฏิบัติ (3 ชม.)</h3>
+                    <ul>
+                        <li>วาด ER Diagram จากโจทย์</li>
+                        <li>ออกแบบ API Endpoints</li>
+                        <li>เขียน HTML/CSS/JS พื้นฐาน</li>
+                        <li>เขียน SQL Query</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div style="text-align: center; margin-top: 10vh;">
+                <h1 style="font-size: 5rem;">🚀</h1>
+                <h2>"Good Software Design is easy to change."</h2>
+                <p>การที่เราเหนื่อยออกแบบโครงสร้าง Database และแบ่ง Layer ในวันนี้<br>จะทำให้เราสบายในวันที่ Requirement เปลี่ยนในอนาคต</p>
+                <div style="margin-top: 3rem;">
+                    <button class="btn-ui bg-blue" style="font-size: 1.5rem; padding: 1rem 3rem;" onclick="location.reload()">Start Over</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Logic ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const statusBar = document.getElementById('statusBar');
+        const totalSlides = slides.length;
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+            
+            // Update Progress
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Update Status
+            statusBar.innerText = `ENGCE301 | Week 7 | Slide ${currentSlide + 1}/${totalSlides}`;
+
+            // Handle Buttons visibility
+            document.querySelector('.prev-btn').style.display = currentSlide === 0 ? 'none' : 'flex';
+            document.querySelector('.next-btn').style.display = currentSlide === totalSlides - 1 ? 'none' : 'flex';
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        // --- Keyboard Navigation ---
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // --- Theme Toggle ---
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        }
+
+        // --- Font Size Adjustment ---
+        let baseFontSize = 16; // px (based on CSS root, strictly roughly)
+        // Actually CSS sets fonts in rem/em, changing html font-size scales everything
+        function adjustFontSize(change) {
+            const html = document.documentElement;
+            const currentSize = parseFloat(window.getComputedStyle(html).fontSize);
+            html.style.fontSize = (currentSize + change) + 'px';
+        }
+
+        // --- Full Screen ---
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Initialize
+        updateSlide();
+    </script>
+</body>
+</html>

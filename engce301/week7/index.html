@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGCE301 Week 7: Backend & API Design (Complete)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Sarabun:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Light Theme Variables */
+            --bg-color: #f8fafc;
+            --slide-bg: #ffffff;
+            --text-color: #1e293b;
+            --accent-color: #3b82f6; /* Blue-500 */
+            --secondary-color: #64748b;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --font-main: 'Sarabun', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Variables */
+            --bg-color: #0f172a;
+            --slide-bg: #1e293b;
+            --text-color: #f1f5f9;
+            --accent-color: #38bdf8;
+            --secondary-color: #94a3b8;
+            --code-bg: #020617;
+            --code-text: #f8fafc;
+            --border-color: #334155;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        * { box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            background: var(--slide-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-main);
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn:hover { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Slide Container */
+        #slide-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            max-width: 1400px;
+            height: 90vh;
+            background-color: var(--slide-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 40px 60px;
+            flex-direction: column;
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Typography */
+        h1 { font-size: 3rem; color: var(--accent-color); margin: 0 0 1rem 0; line-height: 1.1; }
+        h2 { font-size: 2.2rem; border-bottom: 3px solid var(--accent-color); padding-bottom: 10px; margin-bottom: 20px; color: var(--text-color); }
+        h3 { font-size: 1.6rem; margin: 15px 0 10px 0; color: var(--accent-color); }
+        p, li { font-size: 1.3rem; line-height: 1.6; margin-bottom: 10px; }
+        strong { color: var(--accent-color); }
+
+        /* Components */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; height: 100%; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        
+        .card {
+            background: rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        [data-theme="dark"] .card { background: rgba(255,255,255,0.05); }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: white;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        .bg-blue { background: var(--accent-color); }
+        .bg-green { background: var(--success); }
+        .bg-red { background: var(--danger); }
+        .bg-yellow { background: var(--warning); color: #000; }
+        .bg-purple { background: var(--purple); }
+
+        /* Code Blocks */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: var(--font-code);
+            font-size: 1rem;
+            border: 1px solid var(--border-color);
+            margin: 10px 0;
+            max-height: 500px; /* Allow scrolling for long code */
+        }
+        code { font-family: var(--font-code); background: rgba(59, 130, 246, 0.1); color: var(--accent-color); padding: 2px 6px; border-radius: 4px; }
+        pre code { background: none; color: inherit; padding: 0; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid var(--border-color); padding: 15px; text-align: left; font-size: 1.1rem; }
+        th { background: rgba(59, 130, 246, 0.1); color: var(--accent-color); }
+
+        /* Simulator */
+        .simulator { border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; margin-top: 20px; }
+        .sim-bar { background: #e2e8f0; padding: 10px; display: flex; gap: 10px; }
+        .sim-content { padding: 20px; background: var(--code-bg); color: var(--success); font-family: var(--font-code); min-height: 150px; }
+
+        /* Nav Buttons */
+        .nav-btn {
+            position: fixed;
+            bottom: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover { opacity: 1; transform: scale(1.1); }
+        .prev-btn { left: 30px; }
+        .next-btn { right: 30px; }
+        .status-text { position: fixed; bottom: 10px; right: 20px; font-size: 0.9rem; color: var(--secondary-color); opacity: 0.6; }
+
+    </style>
+</head>
+<body>
+
+    <div class="toolbar">
+        <button class="btn" onclick="toggleTheme()">🌗 Theme</button>
+        <button class="btn" onclick="adjustFont(-2)">A-</button>
+        <button class="btn" onclick="adjustFont(2)">A+</button>
+        <button class="btn" onclick="toggleFullScreen()">⛶ Full</button>
+    </div>
+
+    <div id="slide-container">
+        
+        <div class="slide active">
+            <div style="text-align: center; margin-top: 5vh;">
+                <h3 style="color: var(--secondary-color); letter-spacing: 2px; text-transform: uppercase;">ENGCE301: Software Design and Development</h3>
+                <h1 style="font-size: 4.5rem; margin: 30px 0;">Backend & API Design<br>+ SQLite Integration</h1>
+                <div style="font-size: 2rem; color: var(--accent-color); font-weight: bold; margin-bottom: 40px;">Week 7</div>
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <span class="badge bg-blue" style="font-size: 1.2rem; padding: 10px 20px;">RESTful API</span>
+                    <span class="badge bg-green" style="font-size: 1.2rem; padding: 10px 20px;">SQLite</span>
+                    <span class="badge bg-purple" style="font-size: 1.2rem; padding: 10px 20px;">ER Diagram</span>
+                    <span class="badge bg-yellow" style="font-size: 1.2rem; padding: 10px 20px;">Layered Architecture</span>
+                </div>
+                <p style="margin-top: 50px; color: var(--secondary-color);">คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเทคโนโลยีราชมงคลล้านนา</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🗺️ Course Journey</h2>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 50px; text-align: center;">
+                <div class="card" style="opacity: 0.5;">Week 1-5<br>Frontend & UX/UI</div>
+                <div style="font-size: 2rem;">➜</div>
+                <div class="card" style="opacity: 0.5;">Week 6<br>Node.js & JSON File</div>
+                <div style="font-size: 2rem;">➜</div>
+                <div class="card" style="border: 3px solid var(--accent-color); transform: scale(1.1); background: rgba(59, 130, 246, 0.1);">
+                    <strong>Week 7</strong><br>DB & API Design<br>(SQLite)
+                </div>
+                <div style="font-size: 2rem;">➜</div>
+                <div class="card" style="border-style: dashed;">Week 8<br>Midterm Exam</div>
+                <div style="font-size: 2rem;">➜</div>
+                <div class="card" style="opacity: 0.5;">Week 9+<br>React Full-stack</div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🎯 วัตถุประสงค์การเรียนรู้ (Objectives)</h2>
+            <div class="two-col">
+                <div>
+                    <h3>📚 ทฤษฎี (Knowledge)</h3>
+                    <ul>
+                        <li><strong>7.1</strong> อธิบายหลักการ RESTful API (REST Principles)</li>
+                        <li><strong>7.2</strong> เข้าใจ Data Modelling และ ER Diagram</li>
+                        <li><strong>7.3</strong> เปรียบเทียบ JSON File vs SQLite ได้</li>
+                        <li><strong>7.4</strong> เข้าใจ Layered Architecture (Controller/Service/DB)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>🔨 ปฏิบัติ (Skills)</h3>
+                    <ul>
+                        <li>ออกแบบ API Endpoints ที่ถูกต้อง</li>
+                        <li>แปลง ER Diagram เป็น Database Table</li>
+                        <li>เชื่อมต่อ Express กับ SQLite (CRUD)</li>
+                        <li>Refactor โค้ดเป็น Layered Structure</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="margin-top: 20px; text-align: right; color: var(--secondary-color);">CLO: 2, 3, 4, 5</p>
+        </div>
+
+        <div class="slide">
+            <h2>⏪ ทบทวน Week 6: JSON File Storage</h2>
+            <p>ในสัปดาห์ที่แล้วเราใช้ไฟล์ <code>data.json</code> ในการเก็บข้อมูล</p>
+            <div class="two-col">
+                <div class="card">
+                    <h3>Week 6: File System</h3>
+                    <pre>{
+  "users": [
+    { "id": 1, "name": "A" },
+    { "id": 2, "name": "B" }
+  ]
+}</pre>
+                    <p>❌ ช้าเมื่อข้อมูลเยอะ<br>❌ Query ซับซ้อนไม่ได้<br>❌ ไม่มี Relationships</p>
+                </div>
+                <div class="card" style="border-color: var(--success);">
+                    <h3>Week 7: Database (SQLite)</h3>
+                    <div style="font-size: 3rem; text-align: center; margin: 10px;">💾</div>
+                    <p>✅ มี Schema ชัดเจน<br>✅ ใช้ SQL Query (JOIN, Filter)<br>✅ รองรับ Relationships</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: var(--accent-color);">7.1 RESTful API Design</h1>
+                <p style="font-size: 1.5rem;">หัวใจสำคัญของการสื่อสารระหว่าง Client และ Server</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🌐 7.1.1 REST คืออะไร?</h2>
+            <p><strong>RE</strong>presentational <strong>S</strong>tate <strong>T</strong>ransfer</p>
+            <p>เป็น <em>Architectural Style</em> สำหรับออกแบบ Web Services ไม่ใช่ Protocol</p>
+            <h3>🎯 6 Guiding Principles:</h3>
+            <div class="grid-3">
+                <div class="card"><strong>1. Client-Server</strong><br>แยกส่วนการทำงานชัดเจน</div>
+                <div class="card"><strong>2. Stateless</strong><br>ไม่จดจำ Session ที่ Server</div>
+                <div class="card"><strong>3. Cacheable</strong><br>Response ระบุว่า Cache ได้ไหม</div>
+                <div class="card"><strong>4. Uniform Interface</strong><br>รูปแบบสื่อสารเป็นมาตรฐาน</div>
+                <div class="card"><strong>5. Layered System</strong><br>ผ่าน Proxy/Gateway ได้</div>
+                <div class="card"><strong>6. Code on Demand</strong><br>(Optional) ส่ง JS ให้ Client</div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📦 7.1.2 Everything is a "Resource"</h2>
+            <p>ใน REST เรามองสิ่งต่างๆ เป็น <strong>Resource (คำนาม)</strong> ไม่ใช่ Action (คำกริยา)</p>
+            <table>
+                <tr>
+                    <th>❌ Bad Design (Verb)</th>
+                    <th>✅ Good Design (Noun)</th>
+                    <th>Reason</th>
+                </tr>
+                <tr>
+                    <td>/getUsers</td>
+                    <td><code>GET /users</code></td>
+                    <td>ใช้ HTTP Method บอกการกระทำ</td>
+                </tr>
+                <tr>
+                    <td>/createProduct</td>
+                    <td><code>POST /products</code></td>
+                    <td>ใช้ Plural Noun (พหูพจน์)</td>
+                </tr>
+                <tr>
+                    <td>/update_user_profile</td>
+                    <td><code>PUT /users/123</code></td>
+                    <td>ระบุ ID ใน URL Path</td>
+                </tr>
+                <tr>
+                    <td>/Users, /user_info</td>
+                    <td><code>/users</code>, <code>/user-info</code></td>
+                    <td>ใช้ตัวพิมพ์เล็ก และ kebab-case</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="slide">
+            <h2>🛠️ 7.1.3 HTTP Methods (Verbs)</h2>
+            <p>เมื่อ Resource คือนาม, Method คือกริยา</p>
+            <table>
+                <tr>
+                    <th>Method</th>
+                    <th>Action</th>
+                    <th>Description</th>
+                    <th>Safe?</th>
+                </tr>
+                <tr>
+                    <td><span class="badge bg-blue">GET</span></td>
+                    <td>Read</td>
+                    <td>ดึงข้อมูล (ห้ามแก้ไข DB)</td>
+                    <td>✅ Yes</td>
+                </tr>
+                <tr>
+                    <td><span class="badge bg-green">POST</span></td>
+                    <td>Create</td>
+                    <td>สร้างข้อมูลใหม่</td>
+                    <td>❌ No</td>
+                </tr>
+                <tr>
+                    <td><span class="badge bg-yellow">PUT</span></td>
+                    <td>Update</td>
+                    <td>แทนที่ข้อมูลทั้งหมด (All fields)</td>
+                    <td>❌ No</td>
+                </tr>
+                <tr>
+                    <td><span class="badge bg-purple">PATCH</span></td>
+                    <td>Update</td>
+                    <td>แก้ไขบางส่วน (Partial)</td>
+                    <td>❌ No</td>
+                </tr>
+                <tr>
+                    <td><span class="badge bg-red">DELETE</span></td>
+                    <td>Delete</td>
+                    <td>ลบข้อมูล</td>
+                    <td>❌ No</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="slide">
+            <h2>🚦 7.1.4 HTTP Status Codes</h2>
+            <div class="two-col">
+                <div>
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><strong class="text-green">2xx Success:</strong> สำเร็จ</li>
+                        <li><strong class="text-blue">3xx Redirection:</strong> ย้ายที่อยู่</li>
+                        <li><strong class="text-yellow">4xx Client Error:</strong> เราผิด (ส่งข้อมูลไม่ครบ/ไม่มีสิทธิ์)</li>
+                        <li><strong class="text-red">5xx Server Error:</strong> Server พัง/Code Bug</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Common Codes</h3>
+                    <ul>
+                        <li><code>200 OK</code>: ปกติ</li>
+                        <li><code>201 Created</code>: สร้างเสร็จ (POST)</li>
+                        <li><code>204 No Content</code>: ลบเสร็จ (DELETE)</li>
+                        <li><code>400 Bad Request</code>: Input ผิดพลาด</li>
+                        <li><code>401 Unauthorized</code>: ยังไม่ Login</li>
+                        <li><code>403 Forbidden</code>: ไม่มีสิทธิ์เข้าถึง</li>
+                        <li><code>404 Not Found</code>: หาไม่เจอ</li>
+                        <li><code>500 Internal Error</code>: DB Error etc.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🕹️ API Simulator</h2>
+            <p>ลองส่ง Request ดู Response จริง</p>
+            <div class="simulator">
+                <div class="sim-bar">
+                    <select id="sim-method" class="btn" style="padding:5px;">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                    <input type="text" id="sim-url" value="/api/users/101" style="flex:1; padding:5px; border-radius:4px; border:1px solid #ccc;">
+                    <button class="btn bg-blue" onclick="simulateApi()">Send</button>
+                </div>
+                <pre id="sim-res" class="sim-content">Response will appear here...</pre>
+            </div>
+            <script>
+                function simulateApi() {
+                    const m = document.getElementById('sim-method').value;
+                    const u = document.getElementById('sim-url').value;
+                    const res = document.getElementById('sim-res');
+                    res.innerHTML = "Loading...";
+                    setTimeout(() => {
+                        let status = 200;
+                        let body = {};
+                        if(m === 'GET') {
+                            body = { id: 101, name: "Student A", email: "student@example.com" };
+                        } else if (m === 'POST') {
+                            status = 201;
+                            body = { id: 102, message: "User created successfully" };
+                        } else {
+                            status = 204;
+                            body = ""; // No content
+                        }
+                        res.innerHTML = `HTTP/1.1 ${status} ${status===200?'OK':status===201?'Created':'No Content'}
+Content-Type: application/json
+Date: ${new Date().toUTCString()}
+
+${JSON.stringify(body, null, 2)}`;
+                    }, 500);
+                }
+            </script>
+        </div>
+
+        <div class="slide">
+            <h2>🔍 7.1.5 Query Parameters</h2>
+            <p>ใช้สำหรับ <strong>Filtering, Sorting, Pagination, Search</strong> โดยไม่เปลี่ยน URL Path</p>
+            
+            <div class="card">
+                <h3>Filtering (กรองข้อมูล)</h3>
+                <code>GET /products?category=electronics&price_min=1000</code>
+            </div>
+            <div class="card">
+                <h3>Sorting (เรียงลำดับ)</h3>
+                <code>GET /users?sort=created_at&order=desc</code><br>
+                <code>GET /products?sort=-price</code> (แบบย่อ)
+            </div>
+            <div class="card">
+                <h3>Pagination (แบ่งหน้า)</h3>
+                <code>GET /items?page=2&limit=20</code>
+            </div>
+            <div class="card">
+                <h3>Field Selection (เลือกฟิลด์)</h3>
+                <code>GET /users?fields=id,name,email</code>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📅 7.1.6 API Versioning</h2>
+            <p>เมื่อมีการเปลี่ยน API แบบ Breaking Change ต้องทำ Versioning</p>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <h3>1. URL Path (Popular ⭐)</h3>
+                    <p>ชัดเจนที่สุด ใช้ง่าย</p>
+                    <code>/api/v1/users</code><br>
+                    <code>/api/v2/users</code>
+                </div>
+                <div class="card">
+                    <h3>2. Header</h3>
+                    <p>URL สะอาด แต่เทสยาก</p>
+                    <code>Accept: application/vnd.myapp.v1+json</code>
+                </div>
+                <div class="card">
+                    <h3>3. Query Param</h3>
+                    <p>ยืดหยุ่น แต่บางทีลืมใส่</p>
+                    <code>/users?version=1</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: var(--warning);">7.2 Data Modelling & ER Diagram</h1>
+                <p style="font-size: 1.5rem;">ออกแบบโครงสร้างข้อมูลก่อนเริ่มเขียนโค้ด</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📊 7.2.1 ER Diagram Components</h2>
+            <p>Entity-Relationship Diagram ประกอบด้วย 3 ส่วนหลัก:</p>
+            <div class="grid-3" style="text-align: center;">
+                <div class="card">
+                    <div style="font-size:3rem;">▭</div>
+                    <h3>Entity (ตาราง)</h3>
+                    <p>วัตถุที่เราสนใจ เช่น User, Product, Order</p>
+                </div>
+                <div class="card">
+                    <div style="font-size:3rem;">⬭</div>
+                    <h3>Attribute (คอลัมน์)</h3>
+                    <p>คุณสมบัติ เช่น id, name, price</p>
+                </div>
+                <div class="card">
+                    <div style="font-size:3rem;">◇</div>
+                    <h3>Relationship (ความสัมพันธ์)</h3>
+                    <p>การเกี่ยวข้องกัน เช่น User "ซื้อ" Product</p>
+                </div>
+            </div>
+            <p><strong>Primary Key (PK):</strong> ขีดเส้นใต้ Attribute ที่เป็นเอกลักษณ์ (ห้ามซ้ำ)</p>
+        </div>
+
+        <div class="slide">
+            <h2>🔗 7.2.2 Relationship Cardinality</h2>
+            <p>ความสัมพันธ์เชิงปริมาณ</p>
+            <ul>
+                <li>
+                    <strong>1:1 (One-to-One):</strong> User 1 คน มี Profile 1 อัน
+                    <br><code class="text-secondary">User --- Profile</code>
+                </li>
+                <br>
+                <li>
+                    <strong>1:N (One-to-Many) ⭐:</strong> Customer 1 คน มี Orders หลายใบ
+                    <br><code class="text-secondary">Customer ---< Orders</code>
+                </li>
+                <br>
+                <li>
+                    <strong>N:M (Many-to-Many):</strong> Student หลายคน เรียน Courses หลายวิชา
+                    <br><code class="text-secondary">Student >---< Course</code>
+                    <br><strong class="badge bg-red">Important</strong> ต้องสร้างตารางกลาง (Junction Table) เสมอ!
+                </li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h2>🛒 ตัวอย่าง ER Diagram: E-Commerce</h2>
+            <div style="display: flex; justify-content: center; gap: 30px; align-items: flex-start;">
+                
+                <div class="card" style="width: 200px;">
+                    <strong>CUSTOMER</strong><br>
+                    <hr>
+                    <u>id (PK)</u><br>
+                    name<br>
+                    email
+                </div>
+
+                <div style="margin-top: 50px;">1 ── has ──< N</div>
+
+                <div class="card" style="width: 200px;">
+                    <strong>ORDER</strong><br>
+                    <hr>
+                    <u>id (PK)</u><br>
+                    customer_id (FK)<br>
+                    total<br>
+                    date
+                </div>
+
+                <div style="margin-top: 50px;">1 ── contains ──< N</div>
+
+                <div class="card" style="width: 200px;">
+                    <strong>ORDER_ITEM</strong><br>
+                    <hr>
+                    <u>id (PK)</u><br>
+                    order_id (FK)<br>
+                    product_id (FK)<br>
+                    qty
+                </div>
+
+                <div style="margin-top: 50px;">N ── in ── 1</div>
+
+                <div class="card" style="width: 200px;">
+                    <strong>PRODUCT</strong><br>
+                    <hr>
+                    <u>id (PK)</u><br>
+                    name<br>
+                    price
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📝 7.2.3 From ER to Database Tables</h2>
+            <div class="two-col">
+                <div>
+                    <h3>กฎการแปลง (Rules)</h3>
+                    <ol>
+                        <li>1 Entity = 1 Table</li>
+                        <li>Attribute = Column</li>
+                        <li>ขีดเส้นใต้ = Primary Key (PK)</li>
+                        <li><strong>1:N Relationship:</strong> นำ PK ของฝั่ง 1 ไปเป็น Foreign Key (FK) ในฝั่ง N</li>
+                        <li><strong>N:M Relationship:</strong> สร้างตารางใหม่ (Junction Table) เก็บ FK ของทั้งคู่</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>SQL Concept</h3>
+                    <pre>CREATE TABLE orders (
+  id INTEGER PRIMARY KEY,
+  customer_id INTEGER, -- FK
+  total REAL,
+  FOREIGN KEY (customer_id) 
+    REFERENCES customers(id)
+);</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>💾 SQL Example: E-Commerce</h2>
+            <pre><code class="language-sql">-- 1. Customers Table (ฝั่ง 1)
+CREATE TABLE customers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL
+);
+
+-- 2. Orders Table (ฝั่ง N) มี FK
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER NOT NULL,
+    total_amount REAL DEFAULT 0,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+-- 3. Order Items (Junction Table สำหรับ N:M ระหว่าง Order-Product)
+CREATE TABLE order_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER,
+    product_id INTEGER,
+    quantity INTEGER,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);</code></pre>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: var(--success);">7.3 SQLite Integration</h1>
+                <p style="font-size: 1.5rem;">Database ที่เหมาะกับการเรียนรู้และ Prototyping</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🗄️ 7.3.1 SQLite คืออะไร?</h2>
+            <blockquote>
+                "Small, Fast, Self-contained, High-reliability, Full-featured, SQL database engine"
+            </blockquote>
+            <ul>
+                <li><strong>Serverless:</strong> ไม่ต้องติดตั้ง MySQL/PostgreSQL server แยก</li>
+                <li><strong>Single File:</strong> ฐานข้อมูลทั้งหมดคือไฟล์เดียว (<code>.db</code>)</li>
+                <li><strong>Zero Configuration:</strong> ติดตั้ง library แล้วใช้ได้เลย</li>
+                <li><strong>Cross-platform:</strong> ใช้ได้ทั้ง Web, Mobile (Android/iOS), Desktop</li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h2>🆚 7.3.2 JSON File vs SQLite</h2>
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>JSON File</th>
+                    <th>SQLite Database</th>
+                </tr>
+                <tr>
+                    <td><strong>Structure</strong></td>
+                    <td>❌ ไม่มี Schema (Free form)</td>
+                    <td>✅ มี Schema ชัดเจน (Types)</td>
+                </tr>
+                <tr>
+                    <td><strong>Performance</strong></td>
+                    <td>❌ ช้า (ต้องอ่านทั้งไฟล์)</td>
+                    <td>✅ เร็ว (มี Indexing)</td>
+                </tr>
+                <tr>
+                    <td><strong>Querying</strong></td>
+                    <td>❌ ยาก (ต้อง Loop ใน Code)</td>
+                    <td>✅ ง่าย (SQL: JOIN, WHERE)</td>
+                </tr>
+                <tr>
+                    <td><strong>Relationship</strong></td>
+                    <td>❌ จัดการเอง (Manual)</td>
+                    <td>✅ Foreign Keys</td>
+                </tr>
+                <tr>
+                    <td><strong>Data Integrity</strong></td>
+                    <td>❌ ข้อมูลผิดพลาดง่าย</td>
+                    <td>✅ ACID Compliant</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="slide">
+            <h2>⚙️ 7.3.3 Setup & Connection</h2>
+            <p>1. Install Package: <code>npm install sqlite3</code></p>
+            <p>2. Create <code>database.js</code>:</p>
+            <pre><code class="language-javascript">const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+
+// สร้าง Connection ไปยังไฟล์ .db
+const dbPath = path.resolve(__dirname, 'database.db');
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) console.error('❌ Error:', err.message);
+    else console.log('✅ Connected to SQLite database');
+});
+
+// เปิดใช้งาน Foreign Key Constraints
+db.run('PRAGMA foreign_keys = ON');
+
+module.exports = db;</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>📥 7.3.4 CRUD: Create (INSERT)</h2>
+            <pre><code class="language-javascript">const db = require('./database');
+
+// ฟังก์ชันสร้าง User ใหม่
+function createUser(name, email, password) {
+  const sql = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
+  
+  // ใช้ ? (Placeholder) เพื่อป้องกัน SQL Injection!
+  db.run(sql, [name, email, password], function(err) {
+    if (err) {
+      console.error(err.message);
+    } else {
+      // this.lastID คือ ID ของแถวที่เพิ่งสร้าง
+      console.log(`User created with ID: ${this.lastID}`);
+    }
+  });
+}</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>📖 7.3.4 CRUD: Read (SELECT)</h2>
+            <div class="two-col">
+                <div>
+                    <h3>1. Get All (db.all)</h3>
+                    <pre><code class="language-javascript">const sql = "SELECT * FROM users";
+
+db.all(sql, [], (err, rows) => {
+  // rows คือ Array ของ Objects
+  rows.forEach(user => {
+    console.log(user.name);
+  });
+});</code></pre>
+                </div>
+                <div>
+                    <h3>2. Get One (db.get)</h3>
+                    <pre><code class="language-javascript">const sql = "SELECT * FROM users WHERE id = ?";
+
+db.get(sql, [1], (err, row) => {
+  if (row) {
+    console.log(row.name);
+  } else {
+    console.log("Not Found");
+  }
+});</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🔄 7.3.4 CRUD: Update & Delete</h2>
+            <div class="two-col">
+                <div>
+                    <h3>Update</h3>
+                    <pre><code class="language-javascript">const sql = `UPDATE users 
+             SET name = ? 
+             WHERE id = ?`;
+
+db.run(sql, ["New Name", 1], function(err) {
+  // this.changes คือจำนวนแถวที่ถูกแก้ไข
+  console.log(`Updated ${this.changes} row(s)`);
+});</code></pre>
+                </div>
+                <div>
+                    <h3>Delete</h3>
+                    <pre><code class="language-javascript">const sql = "DELETE FROM users WHERE id = ?";
+
+db.run(sql, [1], function(err) {
+  console.log(`Deleted ${this.changes} row(s)`);
+});</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🚀 7.3.5 Express + SQLite Integration</h2>
+            <p>ตัวอย่าง Route <code>routes/users.js</code></p>
+            <pre><code class="language-javascript">router.get('/', (req, res) => {
+  db.all('SELECT * FROM users', [], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
+  });
+});
+
+router.post('/', (req, res) => {
+  const { name, email } = req.body;
+  db.run('INSERT INTO users (name, email) VALUES (?, ?)', 
+    [name, email], 
+    function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      res.status(201).json({ id: this.lastID, name, email });
+    }
+  );
+});</code></pre>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: var(--purple);">7.4 Layered Architecture</h1>
+                <p style="font-size: 1.5rem;">จัดระเบียบโค้ดให้รองรับการขยายตัว (Scalability)</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🏗️ 7.4.1 ทำไมต้องแบ่ง Layer?</h2>
+            <div class="two-col">
+                <div class="card bg-red" style="color:white;">
+                    <h3>❌ Spaghetti Code</h3>
+                    <p>เขียนทุกอย่างในไฟล์เดียว (Logic, SQL, Validation รวมกัน)</p>
+                    <ul>
+                        <li>อ่านยาก</li>
+                        <li>แก้จุดหนึ่ง กระทบอีกจุด</li>
+                        <li>Test ยาก</li>
+                    </ul>
+                </div>
+                <div class="card bg-green" style="color:white;">
+                    <h3>✅ Layered Code</h3>
+                    <p>แบ่งหน้าที่ชัดเจน (Separation of Concerns)</p>
+                    <ul>
+                        <li><strong>Router:</strong> รับแขก</li>
+                        <li><strong>Controller:</strong> ตรวจสอบ/จัดการ</li>
+                        <li><strong>Service:</strong> Business Logic</li>
+                        <li><strong>Database:</strong> คุยกับ DB</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📚 7.4.2 โครงสร้าง 4 Layers</h2>
+            <div style="width: 50%; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;">
+                <div class="card" style="text-align:center; border-left: 5px solid var(--accent-color);">
+                    <strong>1. Router</strong><br>รับ HTTP Request / ส่ง Response
+                </div>
+                <div style="text-align:center;">⬇️</div>
+                <div class="card" style="text-align:center; border-left: 5px solid var(--purple);">
+                    <strong>2. Controller</strong><br>Validate Input / เรียก Service / Handle Error
+                </div>
+                <div style="text-align:center;">⬇️</div>
+                <div class="card" style="text-align:center; border-left: 5px solid var(--warning);">
+                    <strong>3. Service</strong><br>Business Logic / คำนวณ / เงื่อนไข
+                </div>
+                <div style="text-align:center;">⬇️</div>
+                <div class="card" style="text-align:center; border-left: 5px solid var(--secondary-color);">
+                    <strong>4. Database</strong><br>SQL Queries / CRUD
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📂 Project Structure</h2>
+            <pre>backend/
+├── database/
+│   ├── connection.js      # เชื่อมต่อ DB
+│   └── users.db.js        # Layer 4: SQL Queries
+├── services/
+│   └── user.service.js    # Layer 3: Logic
+├── controllers/
+│   └── user.controller.js # Layer 2: Req/Res
+├── routes/
+│   └── users.route.js     # Layer 1: Routes
+└── server.js              # Entry Point</pre>
+        </div>
+
+        <div class="slide">
+            <h2>🧱 Layer 4: Database (users.db.js)</h2>
+            <p>ทำหน้าที่ execute SQL อย่างเดียว ห้ามมี Business Logic</p>
+            <pre><code class="language-javascript">const db = require('./connection');
+
+class UserDatabase {
+  static findAll() {
+    return new Promise((resolve, reject) => {
+      db.all('SELECT * FROM users', [], (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+  }
+  
+  static create(name, email) {
+    // ... code insert ...
+  }
+}
+module.exports = UserDatabase;</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>🧠 Layer 3: Service (user.service.js)</h2>
+            <p>ทำหน้าที่ Business Logic เช่น ตรวจสอบเงื่อนไข, คำนวณ</p>
+            <pre><code class="language-javascript">const UserDatabase = require('../database/users.db');
+
+class UserService {
+  static async getAllUsers() {
+    // อาจจะมีการ filter หรือ transform ข้อมูลที่นี่
+    return await UserDatabase.findAll();
+  }
+
+  static async createUser(data) {
+    // Logic: ตรวจสอบว่าอีเมลซ้ำไหม? Password ยากพอไหม?
+    if (data.password.length < 6) {
+        throw new Error('Password too short');
+    }
+    return await UserDatabase.create(data.name, data.email);
+  }
+}
+module.exports = UserService;</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>👮 Layer 2: Controller (user.controller.js)</h2>
+            <p>รับ Req, Validate เบื้องต้น, เรียก Service, ส่ง Res</p>
+            <pre><code class="language-javascript">const UserService = require('../services/user.service');
+
+class UserController {
+  static async getUsers(req, res) {
+    try {
+      const users = await UserService.getAllUsers();
+      res.json(users);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  static async create(req, res) {
+    try {
+      if (!req.body.email) return res.status(400).send('Email required');
+      const newUser = await UserService.createUser(req.body);
+      res.status(201).json(newUser);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  }
+}
+module.exports = UserController;</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>🛣️ Layer 1: Router (users.route.js)</h2>
+            <p>กำหนด URL และผูกกับ Controller</p>
+            <pre><code class="language-javascript">const express = require('express');
+const router = express.Router();
+const UserController = require('../controllers/user.controller');
+
+router.get('/', UserController.getUsers);
+router.post('/', UserController.create);
+router.get('/:id', UserController.getById);
+
+module.exports = router;</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>🔄 Request Flow Summary</h2>
+            <p>เมื่อ Client ยิง <code>GET /users</code></p>
+            <ol style="font-size: 1.4rem;">
+                <li><strong>Router:</strong> เห็น URL <code>/users</code> ส่งต่อให้ <code>UserController.getUsers</code></li>
+                <li><strong>Controller:</strong> เรียก <code>UserService.getAllUsers()</code></li>
+                <li><strong>Service:</strong> (ไม่มี Logic พิเศษ) เรียก <code>UserDatabase.findAll()</code></li>
+                <li><strong>Database:</strong> รัน SQL <code>SELECT * FROM users</code> แล้วคืนค่ากลับขึ้นมาตามลำดับ</li>
+                <li><strong>Controller:</strong> ส่ง JSON response กลับหา Client</li>
+            </ol>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: var(--text-color);">💻 Workshop (3 ชั่วโมง)</h1>
+                <p>สร้าง Backend Database สำหรับ Term Project</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📝 Workshop Steps</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <h3>1. Design ERD</h3>
+                    <p>วาด ER Diagram ของกลุ่มตัวเอง (Users, Products, etc.)</p>
+                </div>
+                <div class="card">
+                    <h3>2. Init DB</h3>
+                    <p>สร้างไฟล์ <code>schema.sql</code> และ script <code>init-db.js</code> เพื่อสร้างตาราง</p>
+                </div>
+                <div class="card">
+                    <h3>3. Migrate Data</h3>
+                    <p>เปลี่ยนการอ่านไฟล์ JSON มาใช้ SQLite Queries</p>
+                </div>
+                <div class="card">
+                    <h3>4. Layering</h3>
+                    <p>จัดโครงสร้างโฟลเดอร์เป็น Router, Controller, Service, DB</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>💻 Workshop: init-db.js</h2>
+            <pre><code class="language-javascript">const db = require('./database');
+
+const createUsersTable = `
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+  )
+`;
+
+db.serialize(() => {
+  db.run(createUsersTable, (err) => {
+    if (err) console.error(err);
+    else console.log('✅ Users table created');
+  });
+});</code></pre>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: var(--danger);">🏠 Lab Assignment</h1>
+                <p>งานเดี่ยว (10 คะแนน) - ส่งก่อนสอบ Midterm</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>🧪 Task 1: Advanced Queries (3 คะแนน)</h2>
+            <p>ต้องเขียน SQL ที่มีความซับซ้อน (ไม่ใช่แค่ Select *)</p>
+            <ul>
+                <li><strong>JOIN:</strong> ดึงข้อมูลข้ามตาราง (เช่น User + Orders)</li>
+                <li><strong>Aggregate:</strong> ใช้ <code>COUNT, SUM, AVG</code></li>
+                <li><strong>Search:</strong> ค้นหาแบบหลายเงื่อนไข</li>
+            </ul>
+            <pre><code class="language-sql">-- ตัวอย่าง: นับจำนวนโพสต์ของแต่ละ User
+SELECT users.username, COUNT(posts.id) as post_count
+FROM users
+LEFT JOIN posts ON users.id = posts.user_id
+GROUP BY users.id
+ORDER BY post_count DESC;</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>🧪 Task 2: Transactions (3 คะแนน)</h2>
+            <p>ใช้ <strong>ACID Properties</strong> (Begin, Commit, Rollback)</p>
+            <pre><code class="language-javascript">db.serialize(() => {
+  db.run('BEGIN TRANSACTION');
+  
+  try {
+    // 1. สร้าง Order
+    db.run('INSERT INTO orders ...');
+    
+    // 2. ตัด Stock สินค้า (ถ้า Stock ไม่พอต้อง Error)
+    db.run('UPDATE products SET stock = stock - 1 ...');
+
+    db.run('COMMIT'); // บันทึกถาวรเมื่อสำเร็จทุกขั้นตอน
+  } catch (e) {
+    db.run('ROLLBACK'); // ย้อนกลับหมดถ้าพังกลางทาง
+  }
+});</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>🧪 Task 3: Authentication (4 คะแนน)</h2>
+            <p>ระบบความปลอดภัยพื้นฐาน</p>
+            <ul>
+                <li><strong>Register:</strong> Hash password ด้วย <code>bcrypt</code> ก่อนลง DB</li>
+                <li><strong>Login:</strong> ตรวจสอบ Password และออก <code>JWT Token</code></li>
+                <li><strong>Middleware:</strong> ตรวจสอบ Token ก่อนให้เข้าถึง Route</li>
+            </ul>
+            <pre><code class="language-javascript">const bcrypt = require('bcrypt');
+// Hash ก่อนบันทึก
+const hashedPassword = await bcrypt.hash(password, 10);
+// ตรวจสอบตอน Login
+const match = await bcrypt.compare(password, user.password);</code></pre>
+        </div>
+
+        <div class="slide">
+            <h2>📤 การส่งงาน</h2>
+            <ul>
+                <li><strong>1. GitHub:</strong> Push code ขึ้น Repository</li>
+                <li><strong>2. README.md:</strong> ต้องมีภาพ ER Diagram และวิธีรัน</li>
+                <li><strong>3. Video:</strong> อัดคลิปสาธิตการทำงาน (3-5 นาที)</li>
+                <li><strong>4. LMS:</strong> ส่งลิงก์ในระบบ</li>
+            </ul>
+            <div class="card bg-yellow">
+                <strong>Deadline:</strong> ก่อนวันสอบกลางภาค (Week 8)
+            </div>
+        </div>
+
+        <div class="slide">
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="color: var(--accent-color);">📝 Midterm Examination</h1>
+                <p>เตรียมตัวสอบกลางภาค</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>📚 เนื้อหาที่ออกสอบ (Week 1-7)</h2>
+            <div class="two-col">
+                <div class="card">
+                    <h3>ทฤษฎี (2 ชม.)</h3>
+                    <ul>
+                        <li>SDLC & Agile (Scrum)</li>
+                        <li>Requirements (Functional/Non-func)</li>
+                        <li>UML Diagrams (Use Case)</li>
+                        <li>REST API Principles</li>
+                        <li>Database Design (ERD)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>ปฏิบัติ (3 ชม.)</h3>
+                    <ul>
+                        <li>วาด Use Case / ER Diagram</li>
+                        <li>เขียน HTML/CSS Layout</li>
+                        <li>ออกแบบ API Endpoints</li>
+                        <li>เขียน SQL Query เบื้องต้น</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div style="text-align: center; margin-top: 10vh;">
+                <h1>🚀 Keep Coding!</h1>
+                <p style="font-size: 1.5rem;">"Software Engineering is not just about writing code,<br>it's about designing solutions."</p>
+                <div style="margin-top: 50px;">
+                    <p>เจอกันสัปดาห์หน้า (สอบกลางภาค)</p>
+                    <p style="color: var(--secondary-color);">ขอให้โชคดีครับทุกคน!</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="nav-btn prev-btn" onclick="prevSlide()">❮</button>
+    <button class="nav-btn next-btn" onclick="nextSlide()">❯</button>
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    <div class="status-text" id="status-text">Slide 1/46</div>
+
+    <script>
+        // Data
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progress-bar');
+        const statusText = document.getElementById('status-text');
+
+        // Functions
+        function showSlide(index) {
+            slides.forEach((s, i) => {
+                s.classList.remove('active');
+                if (i === index) s.classList.add('active');
+            });
+            // Update Progress
+            const p = ((index + 1) / totalSlides) * 100;
+            progressBar.style.width = `${p}%`;
+            statusText.innerText = `Slide ${index + 1}/${totalSlides}`;
+            
+            // Buttons
+            document.querySelector('.prev-btn').style.display = index === 0 ? 'none' : 'block';
+            document.querySelector('.next-btn').style.display = index === totalSlides - 1 ? 'none' : 'block';
+        }
+
+        function nextSlide() {
+            if(currentSlide < totalSlides - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if(currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        }
+
+        function adjustFont(delta) {
+            const html = document.documentElement;
+            const style = window.getComputedStyle(html, null).getPropertyValue('font-size');
+            const currentSize = parseFloat(style);
+            html.style.fontSize = (currentSize + delta) + 'px';
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Init
+        showSlide(0);
+
+        // Keyboard
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+        });
+
+    </script>
+</body>
+</html>
